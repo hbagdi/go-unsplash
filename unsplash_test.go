@@ -84,4 +84,5 @@ func TestUnsplash(T *testing.T) {
 	unsplash, err = New(c)
 	assert.Nil(err)
 	assert.NotNil(unsplash)
+	unsplash.List()
 }

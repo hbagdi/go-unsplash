@@ -23,7 +23,12 @@
 
 package unsplash
 
-import "net/http"
+import (
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+)
 
 const (
 	apiURL = "https://api.unsplash.com/"
@@ -53,4 +58,25 @@ func New(config *AuthConfig) (*Unsplash, error) {
 	unsplash := new(Unsplash)
 	unsplash.Config = *config
 	return unsplash, nil
+}
+
+// List is a temporary crude test
+func (u *Unsplash) List() {
+	req, err := http.NewRequest("GET", apiURL+"photos", nil)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	req.Header.Set("Authorization", "Client-ID "+u.Config.AppID)
+	res, err := u.httpClient.Do(req)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	defer res.Body.Close()
+	fmt.Println(res.Status)
+	body, _ := ioutil.ReadAll(res.Body)
+	fmt.Println(string(body))
+	res.Header.Write(os.Stdout)
+	//fmt.Println(res.Header.Write(w))
 }
