@@ -24,8 +24,10 @@
 package unsplash
 
 import (
-	"fmt"
+	"bytes"
+	"encoding/json"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"os"
 )
@@ -60,23 +62,54 @@ func New(config *AuthConfig) (*Unsplash, error) {
 	return unsplash, nil
 }
 
-// List is a temporary crude test
-func (u *Unsplash) List() {
-	req, err := http.NewRequest("GET", apiURL+"photos", nil)
+// CurrentUser returns details about the authenticated user
+func (u *Unsplash) CurrentUser() (*User, error) {
+	req, err := http.NewRequest("GET", apiURL+"me", nil)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
-	req.Header.Set("Authorization", "Client-ID "+u.Config.AppID)
+	req.Header.Set("Authorization", "Bearer "+u.Config.AuthToken)
+	req.Header.Set("Content-Type", "application/json")
 	res, err := u.httpClient.Do(req)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		os.Exit(1)
 	}
 	defer res.Body.Close()
-	fmt.Println(res.Status)
+	log.Println(res.Status)
 	body, _ := ioutil.ReadAll(res.Body)
-	fmt.Println(string(body))
 	res.Header.Write(os.Stdout)
-	//fmt.Println(res.Header.Write(w))
+	log.Println()
+	log.Println(string(body))
+	var user User
+	err = json.NewDecoder(bytes.NewReader(body)).Decode(&user)
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+	log.Println()
+	log.Println(user)
+	return nil, err
 }
+
+// List is a temporary crude test
+// func (u *Unsplash) List() {
+// 	req, err := http.NewRequest("GET", apiURL+"photos", nil)
+// 	if err != nil {
+// 		log.Println(err)
+// 		os.Exit(1)
+// 	}
+// 	req.Header.Set("Authorization", "Client-ID "+u.Config.AppID)
+// 	res, err := u.httpClient.Do(req)
+// 	if err != nil {
+// 		log.Println(err)
+// 		os.Exit(1)
+// 	}
+// 	defer res.Body.Close()
+// 	log.Println(res.Status)
+// 	body, _ := ioutil.ReadAll(res.Body)
+// 	log.Println(string(body))
+// 	res.Header.Write(os.Stdout)
+// 	//log.Println(res.Header.Write(w))
+// }

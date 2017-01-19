@@ -24,65 +24,39 @@
 package unsplash
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-func getAppAuth() *AuthConfig {
-	var config AuthConfig
-	appID, ok := os.LookupEnv("unsplash_appID")
-	if !ok {
-		log.Println("unsplash_appID env varible not set. Stopping tests.")
-		os.Exit(1)
+var (
+	data = []string{
+		"{\"URL\":\"https://unsplash.com/@hbagdi/likes\"}",
+		"{\"URL\":\"https://unsplash.com/documentation#get-the-users-profile\"}",
+		"{\"URL\":\"https://en.wikipedia.org/wiki/42_(number)\"}",
 	}
-	config.AppID = appID
-	return &config
+)
+
+type URLWrapper struct {
+	OURL *URL `json:"URL,omitempty"`
 }
 
-func getUserAuth() *AuthConfig {
-	config := getAppAuth()
-	secret, ok := os.LookupEnv("unsplash_secret")
-	if !ok {
-		log.Println("unsplash_secret env varible not set. Stopping tests.")
-		os.Exit(1)
-	}
-	config.Secret = secret
-	token, ok := os.LookupEnv("unsplash_usertoken")
-	if !ok {
-		log.Println("unsplash_usertoken env varible not set. Stopping tests.")
-		os.Exit(1)
-	}
-	config.AuthToken = token
-	return config
-}
-
-func TestUnsplash(T *testing.T) {
+func TestURL(T *testing.T) {
 	assert := assert.New(T)
-	//test setup
-	t := 2
-	assert.Equal(2, t)
+	log.SetOutput(ioutil.Discard)
 
-	unsplash, err := New(nil)
-	assert.Nil(unsplash)
-	assert.NotNil(err)
-	_, ok := err.(*InvalidAuthCredentialsError)
-	assert.NotNil(err.Error())
-	assert.Equal(true, ok)
-
-	var config AuthConfig
-	unsplash, err = New(&config)
-	assert.Nil(unsplash)
-	assert.NotNil(err)
-	_, ok = err.(*InvalidAuthCredentialsError)
-	assert.NotNil(err.Error())
-	assert.Equal(true, ok)
-
-	c := getUserAuth()
-	unsplash, err = New(c)
-	assert.Nil(err)
-	assert.NotNil(unsplash)
-	unsplash.CurrentUser()
+	for _, value := range data {
+		bytes := []byte(value)
+		var url URLWrapper
+		err := json.Unmarshal(bytes, &url)
+		assert.Nil(err)
+		log.Println("Unmarshalled string: ", url.OURL.String())
+		marshalBytes, err := json.Marshal(url)
+		assert.Nil(err)
+		log.Println("Marshalled string: ", string(marshalBytes))
+		assert.Equal(string(marshalBytes), value)
+	}
 }
