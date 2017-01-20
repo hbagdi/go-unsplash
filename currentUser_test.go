@@ -24,62 +24,16 @@
 package unsplash
 
 import (
-	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/oauth2"
 )
 
-type AuthConfig struct {
-	AppID, Secret, AuthToken string
-}
-
-func getAppAuth() *AuthConfig {
-	var config AuthConfig
-	appID, ok := os.LookupEnv("unsplash_appID")
-	if !ok {
-		log.Println("unsplash_appID env varible not set. Stopping tests.")
-		os.Exit(1)
-	}
-	config.AppID = appID
-	return &config
-}
-
-func getUserAuth() *AuthConfig {
-	config := getAppAuth()
-	secret, ok := os.LookupEnv("unsplash_secret")
-	if !ok {
-		log.Println("unsplash_secret env varible not set. Stopping tests.")
-		os.Exit(1)
-	}
-	config.Secret = secret
-	token, ok := os.LookupEnv("unsplash_usertoken")
-	if !ok {
-		log.Println("unsplash_usertoken env varible not set. Stopping tests.")
-		os.Exit(1)
-	}
-	config.AuthToken = token
-	return config
-}
-
-func setup() *Unsplash {
-	c := getUserAuth()
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: c.AuthToken},
-	)
-	client := oauth2.NewClient(oauth2.NoContext, ts)
-	return New(client)
-}
-func TestUnsplash(T *testing.T) {
+func TestCurrentUser(T *testing.T) {
 	assert := assert.New(T)
 	unsplash := setup()
-	assert.NotNil(unsplash)
-	assert.NotNil(unsplash.common)
-	assert.NotNil(unsplash.common.httpClient)
-	stats, err := unsplash.Stats()
+
+	user, err := unsplash.CurrentUser()
+	assert.NotNil(user)
 	assert.Nil(err)
-	assert.NotNil(stats)
-	log.Println(stats)
 }
