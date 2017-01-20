@@ -23,40 +23,43 @@
 
 package unsplash
 
-//The following are implementing error interface
+import (
+	"io/ioutil"
+	"net/http"
+)
 
-// InvalidAuthCredentialsError denotes the credentials provided for the
-// request are invalid.
-type InvalidAuthCredentialsError struct {
+type response struct {
+	Response                                *http.Response
+	MorePage                                bool
+	body                                    *[]byte
+	FirstPage, PrevPage, NextPage, LastPage URL
+	err                                     error
 }
 
-func (err *InvalidAuthCredentialsError) Error() string {
-	return "Incorrect/missing authentication keys"
+func (r *response) Errored() error {
+	return r.err
+}
+func (r *response) CheckForErrors() error {
+	return nil
 }
 
-type errString struct {
-	ErrString string
-}
+func newResponse(r *http.Response) (*response, error) {
+	if nil == r {
+		return nil,
+			&IllegalArgumentError{ErrString: "*http.Response cannot be null"}
+	}
+	resp := new(response)
+	resp.Response = r
 
-func (e *errString) Error() string {
-	return e.ErrString
-}
-
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
-
-func (e *IllegalArgumentError) Error() string {
-	return e.ErrString
-}
-
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
-
-func (e *JSONUnmarshallingError) Error() string {
-	return e.ErrString
+	defer r.Body.Close()
+	err := resp.CheckForErrors()
+	if err != nil {
+		return nil, err
+	}
+	buf, err := ioutil.ReadAll(r.Body)
+	resp.body = &buf
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }

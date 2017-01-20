@@ -27,7 +27,6 @@ import (
 	"encoding/json"
 	"log"
 	"os"
-	"strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -84,8 +83,4 @@ func TestUser(T *testing.T) {
 	// log.Println("Unmarshalled bytes:", string(bytes))
 	// log.Println("Marshalled bytes:", string(marshalledBytes))
 	//assert.JSONEq(userJSONString, string(marshalledBytes))
-}
-
-func stripSpaces(s string) string {
-	return strings.Replace(s, " ", "", -1)
 }

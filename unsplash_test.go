@@ -29,7 +29,12 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/oauth2"
 )
+
+type AuthConfig struct {
+	AppID, Secret, AuthToken string
+}
 
 func getAppAuth() *AuthConfig {
 	var config AuthConfig
@@ -59,30 +64,20 @@ func getUserAuth() *AuthConfig {
 	return config
 }
 
+func setup() *Unsplash {
+	c := getUserAuth()
+	ts := oauth2.StaticTokenSource(
+		&oauth2.Token{AccessToken: c.AuthToken},
+	)
+	client := oauth2.NewClient(oauth2.NoContext, ts)
+	return New(client)
+}
 func TestUnsplash(T *testing.T) {
 	assert := assert.New(T)
-	//test setup
-	t := 2
-	assert.Equal(2, t)
-
-	unsplash, err := New(nil)
-	assert.Nil(unsplash)
-	assert.NotNil(err)
-	_, ok := err.(*InvalidAuthCredentialsError)
-	assert.NotNil(err.Error())
-	assert.Equal(true, ok)
-
-	var config AuthConfig
-	unsplash, err = New(&config)
-	assert.Nil(unsplash)
-	assert.NotNil(err)
-	_, ok = err.(*InvalidAuthCredentialsError)
-	assert.NotNil(err.Error())
-	assert.Equal(true, ok)
-
-	c := getUserAuth()
-	unsplash, err = New(c)
-	assert.Nil(err)
+	unsplash := setup()
 	assert.NotNil(unsplash)
-	unsplash.CurrentUser()
+	log.SetOutput(os.Stdout)
+	user, err := unsplash.CurrentUser()
+	assert.Nil(err)
+	assert.NotNil(user)
 }

@@ -23,40 +23,26 @@
 
 package unsplash
 
-//The following are implementing error interface
+import (
+	"bytes"
+	"encoding/json"
+	"net/http"
+)
 
-// InvalidAuthCredentialsError denotes the credentials provided for the
-// request are invalid.
-type InvalidAuthCredentialsError struct {
+type request struct {
+	Request *http.Request
 }
 
-func (err *InvalidAuthCredentialsError) Error() string {
-	return "Incorrect/missing authentication keys"
-}
-
-type errString struct {
-	ErrString string
-}
-
-func (e *errString) Error() string {
-	return e.ErrString
-}
-
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
-
-func (e *IllegalArgumentError) Error() string {
-	return e.ErrString
-}
-
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
-
-func (e *JSONUnmarshallingError) Error() string {
-	return e.ErrString
+func newRequest(m method, e endpoint, body interface{}) (*request, error) {
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	req := new(request)
+	req.Request, err = http.NewRequest(string(m), getEndpoint(base)+getEndpoint(e), bytes.NewReader(buf))
+	if err != nil {
+		return nil, err
+	}
+	req.Request.Header.Add("Content-Type", "application/json")
+	return req, nil
 }

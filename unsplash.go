@@ -24,73 +24,71 @@
 package unsplash
 
 import (
-	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
-
-const (
-	apiURL = "https://api.unsplash.com/"
-)
-
-//AuthConfig defines various authorization header
-type AuthConfig struct {
-	AppID     string
-	Secret    string
-	AuthToken string
-}
 
 // Unsplash wraps the entire Unsplash.com API
 type Unsplash struct {
-	httpClient http.Client
-	Config     AuthConfig
+	httpClient *http.Client
+	//TODO add rate limit struct
 }
 
 //New returns a new Unsplash struct
-func New(config *AuthConfig) (*Unsplash, error) {
-	if config == nil {
-		return nil, &InvalidAuthCredentialsError{}
-	}
-	if config.AppID == "" {
-		return nil, &InvalidAuthCredentialsError{}
-	}
+func New(client *http.Client) *Unsplash {
 	unsplash := new(Unsplash)
-	unsplash.Config = *config
-	return unsplash, nil
+	if client == nil {
+		unsplash.httpClient = http.DefaultClient
+	} else {
+		unsplash.httpClient = client
+	}
+	return unsplash
+}
+
+func (u *Unsplash) do(req *request) (*response, error) {
+	var err error
+	//TODO should this be exported?
+	if req == nil {
+		return nil,
+			&IllegalArgumentError{ErrString: "Request object cannot be nil"}
+	}
+	//TODO add rate limiting support, API is erronous at the moment
+
+	//Make the request
+	rawResp, err := u.httpClient.Do(req.Request)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := newResponse(rawResp)
+	if err != nil {
+		return nil, err
+	}
+	return resp, nil
 }
 
 // CurrentUser returns details about the authenticated user
 func (u *Unsplash) CurrentUser() (*User, error) {
-	req, err := http.NewRequest("GET", apiURL+"me", nil)
+	var err error
+	req, err := newRequest(GET, currentUser, nil)
 	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	req.Header.Set("Authorization", "Bearer "+u.Config.AuthToken)
-	req.Header.Set("Content-Type", "application/json")
-	res, err := u.httpClient.Do(req)
-	if err != nil {
-		log.Println(err)
-		os.Exit(1)
-	}
-	defer res.Body.Close()
-	log.Println(res.Status)
-	body, _ := ioutil.ReadAll(res.Body)
-	res.Header.Write(os.Stdout)
-	log.Println()
-	log.Println(string(body))
-	var user User
-	err = json.NewDecoder(bytes.NewReader(body)).Decode(&user)
-	if err != nil {
-		log.Println(err)
 		return nil, err
+	}
+	resp, err := u.do(req)
+	if err != nil {
+		return nil, err
+	}
+	user := new(User)
+	err = json.Unmarshal(*resp.body, &user)
+	if err != nil {
+		e := new(JSONUnmarshallingError)
+		e.ErrString = err.Error()
+		return nil,
+			&JSONUnmarshallingError{ErrString: err.Error()}
 	}
 	log.Println()
 	log.Println(user)
-	return nil, err
+	return user, nil
 }
 
 // List is a temporary crude test

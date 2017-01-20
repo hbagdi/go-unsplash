@@ -23,40 +23,42 @@
 
 package unsplash
 
-//The following are implementing error interface
+type method string
 
-// InvalidAuthCredentialsError denotes the credentials provided for the
-// request are invalid.
-type InvalidAuthCredentialsError struct {
+const (
+	// GET is HTTP GET request
+	GET method = "GET"
+	// POST is HTTP POST request
+	POST method = "POST"
+	// PUT is HTTP PUT request
+	PUT method = "PUT"
+)
+
+const (
+	apiBaseURL          = "https://api.unsplash.com/"
+	currentUserEndpoint = "me"
+	searchEndpoint      = "search"
+)
+
+type endpoint int
+
+const (
+	base endpoint = iota
+	currentUser
+	search
+	photo
+	collection
+	user
+)
+
+var mapURL map[endpoint]string
+
+func init() {
+	mapURL = make(map[endpoint]string)
+	mapURL[base] = apiBaseURL
+	mapURL[currentUser] = currentUserEndpoint
 }
 
-func (err *InvalidAuthCredentialsError) Error() string {
-	return "Incorrect/missing authentication keys"
-}
-
-type errString struct {
-	ErrString string
-}
-
-func (e *errString) Error() string {
-	return e.ErrString
-}
-
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
-
-func (e *IllegalArgumentError) Error() string {
-	return e.ErrString
-}
-
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
-
-func (e *JSONUnmarshallingError) Error() string {
-	return e.ErrString
+func getEndpoint(e endpoint) string {
+	return mapURL[e]
 }
