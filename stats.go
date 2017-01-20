@@ -23,45 +23,23 @@
 
 package unsplash
 
-type method string
-
-const (
-	// GET is HTTP GET request
-	GET method = "GET"
-	// POST is HTTP POST request
-	POST method = "POST"
-	// PUT is HTTP PUT request
-	PUT method = "PUT"
+import (
+	"bytes"
+	"strconv"
 )
 
-const (
-	apiBaseURL          = "https://api.unsplash.com/"
-	currentUserEndpoint = "me"
-	globalStatsEndpoint = "stats/total"
-	searchEndpoint      = "search"
-)
-
-type endpoint int
-
-const (
-	base endpoint = iota
-	currentUser
-	globalStats
-	search
-	photo
-	collection
-	user
-)
-
-var mapURL map[endpoint]string
-
-func init() {
-	mapURL = make(map[endpoint]string)
-	mapURL[base] = apiBaseURL
-	mapURL[currentUser] = currentUserEndpoint
-	mapURL[globalStats] = globalStatsEndpoint
+// GlobalStats shows the total photo stats of Unsplash.com
+type GlobalStats struct {
+	TotalPhotos    int `json:"total_photos"`
+	PhotoDownloads int `json:"photo_downloads"`
+	BatchDownloads int `json:"batch_downloads"`
 }
 
-func getEndpoint(e endpoint) string {
-	return mapURL[e]
+func (G *GlobalStats) String() string {
+	var buf bytes.Buffer
+	buf.WriteString("\nGlobal Stats:\n")
+	buf.WriteString("Total Photos: " + strconv.Itoa(G.TotalPhotos) + "\n")
+	buf.WriteString("Total downloads: " + strconv.Itoa(G.PhotoDownloads) + "\n")
+	buf.WriteString("Batch downloads: " + strconv.Itoa(G.BatchDownloads) + "\n")
+	return buf.String()
 }

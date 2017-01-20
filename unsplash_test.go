@@ -80,4 +80,8 @@ func TestUnsplash(T *testing.T) {
 	user, err := unsplash.CurrentUser()
 	assert.Nil(err)
 	assert.NotNil(user)
+	stats, err := unsplash.Stats()
+	assert.Nil(err)
+	assert.NotNil(stats)
+	log.Println(stats)
 }

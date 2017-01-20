@@ -23,45 +23,5 @@
 
 package unsplash
 
-type method string
-
-const (
-	// GET is HTTP GET request
-	GET method = "GET"
-	// POST is HTTP POST request
-	POST method = "POST"
-	// PUT is HTTP PUT request
-	PUT method = "PUT"
-)
-
-const (
-	apiBaseURL          = "https://api.unsplash.com/"
-	currentUserEndpoint = "me"
-	globalStatsEndpoint = "stats/total"
-	searchEndpoint      = "search"
-)
-
-type endpoint int
-
-const (
-	base endpoint = iota
-	currentUser
-	globalStats
-	search
-	photo
-	collection
-	user
-)
-
-var mapURL map[endpoint]string
-
-func init() {
-	mapURL = make(map[endpoint]string)
-	mapURL[base] = apiBaseURL
-	mapURL[currentUser] = currentUserEndpoint
-	mapURL[globalStats] = globalStatsEndpoint
-}
-
-func getEndpoint(e endpoint) string {
-	return mapURL[e]
-}
+// UserService wer
+type UserService service

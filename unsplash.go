@@ -25,24 +25,30 @@ package unsplash
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 )
 
+type service struct {
+	httpClient *http.Client
+}
+
 // Unsplash wraps the entire Unsplash.com API
 type Unsplash struct {
-	httpClient *http.Client
+	common *service
+	Users  *UserService
 	//TODO add rate limit struct
 }
 
 //New returns a new Unsplash struct
 func New(client *http.Client) *Unsplash {
 	unsplash := new(Unsplash)
+	unsplash.common = new(service)
 	if client == nil {
-		unsplash.httpClient = http.DefaultClient
+		unsplash.common.httpClient = http.DefaultClient
 	} else {
-		unsplash.httpClient = client
+		unsplash.common.httpClient = client
 	}
+	unsplash.Users = (*UserService)(unsplash.common)
 	return unsplash
 }
 
@@ -56,7 +62,8 @@ func (u *Unsplash) do(req *request) (*response, error) {
 	//TODO add rate limiting support, API is erronous at the moment
 
 	//Make the request
-	rawResp, err := u.httpClient.Do(req.Request)
+	client := u.common.httpClient
+	rawResp, err := client.Do(req.Request)
 	if err != nil {
 		return nil, err
 	}
@@ -81,33 +88,28 @@ func (u *Unsplash) CurrentUser() (*User, error) {
 	user := new(User)
 	err = json.Unmarshal(*resp.body, &user)
 	if err != nil {
-		e := new(JSONUnmarshallingError)
-		e.ErrString = err.Error()
 		return nil,
 			&JSONUnmarshallingError{ErrString: err.Error()}
 	}
-	log.Println()
-	log.Println(user)
 	return user, nil
 }
 
-// List is a temporary crude test
-// func (u *Unsplash) List() {
-// 	req, err := http.NewRequest("GET", apiURL+"photos", nil)
-// 	if err != nil {
-// 		log.Println(err)
-// 		os.Exit(1)
-// 	}
-// 	req.Header.Set("Authorization", "Client-ID "+u.Config.AppID)
-// 	res, err := u.httpClient.Do(req)
-// 	if err != nil {
-// 		log.Println(err)
-// 		os.Exit(1)
-// 	}
-// 	defer res.Body.Close()
-// 	log.Println(res.Status)
-// 	body, _ := ioutil.ReadAll(res.Body)
-// 	log.Println(string(body))
-// 	res.Header.Write(os.Stdout)
-// 	//log.Println(res.Header.Write(w))
-// }
+// Stats gives the total photos,download since the inception of unsplash.com
+func (u *Unsplash) Stats() (*GlobalStats, error) {
+	var err error
+	req, err := newRequest(GET, globalStats, nil)
+	if err != nil {
+		return nil, err
+	}
+	resp, err := u.do(req)
+	if err != nil {
+		return nil, err
+	}
+	globalStats := new(GlobalStats)
+	err = json.Unmarshal(*resp.body, &globalStats)
+	if err != nil {
+		return nil,
+			&JSONUnmarshallingError{ErrString: err.Error()}
+	}
+	return globalStats, nil
+}

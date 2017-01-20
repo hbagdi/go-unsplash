@@ -40,6 +40,7 @@ func (r *response) Errored() error {
 	return r.err
 }
 func (r *response) CheckForErrors() error {
+	//TODO
 	return nil
 }
 
