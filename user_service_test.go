@@ -23,47 +23,21 @@
 
 package unsplash
 
-type method string
+import (
+	"log"
+	"os"
+	"testing"
 
-const (
-	// GET is HTTP GET request
-	GET method = "GET"
-	// POST is HTTP POST request
-	POST method = "POST"
-	// PUT is HTTP PUT request
-	PUT method = "PUT"
+	"github.com/stretchr/testify/assert"
 )
 
-const (
-	apiBaseURL          = "https://api.unsplash.com/"
-	currentUserEndpoint = "me"
-	globalStatsEndpoint = "stats/total"
-	usersEndpoint       = "users"
-	searchEndpoint      = "search"
-)
-
-type endpoint int
-
-const (
-	base endpoint = iota
-	currentUser
-	globalStats
-	users
-	search
-	photo
-	collection
-)
-
-var mapURL map[endpoint]string
-
-func init() {
-	mapURL = make(map[endpoint]string)
-	mapURL[base] = apiBaseURL
-	mapURL[currentUser] = currentUserEndpoint
-	mapURL[globalStats] = globalStatsEndpoint
-	mapURL[users] = usersEndpoint
-}
-
-func getEndpoint(e endpoint) string {
-	return mapURL[e]
+func TestUserService(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	imageOpt := &ImageOpt{Height: 120, Width: 400}
+	user, err := unsplash.Users.User("hbagdi", imageOpt)
+	assert.Nil(err)
+	assert.NotNil(user)
+	log.Println(user)
 }

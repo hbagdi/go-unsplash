@@ -24,6 +24,8 @@
 package unsplash
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -36,12 +38,23 @@ type AuthConfig struct {
 	AppID, Secret, AuthToken string
 }
 
+func authFromFile() *AuthConfig {
+	bytes, err := ioutil.ReadFile("auth.json")
+	if err != nil {
+		return nil
+	}
+	var config AuthConfig
+	err = json.Unmarshal(bytes, &config)
+	if err != nil {
+		return nil
+	}
+	return &config
+}
 func getAppAuth() *AuthConfig {
 	var config AuthConfig
 	appID, ok := os.LookupEnv("unsplash_appID")
 	if !ok {
-		log.Println("unsplash_appID env varible not set. Stopping tests.")
-		os.Exit(1)
+		return nil
 	}
 	config.AppID = appID
 	return &config
@@ -51,21 +64,27 @@ func getUserAuth() *AuthConfig {
 	config := getAppAuth()
 	secret, ok := os.LookupEnv("unsplash_secret")
 	if !ok {
-		log.Println("unsplash_secret env varible not set. Stopping tests.")
-		os.Exit(1)
+		return nil
 	}
 	config.Secret = secret
 	token, ok := os.LookupEnv("unsplash_usertoken")
 	if !ok {
-		log.Println("unsplash_usertoken env varible not set. Stopping tests.")
-		os.Exit(1)
+		return nil
 	}
 	config.AuthToken = token
 	return config
 }
 
 func setup() *Unsplash {
-	c := getUserAuth()
+	var c *AuthConfig
+	c = getUserAuth()
+	if c == nil {
+		c = authFromFile()
+		if c == nil {
+			log.Println("Couldn't read auth token. Stopping tests.")
+			os.Exit(1)
+		}
+	}
 	ts := oauth2.StaticTokenSource(
 		&oauth2.Token{AccessToken: c.AuthToken},
 	)

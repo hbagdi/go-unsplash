@@ -52,7 +52,7 @@ func New(client *http.Client) *Unsplash {
 	return unsplash
 }
 
-func (u *Unsplash) do(req *request) (*response, error) {
+func (s *service) do(req *request) (*response, error) {
 	var err error
 	//TODO should this be exported?
 	if req == nil {
@@ -62,7 +62,7 @@ func (u *Unsplash) do(req *request) (*response, error) {
 	//TODO add rate limiting support, API is erronous at the moment
 
 	//Make the request
-	client := u.common.httpClient
+	client := s.httpClient
 	rawResp, err := client.Do(req.Request)
 	if err != nil {
 		return nil, err
@@ -77,11 +77,11 @@ func (u *Unsplash) do(req *request) (*response, error) {
 // CurrentUser returns details about the authenticated user
 func (u *Unsplash) CurrentUser() (*User, error) {
 	var err error
-	req, err := newRequest(GET, currentUser, nil)
+	req, err := newRequest(GET, getEndpoint(currentUser), nil)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := u.do(req)
+	resp, err := u.common.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -97,11 +97,11 @@ func (u *Unsplash) CurrentUser() (*User, error) {
 // Stats gives the total photos,download since the inception of unsplash.com
 func (u *Unsplash) Stats() (*GlobalStats, error) {
 	var err error
-	req, err := newRequest(GET, globalStats, nil)
+	req, err := newRequest(GET, getEndpoint(globalStats), nil)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := u.do(req)
+	resp, err := u.common.do(req)
 	if err != nil {
 		return nil, err
 	}

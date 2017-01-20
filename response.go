@@ -24,7 +24,6 @@
 package unsplash
 
 import (
-	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -41,8 +40,12 @@ func (r *response) Errored() error {
 	return r.err
 }
 func (r *response) CheckForErrors() error {
-	if r.Response.StatusCode != 200 {
-		return errors.New("Some error here")
+	if 401 == r.Response.StatusCode {
+		return &AuthorizationError{ErrString: "401: Unauthorized request"}
+	}
+	if 403 == r.Response.StatusCode {
+		return &AuthorizationError{ErrString: "403: Access forbidden request"}
+		//TODO check body for rate limiting
 	}
 	//TODO
 	return nil

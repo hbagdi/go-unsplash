@@ -71,6 +71,6 @@ func (u User) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("\nID :" + *u.ID + "\n")
 	buf.WriteString("Fullname: " + *u.Name + "\n")
-	buf.WriteString("Profile:" + u.Links.HTML.String() + "\n")
+	buf.WriteString("Profile: " + u.Links.HTML.String() + "\n")
 	return buf.String()
 }

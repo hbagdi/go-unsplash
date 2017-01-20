@@ -33,13 +33,14 @@ type request struct {
 	Request *http.Request
 }
 
-func newRequest(m method, e endpoint, body interface{}) (*request, error) {
+func newRequest(m method, e string, body interface{}) (*request, error) {
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
 	req := new(request)
-	req.Request, err = http.NewRequest(string(m), getEndpoint(base)+getEndpoint(e), bytes.NewReader(buf))
+	httpRequest, err := http.NewRequest(string(m), getEndpoint(base)+e, bytes.NewBuffer(buf))
+	req.Request = httpRequest
 	if err != nil {
 		return nil, err
 	}

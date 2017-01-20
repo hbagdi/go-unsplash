@@ -52,3 +52,12 @@ type JSONUnmarshallingError struct {
 func (e JSONUnmarshallingError) Error() string {
 	return e.ErrString
 }
+
+// AuthorizationError occurs due to a unmarshalling error
+type AuthorizationError struct {
+	ErrString string
+}
+
+func (e AuthorizationError) Error() string {
+	return e.ErrString
+}

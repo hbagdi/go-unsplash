@@ -23,5 +23,51 @@
 
 package unsplash
 
-// UserService wer
+import (
+	"encoding/json"
+	"fmt"
+	"os"
+)
+
+// ImageOpt denotes properties of any Image
+type ImageOpt struct {
+	Height int `json:"h,omitempty"`
+	Width  int `json:"w,omitempty"`
+}
+
+type userOpt struct {
+	Height int `json:"h,omitempty"`
+	Width  int `json:"w,omitempty"`
+}
+
+// UserService interacts with /users endpoint
 type UserService service
+
+// User returns a User with username and optional profile image size ImageOpt
+func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) {
+	if "" == username {
+		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
+	}
+	var body userOpt
+	if imageOpt != nil {
+		body.Height = imageOpt.Height
+		body.Width = imageOpt.Width
+	}
+	var user *User
+	endpoint := fmt.Sprintf("%v/%v", getEndpoint(users), username)
+	req, err := newRequest(GET, endpoint, body)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*us)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, err
+	}
+	resp.Response.Write(os.Stdout)
+	err = json.Unmarshal(*resp.body, &user)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

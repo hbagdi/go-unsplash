@@ -25,7 +25,6 @@ package unsplash
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"testing"
@@ -67,6 +66,6 @@ func TestURL(T *testing.T) {
 	bytes := []byte(badJSON)
 	err := json.Unmarshal(bytes, &url)
 	assert.NotNil(err)
-	fmt.Println(err)
+	log.Println(err)
 	assert.Nil(url.OURL)
 }
