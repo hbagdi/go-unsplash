@@ -23,41 +23,22 @@
 
 package unsplash
 
-//The following are implementing error interface
+import (
+	"io/ioutil"
+	"log"
+	"testing"
 
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
+	"github.com/stretchr/testify/assert"
+)
 
-func (e IllegalArgumentError) Error() string {
-	return e.ErrString
-}
+func TestResponse(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
 
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
-
-func (e JSONUnmarshallingError) Error() string {
-	return e.ErrString
-}
-
-// AuthorizationError occurs due to a unmarshalling error
-type AuthorizationError struct {
-	ErrString string
-}
-
-func (e AuthorizationError) Error() string {
-	return e.ErrString
-}
-
-// NotFoundError occurs due to a unmarshalling error
-type NotFoundError struct {
-	ErrString string
-}
-
-func (e NotFoundError) Error() string {
-	return e.ErrString
+	response, err := newResponse(nil)
+	assert.NotNil(err)
+	assert.Nil(response)
+	iae, ok := err.(*IllegalArgumentError)
+	assert.NotNil(iae)
+	assert.Equal(true, ok)
 }

@@ -23,41 +23,40 @@
 
 package unsplash
 
-//The following are implementing error interface
+import (
+	"io/ioutil"
+	"log"
+	"testing"
 
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
+	"github.com/stretchr/testify/assert"
+)
 
-func (e IllegalArgumentError) Error() string {
-	return e.ErrString
-}
+func TestErrors(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	var err error
 
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
+	err = &IllegalArgumentError{ErrString: "I'm Joker."}
+	iae2, ok := err.(*IllegalArgumentError)
+	assert.NotNil(iae2)
+	log.Println(iae2)
+	assert.Equal(true, ok)
 
-func (e JSONUnmarshallingError) Error() string {
-	return e.ErrString
-}
+	err = &AuthorizationError{ErrString: "I'm Batman."}
+	ae, ok := err.(*AuthorizationError)
+	assert.NotNil(ae)
+	log.Println(ae)
+	assert.Equal(true, ok)
 
-// AuthorizationError occurs due to a unmarshalling error
-type AuthorizationError struct {
-	ErrString string
-}
+	err = &JSONUnmarshallingError{ErrString: "I'm Batman."}
+	jue, ok := err.(*JSONUnmarshallingError)
+	assert.NotNil(jue)
+	log.Println(jue)
+	assert.Equal(true, ok)
 
-func (e AuthorizationError) Error() string {
-	return e.ErrString
-}
-
-// NotFoundError occurs due to a unmarshalling error
-type NotFoundError struct {
-	ErrString string
-}
-
-func (e NotFoundError) Error() string {
-	return e.ErrString
+	err = &NotFoundError{ErrString: "I'll find you and I'll kill you."}
+	nfe, ok := err.(*NotFoundError)
+	assert.NotNil(nfe)
+	log.Println(nfe)
+	assert.Equal(true, ok)
 }

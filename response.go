@@ -40,12 +40,17 @@ func (r *response) Errored() error {
 	return r.err
 }
 func (r *response) CheckForErrors() error {
-	if 401 == r.Response.StatusCode {
+	switch r.Response.StatusCode {
+
+	case 401:
 		return &AuthorizationError{ErrString: "401: Unauthorized request"}
-	}
-	if 403 == r.Response.StatusCode {
+
+	case 403:
 		return &AuthorizationError{ErrString: "403: Access forbidden request"}
 		//TODO check body for rate limiting
+
+	case 404:
+		return &NotFoundError{ErrString: "404: The cat got tired of the Laser"}
 	}
 	//TODO
 	return nil

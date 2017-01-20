@@ -34,6 +34,9 @@ type request struct {
 }
 
 func newRequest(m method, e string, body interface{}) (*request, error) {
+	if e == "" {
+		return nil, &IllegalArgumentError{ErrString: "Endpoint can't be null."}
+	}
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err

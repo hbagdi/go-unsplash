@@ -40,4 +40,18 @@ func TestUserService(T *testing.T) {
 	assert.Nil(err)
 	assert.NotNil(user)
 	log.Println(user)
+
+	user, err = unsplash.Users.User("", nil)
+	assert.Nil(user)
+	assert.NotNil(err)
+	iae, ok := err.(*IllegalArgumentError)
+	assert.NotNil(iae)
+	assert.Equal(true, ok)
+
+	user, err = unsplash.Users.User(" batmanIsNotAuser", nil)
+	assert.Nil(user)
+	assert.NotNil(err)
+	nfe, ok := err.(*NotFoundError)
+	assert.NotNil(nfe)
+	assert.Equal(true, ok)
 }
