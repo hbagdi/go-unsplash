@@ -24,6 +24,7 @@
 package unsplash
 
 import (
+	"errors"
 	"io/ioutil"
 	"net/http"
 )
@@ -40,6 +41,9 @@ func (r *response) Errored() error {
 	return r.err
 }
 func (r *response) CheckForErrors() error {
+	if r.Response.StatusCode != 200 {
+		return errors.New("Some error here")
+	}
 	//TODO
 	return nil
 }

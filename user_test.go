@@ -78,6 +78,7 @@ func TestUser(T *testing.T) {
 	err := json.Unmarshal(bytes, &user)
 	assert.Nil(err)
 	_, err = json.Marshal(user)
+	log.Println(user)
 	assert.Nil(err)
 	// TODO enable deep testing once badge and photos structs are inplace
 	// log.Println("Unmarshalled bytes:", string(bytes))

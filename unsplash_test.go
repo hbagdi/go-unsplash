@@ -82,4 +82,9 @@ func TestUnsplash(T *testing.T) {
 	assert.Nil(err)
 	assert.NotNil(stats)
 	log.Println(stats)
+
+	unsplash = New(nil)
+	stats, err = unsplash.Stats()
+	assert.Nil(stats)
+	assert.NotNil(err)
 }

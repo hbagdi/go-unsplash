@@ -30,9 +30,9 @@ import (
 
 // GlobalStats shows the total photo stats of Unsplash.com
 type GlobalStats struct {
-	TotalPhotos    int `json:"total_photos"`
-	PhotoDownloads int `json:"photo_downloads"`
-	BatchDownloads int `json:"batch_downloads"`
+	TotalPhotos    int `json:"total_photos,omitempty"`
+	PhotoDownloads int `json:"photo_downloads,omitempty"`
+	BatchDownloads int `json:"batch_downloads,omitempty"`
 }
 
 func (G *GlobalStats) String() string {

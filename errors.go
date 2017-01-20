@@ -30,16 +30,8 @@ package unsplash
 type InvalidAuthCredentialsError struct {
 }
 
-func (err *InvalidAuthCredentialsError) Error() string {
+func (err InvalidAuthCredentialsError) Error() string {
 	return "Incorrect/missing authentication keys"
-}
-
-type errString struct {
-	ErrString string
-}
-
-func (e *errString) Error() string {
-	return e.ErrString
 }
 
 // IllegalArgumentError occurs when the argument to a function are
@@ -48,7 +40,7 @@ type IllegalArgumentError struct {
 	ErrString string
 }
 
-func (e *IllegalArgumentError) Error() string {
+func (e IllegalArgumentError) Error() string {
 	return e.ErrString
 }
 
@@ -57,6 +49,6 @@ type JSONUnmarshallingError struct {
 	ErrString string
 }
 
-func (e *JSONUnmarshallingError) Error() string {
+func (e JSONUnmarshallingError) Error() string {
 	return e.ErrString
 }

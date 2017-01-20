@@ -25,6 +25,7 @@ package unsplash
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"testing"
@@ -33,11 +34,12 @@ import (
 )
 
 var (
-	data = []string{
+	correctData = []string{
 		"{\"URL\":\"https://unsplash.com/@hbagdi/likes\"}",
 		"{\"URL\":\"https://unsplash.com/documentation#get-the-users-profile\"}",
 		"{\"URL\":\"https://en.wikipedia.org/wiki/42_(number)\"}",
 	}
+	badJSON = "{\"Anything that can go wrong, will go wrong.\"}"
 )
 
 type URLWrapper struct {
@@ -48,7 +50,7 @@ func TestURL(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 
-	for _, value := range data {
+	for _, value := range correctData {
 		bytes := []byte(value)
 		var url URLWrapper
 		err := json.Unmarshal(bytes, &url)
@@ -59,4 +61,12 @@ func TestURL(T *testing.T) {
 		log.Println("Marshalled string: ", string(marshalBytes))
 		assert.Equal(string(marshalBytes), value)
 	}
+
+	log.SetOutput(ioutil.Discard)
+	var url URLWrapper
+	bytes := []byte(badJSON)
+	err := json.Unmarshal(bytes, &url)
+	assert.NotNil(err)
+	fmt.Println(err)
+	assert.Nil(url.OURL)
 }
