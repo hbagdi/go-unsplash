@@ -25,47 +25,56 @@ package unsplash
 
 import "bytes"
 
+// ProfileImage contains URLs to profile image of a user
+type ProfileImage struct {
+	Small  *URL `json:"small"`
+	Medium *URL `json:"medium"`
+	Large  *URL `json:"large"`
+	Custom *URL `json:"custom"`
+}
+
+// UserLinks contains URLs to
+type UserLinks struct {
+	Followers *URL `json:"followers"`
+	Following *URL `json:"following"`
+	Self      *URL `json:"self"`
+	HTML      *URL `json:"html"`
+	Photos    *URL `json:"photos"`
+	Likes     *URL `json:"likes"`
+	Portfolio *URL `json:"portfolio"`
+}
+
+// UserBadge contains information about badge for a user
+type UserBadge struct {
+	Title   *URL    `json:"title,omitempty"`
+	Primary bool    `json:"primary,omitempty"`
+	Slug    *string `json:"slug,omitempty"`
+	Link    *URL    `json:"link,omitempty"`
+}
+
 // User represents a Unsplash.com user
 type User struct {
-	UID                 *string `json:"uid"`
-	ID                  *string `json:"id"`
-	Username            *string `json:"username"`
-	Name                *string `json:"name"`
-	FirstName           *string `json:"first_name"`
-	CompletedOnboarding bool    `json:"completed_onboarding"`
-	LastName            *string `json:"last_name,omitempty"`
-	PortfolioURL        *URL    `json:"portfolio_url"`
-	Bio                 *string `json:"bio"`
-	Location            *string `json:"location"`
-	TotalLikes          int     `json:"total_likes"`
-	TotalPhotos         int     `json:"total_photos"`
-	TotalCollections    int     `json:"total_collections"`
-	FollowedByUser      bool    `json:"followed_by_user"`
-	NumericID           int     `json:"numeric_id"`
-	FollowersCount      int     `json:"followers_count"`
-	FollowingCount      int     `json:"following_count"`
-	Downloads           int     `json:"downloads"`
-	ProfileImage        struct {
-		Small  *URL `json:"small"`
-		Medium *URL `json:"medium"`
-		Large  *URL `json:"large"`
-		Custom *URL `json:"custom"`
-	} `json:"profile_image"`
-	Badge struct {
-		Title   *URL   `json:"title,omitempty"`
-		Primary bool   `json:"primary,omitempty"`
-		Slug    string `json:"slug,omitempty"`
-		Link    *URL   `json:"link,omitempty"`
-	} `json:"badge"`
-	Links struct {
-		Followers *URL `json:"followers"`
-		Following *URL `json:"following"`
-		Self      *URL `json:"self"`
-		HTML      *URL `json:"html"`
-		Photos    *URL `json:"photos"`
-		Likes     *URL `json:"likes"`
-		Portfolio *URL `json:"portfolio"`
-	} `json:"links,omitempty"`
+	UID                 *string       `json:"uid"`
+	ID                  *string       `json:"id"`
+	Username            *string       `json:"username"`
+	Name                *string       `json:"name"`
+	FirstName           *string       `json:"first_name"`
+	CompletedOnboarding bool          `json:"completed_onboarding"`
+	LastName            *string       `json:"last_name,omitempty"`
+	PortfolioURL        *URL          `json:"portfolio_url"`
+	Bio                 *string       `json:"bio"`
+	Location            *string       `json:"location"`
+	TotalLikes          int           `json:"total_likes"`
+	TotalPhotos         int           `json:"total_photos"`
+	TotalCollections    int           `json:"total_collections"`
+	FollowedByUser      bool          `json:"followed_by_user"`
+	NumericID           int           `json:"numeric_id"`
+	FollowersCount      int           `json:"followers_count"`
+	FollowingCount      int           `json:"following_count"`
+	Downloads           int           `json:"downloads"`
+	ProfileImage        *ProfileImage `json:"profile_image"`
+	Badge               *UserBadge    `json:"badge"`
+	Links               *UserLinks    `json:"links,omitempty"`
 }
 
 func (u User) String() string {

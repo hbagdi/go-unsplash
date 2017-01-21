@@ -31,7 +31,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUserService(T *testing.T) {
+func TestUserProfile(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(os.Stdout)
 	unsplash := setup()
@@ -67,4 +67,19 @@ func TestUserService(T *testing.T) {
 	nfe, ok := err.(*NotFoundError)
 	assert.NotNil(nfe)
 	assert.Equal(true, ok)
+}
+
+func TestUserPortfolio(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	url, err := unsplash.Users.Portfolio("hbagdi")
+	assert.Nil(err)
+	assert.NotNil(url)
+	log.Println("URL is : ", url.String())
+	url, err = unsplash.Users.Portfolio("gopher")
+	assert.Nil(err)
+	assert.NotNil(url)
+	assert.Equal(url.String(), "https://wikipedia.org/wiki/Gopher")
+	log.Println("URL is : ", url.String())
 }

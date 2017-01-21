@@ -59,3 +59,30 @@ func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) 
 	}
 	return user, nil
 }
+
+type portfolioResponse struct {
+	URL *URL `json:"url"`
+}
+
+// Portfolio returns a User with username and optional profile image size ImageOpt
+func (us *UserService) Portfolio(username string) (*URL, error) {
+	if "" == username {
+		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
+	}
+	var portfolio portfolioResponse
+	endpoint := fmt.Sprintf("%v/%v/portfolio", getEndpoint(users), username)
+	req, err := newRequest(GET, endpoint, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*us)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(*resp.body, &portfolio)
+	if err != nil {
+		return nil, err
+	}
+	return portfolio.URL, nil
+}
