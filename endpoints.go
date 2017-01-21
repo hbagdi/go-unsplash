@@ -35,11 +35,16 @@ const (
 )
 
 const (
-	apiBaseURL          = "https://api.unsplash.com/"
-	currentUserEndpoint = "me"
-	globalStatsEndpoint = "stats/total"
-	usersEndpoint       = "users"
-	searchEndpoint      = "search"
+	apiBaseURL                = "https://api.unsplash.com/"
+	currentUserEndpoint       = "me"
+	globalStatsEndpoint       = "stats/total"
+	usersEndpoint             = "users"
+	photosEndpoint            = "photos"
+	collectionsEndpoint       = "collections"
+	searchEndpoint            = "search"
+	searchUserEndpoint        = searchEndpoint + "/" + usersEndpoint
+	searchPhotosEndpoint      = searchEndpoint + "/" + photosEndpoint
+	searchCollectionsEndpoint = searchEndpoint + "/" + collectionsEndpoint
 )
 
 type endpoint int
@@ -49,9 +54,11 @@ const (
 	currentUser
 	globalStats
 	users
-	search
-	photo
-	collection
+	photos
+	collections
+	searchUsers
+	searchPhotos
+	searchCollections
 )
 
 var mapURL map[endpoint]string
@@ -62,6 +69,11 @@ func init() {
 	mapURL[currentUser] = currentUserEndpoint
 	mapURL[globalStats] = globalStatsEndpoint
 	mapURL[users] = usersEndpoint
+	mapURL[photos] = photosEndpoint
+	mapURL[collections] = collectionsEndpoint
+	mapURL[searchUsers] = searchUserEndpoint
+	mapURL[searchPhotos] = searchPhotosEndpoint
+	mapURL[searchCollections] = searchCollectionsEndpoint
 }
 
 func getEndpoint(e endpoint) string {
