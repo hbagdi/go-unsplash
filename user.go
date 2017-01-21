@@ -49,6 +49,7 @@ type User struct {
 		Small  *URL `json:"small"`
 		Medium *URL `json:"medium"`
 		Large  *URL `json:"large"`
+		Custom *URL `json:"custom"`
 	} `json:"profile_image"`
 	Badge struct {
 		Title   *URL   `json:"title,omitempty"`

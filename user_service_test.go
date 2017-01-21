@@ -40,6 +40,19 @@ func TestUserService(T *testing.T) {
 	assert.Nil(err)
 	assert.NotNil(user)
 	log.Println(user)
+	pi := user.ProfileImage
+	assert.NotNil(pi)
+	assert.NotNil(pi.Medium)
+	assert.NotNil(pi.Custom)
+	log.Println(user.ProfileImage.Custom.String())
+
+	user, err = unsplash.Users.User("hbagdi", nil)
+	assert.Nil(err)
+	assert.NotNil(user)
+	log.Println(user)
+	pi = user.ProfileImage
+	assert.NotNil(pi)
+	assert.Nil(pi.Custom)
 
 	user, err = unsplash.Users.User("", nil)
 	assert.Nil(user)

@@ -27,26 +27,40 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+
+	"github.com/google/go-querystring/query"
 )
 
 type request struct {
 	Request *http.Request
 }
 
-func newRequest(m method, e string, body interface{}) (*request, error) {
+func newRequest(m method, e string, qs interface{}, body interface{}) (*request, error) {
 	if e == "" {
 		return nil, &IllegalArgumentError{ErrString: "Endpoint can't be null."}
 	}
+	//body to be sent in JSON
 	buf, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
 	}
-	req := new(request)
+	//Create a new request
+
 	httpRequest, err := http.NewRequest(string(m), getEndpoint(base)+e, bytes.NewBuffer(buf))
-	req.Request = httpRequest
+
 	if err != nil {
 		return nil, err
 	}
+	//Add query string if any
+	if qs != nil {
+		values, err := query.Values(qs)
+		if err != nil {
+			return nil, err
+		}
+		httpRequest.URL.RawQuery = values.Encode()
+	}
+	req := new(request)
+	req.Request = httpRequest
 	req.Request.Header.Add("Content-Type", "application/json")
 	return req, nil
 }

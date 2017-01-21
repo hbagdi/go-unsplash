@@ -26,18 +26,12 @@ package unsplash
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 )
 
 // ImageOpt denotes properties of any Image
 type ImageOpt struct {
-	Height int `json:"h,omitempty"`
-	Width  int `json:"w,omitempty"`
-}
-
-type userOpt struct {
-	Height int `json:"h,omitempty"`
-	Width  int `json:"w,omitempty"`
+	Height int `json:"h,omitempty" url:"h"`
+	Width  int `json:"w,omitempty" url:"w"`
 }
 
 // UserService interacts with /users endpoint
@@ -48,14 +42,9 @@ func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) 
 	if "" == username {
 		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
-	var body userOpt
-	if imageOpt != nil {
-		body.Height = imageOpt.Height
-		body.Width = imageOpt.Width
-	}
 	var user *User
 	endpoint := fmt.Sprintf("%v/%v", getEndpoint(users), username)
-	req, err := newRequest(GET, endpoint, body)
+	req, err := newRequest(GET, endpoint, imageOpt, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -64,7 +53,6 @@ func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) 
 	if err != nil {
 		return nil, err
 	}
-	resp.Response.Write(os.Stdout)
 	err = json.Unmarshal(*resp.body, &user)
 	if err != nil {
 		return nil, err

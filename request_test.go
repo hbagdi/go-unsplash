@@ -35,7 +35,7 @@ func TestRequest(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 
-	request, err := newRequest(GET, "", nil)
+	request, err := newRequest(GET, "", nil, nil)
 	assert.NotNil(err)
 	assert.Nil(request)
 	iae, ok := err.(*IllegalArgumentError)

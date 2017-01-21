@@ -77,7 +77,7 @@ func (s *service) do(req *request) (*response, error) {
 // CurrentUser returns details about the authenticated user
 func (u *Unsplash) CurrentUser() (*User, error) {
 	var err error
-	req, err := newRequest(GET, getEndpoint(currentUser), nil)
+	req, err := newRequest(GET, getEndpoint(currentUser), nil, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -97,7 +97,7 @@ func (u *Unsplash) CurrentUser() (*User, error) {
 // Stats gives the total photos,download since the inception of unsplash.com
 func (u *Unsplash) Stats() (*GlobalStats, error) {
 	var err error
-	req, err := newRequest(GET, getEndpoint(globalStats), nil)
+	req, err := newRequest(GET, getEndpoint(globalStats), nil, nil)
 	if err != nil {
 		return nil, err
 	}
