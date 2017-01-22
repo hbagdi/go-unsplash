@@ -69,3 +69,33 @@ func TestAllCollections(T *testing.T) {
 	assert.Equal(true, ok)
 
 }
+
+func TestFeaturedCollections(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	collections, resp, err := unsplash.Collections.Featured(nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(2, resp.NextPage)
+	assert.NotNil(collections)
+	assert.Equal(10, len(*collections))
+}
+
+func TestCuratedCollections(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	collections, resp, err := unsplash.Collections.Curated(nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(2, resp.NextPage)
+	assert.NotNil(collections)
+	assert.Equal(10, len(*collections))
+}

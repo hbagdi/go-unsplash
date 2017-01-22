@@ -144,3 +144,15 @@ func TestUserPhotos(T *testing.T) {
 	assert.NotNil(resp)
 	log.Println(resp)
 }
+func TestUserCollections(T *testing.T) {
+	assert := assert.New(T)
+	//TODO write better tests
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	// hopefully cofounder won't change his username
+	_, resp, err := unsplash.Users.Collections("gopher", nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	log.Println(resp)
+}
