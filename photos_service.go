@@ -30,8 +30,8 @@ import (
 	"strconv"
 )
 
-// PhotoService interacts with /photos endpoint
-type PhotoService service
+// PhotosService interacts with /photos endpoint
+type PhotosService service
 
 // PhotoOpt denotes properties of any Image
 type PhotoOpt struct {
@@ -69,7 +69,7 @@ func processPhotoOpt(photoOpt *PhotoOpt) interface{} {
 }
 
 // Photo return a photo with id
-func (us *PhotoService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
+func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 	if "" == id {
 		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
 	}
@@ -88,7 +88,7 @@ func (us *PhotoService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*us)
+	cli := (service)(*ps)
 	resp, err := cli.do(req)
 	if err != nil {
 		return nil, err
@@ -99,4 +99,41 @@ func (us *PhotoService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 		return nil, err
 	}
 	return &photo, nil
+}
+
+// All returns a list of all photos on unsplash.
+// Note that some fields in photo structs from this result will be missing.
+// Use Photo() method to get all details of the  Photo.
+func (ps *PhotosService) All(listOpt *ListOpt) (*[]Photo, *Response, error) {
+	return ps.getPhotos(listOpt, "photos")
+}
+
+// Curated return a list of all curated photos.
+func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) {
+	return ps.getPhotos(listOpt, "photos/curated")
+}
+
+// getPhotos is a common helper function for Photos and LikedPhotos
+func (ps *PhotosService) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Response, error) {
+	if nil == opt {
+		opt = defaultListOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+	}
+	req, err := newRequest(GET, endpoint, opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	likedPhotos := make([]Photo, 0)
+	err = json.Unmarshal(*resp.body, &likedPhotos)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &likedPhotos, resp, nil
 }
