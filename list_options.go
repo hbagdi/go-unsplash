@@ -38,7 +38,7 @@ var orders = []string{"latest", "oldest", "popular"}
 type ListOpt struct {
 	Page    int    `url:"page"`
 	PerPage int    `url:"per_page"`
-	OrderBy string `url:"order_by"`
+	OrderBy string `url:"order_by"` //TODO doc which endpoints obey this
 }
 
 var defaultListOpt = &ListOpt{

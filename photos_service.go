@@ -113,7 +113,7 @@ func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) 
 	return ps.getPhotos(listOpt, "photos/curated")
 }
 
-// getPhotos is a common helper function for Photos and LikedPhotos
+// getPhotos can be used to query any endpoint which returns an array of Photos
 func (ps *PhotosService) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Response, error) {
 	if nil == opt {
 		opt = defaultListOpt
@@ -130,10 +130,10 @@ func (ps *PhotosService) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Re
 	if err != nil {
 		return nil, nil, err
 	}
-	likedPhotos := make([]Photo, 0)
-	err = json.Unmarshal(*resp.body, &likedPhotos)
+	photos := make([]Photo, 0)
+	err = json.Unmarshal(*resp.body, &photos)
 	if err != nil {
 		return nil, nil, err
 	}
-	return &likedPhotos, resp, nil
+	return &photos, resp, nil
 }

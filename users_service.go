@@ -97,7 +97,7 @@ func (us *UsersService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *R
 	return us.getPhotos(username, opt, "likes")
 }
 
-// getPhotos is a common helper function for Photos and LikedPhotos
+// getPhotos can be used to query any endpoint which returns an array of Photos
 func (us *UsersService) getPhotos(username string, opt *ListOpt, which string) (*[]Photo, *Response, error) {
 	if "" == username {
 		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
@@ -118,10 +118,10 @@ func (us *UsersService) getPhotos(username string, opt *ListOpt, which string) (
 	if err != nil {
 		return nil, nil, err
 	}
-	likedPhotos := make([]Photo, 0)
-	err = json.Unmarshal(*resp.body, &likedPhotos)
+	photos := make([]Photo, 0)
+	err = json.Unmarshal(*resp.body, &photos)
 	if err != nil {
 		return nil, nil, err
 	}
-	return &likedPhotos, resp, nil
+	return &photos, resp, nil
 }
