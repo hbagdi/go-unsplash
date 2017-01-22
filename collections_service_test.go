@@ -22,3 +22,50 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package unsplash
+
+import (
+	"log"
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestAllCollections(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	collections, resp, err := unsplash.Collections.All(nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(2, resp.NextPage)
+	lastPage := resp.LastPage
+	//check collections
+	assert.NotNil(collections)
+	assert.Equal(10, len(*collections))
+
+	opt := *defaultListOpt
+	opt.Page = 2
+	collections, resp, err = unsplash.Collections.All(&opt)
+	assert.Nil(err)
+	log.Println(err)
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(3, resp.NextPage)
+	assert.Equal(1, resp.PrevPage)
+	assert.Equal(lastPage, resp.LastPage)
+	assert.NotNil(collections)
+	assert.Equal(10, len(*collections))
+
+	collections, resp, err = unsplash.Collections.All(&ListOpt{PerPage: -1})
+	assert.Nil(collections)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	_, ok := err.(*InvalidListOpt)
+	assert.Equal(true, ok)
+
+}
