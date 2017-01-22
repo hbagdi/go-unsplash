@@ -70,7 +70,6 @@ func newResponse(r *http.Response) (*Response, error) {
 	}
 	resp := new(Response)
 	resp.httpResponse = r
-	defer r.Body.Close()
 	err := resp.checkForErrors()
 	if err != nil {
 		return nil, err
@@ -78,10 +77,10 @@ func newResponse(r *http.Response) (*Response, error) {
 	resp.populatePagingInfo()
 	resp.populateRateLimits()
 	buf, err := ioutil.ReadAll(r.Body)
-	resp.body = &buf
 	if err != nil {
 		return nil, err
 	}
+	resp.body = &buf
 	return resp, nil
 }
 

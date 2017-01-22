@@ -25,6 +25,8 @@ package unsplash
 
 import (
 	"encoding/json"
+	"io"
+	"io/ioutil"
 	"net/http"
 )
 
@@ -70,10 +72,14 @@ func (s *service) do(req *request) (*Response, error) {
 	//Make the request
 	client := s.httpClient
 	rawResp, err := client.Do(req.Request)
+	if rawResp != nil {
+		defer rawResp.Body.Close()
+	}
 	if err != nil {
 		return nil, err
 	}
 	resp, err := newResponse(rawResp)
+	io.Copy(ioutil.Discard, rawResp.Body)
 	if err != nil {
 		return nil, err
 	}
