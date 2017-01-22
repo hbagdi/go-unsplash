@@ -35,8 +35,8 @@ type service struct {
 // Unsplash wraps the entire Unsplash.com API
 type Unsplash struct {
 	common      *service
-	Users       *UserService
-	Photos      *PhotoService
+	Users       *UsersService
+	Photos      *PhotosService
 	Collections *CollectionsService
 	Search      *SearchService
 	//TODO add rate limit struct
@@ -51,8 +51,8 @@ func New(client *http.Client) *Unsplash {
 	} else {
 		unsplash.common.httpClient = client
 	}
-	unsplash.Users = (*UserService)(unsplash.common)
-	unsplash.Photos = (*PhotoService)(unsplash.common)
+	unsplash.Users = (*UsersService)(unsplash.common)
+	unsplash.Photos = (*PhotosService)(unsplash.common)
 	unsplash.Collections = (*CollectionsService)(unsplash.common)
 	unsplash.Search = (*SearchService)(unsplash.common)
 	return unsplash

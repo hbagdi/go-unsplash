@@ -34,11 +34,11 @@ type ProfileImageOpt struct {
 	Width  int `json:"w,omitempty" url:"w"`
 }
 
-// UserService interacts with /users endpoint
-type UserService service
+// UsersService interacts with /users endpoint
+type UsersService service
 
 // User returns a User with username and optional profile image size ImageOpt
-func (us *UserService) User(username string, imageOpt *ProfileImageOpt) (*User, error) {
+func (us *UsersService) User(username string, imageOpt *ProfileImageOpt) (*User, error) {
 	if "" == username {
 		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
@@ -65,7 +65,7 @@ type portfolioResponse struct {
 }
 
 // Portfolio returns a User with username and optional profile image size ImageOpt
-func (us *UserService) Portfolio(username string) (*URL, error) {
+func (us *UsersService) Portfolio(username string) (*URL, error) {
 	if "" == username {
 		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
@@ -88,17 +88,17 @@ func (us *UserService) Portfolio(username string) (*URL, error) {
 }
 
 // Photos return an array of photos uploaded by the user.
-func (us *UserService) Photos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
+func (us *UsersService) Photos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
 	return us.getPhotos(username, opt, "photos")
 }
 
 // LikedPhotos return an array of liked photos
-func (us *UserService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
+func (us *UsersService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
 	return us.getPhotos(username, opt, "likes")
 }
 
 // getPhotos is a common helper function for Photos and LikedPhotos
-func (us *UserService) getPhotos(username string, opt *ListOpt, which string) (*[]Photo, *Response, error) {
+func (us *UsersService) getPhotos(username string, opt *ListOpt, which string) (*[]Photo, *Response, error) {
 	if "" == username {
 		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
