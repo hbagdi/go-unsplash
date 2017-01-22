@@ -93,7 +93,7 @@ func (us *UsersService) Photos(username string, opt *ListOpt) (*[]Photo, *Respon
 		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
 	s := (service)(*us)
-	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, "photos")
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, getEndpoint(photos))
 	return s.getPhotos(opt, endpoint)
 }
 
@@ -105,4 +105,14 @@ func (us *UsersService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *R
 	s := (service)(*us)
 	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, "likes")
 	return s.getPhotos(opt, endpoint)
+}
+
+// Collections return an array of user's collections.
+func (us *UsersService) Collections(username string, opt *ListOpt) (*[]Collection, *Response, error) {
+	if "" == username {
+		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
+	}
+	s := (service)(*us)
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, getEndpoint(collections))
+	return s.getCollections(opt, endpoint)
 }

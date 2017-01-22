@@ -43,11 +43,3 @@ type Collection struct {
 		Related *URL `json:"related"`
 	} `json:"links"`
 }
-
-// All returns a list of all collections on unsplash.
-// Note that some fields in collection structs from this result will be missing.
-// Use Photo() method to get all details of the  Photo.
-func (cs *CollectionsService) All(opt *ListOpt) (*[]Collection, *Response, error) {
-	s := (service)(*cs)
-	return s.getCollections(opt, "collections")
-}

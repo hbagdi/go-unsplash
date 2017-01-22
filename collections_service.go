@@ -25,3 +25,27 @@ package unsplash
 
 // CollectionsService interacts with /users endpoint
 type CollectionsService service
+
+// All returns a list of all collections on unsplash.
+// Note that some fields in collection structs from this result will be missing.
+// Use Collection() method to get all details of the Collection.
+func (cs *CollectionsService) All(opt *ListOpt) (*[]Collection, *Response, error) {
+	s := (service)(*cs)
+	return s.getCollections(opt, getEndpoint(collections))
+}
+
+// Featured returns a list of featured collections on unsplash.
+// Note that some fields in collection structs from this result will be missing.
+// Use Collection() method to get all details of the Collection.
+func (cs *CollectionsService) Featured(opt *ListOpt) (*[]Collection, *Response, error) {
+	s := (service)(*cs)
+	return s.getCollections(opt, getEndpoint(collections)+"/featured")
+}
+
+// Curated returns a list of curated collections on unsplash.
+// Note that some fields in collection structs from this result will be missing.
+// Use Collection() method to get all details of the Collection.
+func (cs *CollectionsService) Curated(opt *ListOpt) (*[]Collection, *Response, error) {
+	s := (service)(*cs)
+	return s.getCollections(opt, getEndpoint(collections)+"/curated")
+}

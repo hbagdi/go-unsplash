@@ -106,11 +106,11 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 // Use Photo() method to get all details of the  Photo.
 func (ps *PhotosService) All(listOpt *ListOpt) (*[]Photo, *Response, error) {
 	s := (service)(*ps)
-	return s.getPhotos(listOpt, "photos")
+	return s.getPhotos(listOpt, getEndpoint(photos))
 }
 
 // Curated return a list of all curated photos.
 func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) {
 	s := (service)(*ps)
-	return s.getPhotos(listOpt, "photos/curated")
+	return s.getPhotos(listOpt, getEndpoint(photos)+"/curated")
 }
