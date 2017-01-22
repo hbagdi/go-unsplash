@@ -23,7 +23,10 @@
 
 package unsplash
 
-import "time"
+import (
+	"bytes"
+	"time"
+)
 
 //ExifData for an image
 type ExifData struct {
@@ -53,6 +56,7 @@ type Photo struct {
 		Regular *URL `json:"regular"`
 		Small   *URL `json:"small"`
 		Thumb   *URL `json:"thumb"`
+		Custom  *URL `json:"custom"`
 	} `json:"urls"`
 	Links *struct {
 		Self             *URL `json:"self"`
@@ -61,4 +65,12 @@ type Photo struct {
 		DownloadLocation *URL `json:"download_location"`
 	} `json:"links"`
 	Photographer *User `json:"user"`
+}
+
+func (p *Photo) String() string {
+	var buf bytes.Buffer
+	buf.WriteString("\nID :" + *p.ID + "\n")
+	buf.WriteString("Link: " + p.Links.HTML.String() + "\n")
+	buf.WriteString("Photographer: " + *p.Photographer.Name + "\n")
+	return buf.String()
 }

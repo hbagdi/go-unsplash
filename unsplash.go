@@ -36,6 +36,7 @@ type service struct {
 type Unsplash struct {
 	common *service
 	Users  *UserService
+	Photos *PhotoService
 	//TODO add rate limit struct
 }
 
@@ -49,6 +50,7 @@ func New(client *http.Client) *Unsplash {
 		unsplash.common.httpClient = client
 	}
 	unsplash.Users = (*UserService)(unsplash.common)
+	unsplash.Photos = (*PhotoService)(unsplash.common)
 	return unsplash
 }
 

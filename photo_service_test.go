@@ -31,62 +31,65 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestUserProfile(T *testing.T) {
-	assert := assert.New(T)
+func TestPhotoOpt(T *testing.T) {
 	log.SetOutput(os.Stdout)
-	unsplash := setup()
-	profileImageOpt := &ProfileImageOpt{Height: 120, Width: 400}
-	user, err := unsplash.Users.User("hbagdi", profileImageOpt)
-	assert.Nil(err)
-	assert.NotNil(user)
-	log.Println(user)
-	pi := user.ProfileImage
-	assert.NotNil(pi)
-	assert.NotNil(pi.Medium)
-	assert.NotNil(pi.Custom)
-	log.Println(user.ProfileImage.Custom.String())
+	assert := assert.New(T)
+	var opt, opt2 PhotoOpt
+	assert.Equal(false, opt.Valid())
 
-	user, err = unsplash.Users.User("hbagdi", nil)
-	assert.Nil(err)
-	assert.NotNil(user)
-	log.Println(user)
-	pi = user.ProfileImage
-	assert.NotNil(pi)
-	assert.Nil(pi.Custom)
-
-	user, err = unsplash.Users.User("", nil)
-	assert.Nil(user)
-	assert.NotNil(err)
-	iae, ok := err.(*IllegalArgumentError)
-	assert.NotNil(iae)
+	opt.Height = -42
+	assert.Equal(false, opt.Valid())
+	opt.Crop = true
+	assert.Equal(false, opt.Valid())
+	opt.Height = 0
+	assert.Equal(false, opt.Valid())
+	opt.Height = 100
+	opt.Width = 100
+	assert.Equal(true, opt.Valid())
+	opt.CropX = 3
+	opt.CropY = 14
+	assert.Equal(true, opt.Valid())
+	opt.Crop = true
+	v := processPhotoOpt(&opt)
+	opt0, ok := v.(rect)
 	assert.Equal(true, ok)
-
-	user, err = unsplash.Users.User(" batmanIsNotAuser", nil)
-	assert.Nil(user)
-	assert.NotNil(err)
-	nfe, ok := err.(*NotFoundError)
-	assert.NotNil(nfe)
+	assert.Equal("3,14,100,100", opt0.Rect)
+	opt2.Width = 42
+	opt2.Height = 42
+	v = processPhotoOpt(&opt2)
+	_, ok = v.(*PhotoOpt)
 	assert.Equal(true, ok)
 }
 
-func TestUserPortfolio(T *testing.T) {
+func TestSimplePhoto(T *testing.T) {
+	log.SetOutput(os.Stdout)
 	assert := assert.New(T)
+	assert.Nil(nil)
 	log.SetOutput(os.Stdout)
 	unsplash := setup()
-	url, err := unsplash.Users.Portfolio("hbagdi")
-	assert.Nil(err)
-	assert.NotNil(url)
-	log.Println("URL is : ", url.String())
-	url, err = unsplash.Users.Portfolio("gopher")
-	assert.Nil(err)
-	assert.NotNil(url)
-	assert.Equal(url.String(), "https://wikipedia.org/wiki/Gopher")
-	log.Println("URL is : ", url.String())
-
-	url, err = unsplash.Users.Portfolio("")
-	assert.Nil(url)
+	photo, err := unsplash.Photos.Photo("", nil)
 	assert.NotNil(err)
-	iae, ok := err.(*IllegalArgumentError)
-	assert.NotNil(iae)
-	assert.Equal(true, ok)
+	assert.Nil(photo)
+
+	photo, err = unsplash.Photos.Photo("random", nil)
+	assert.NotNil(photo)
+	assert.Nil(err)
+	log.Println(photo)
+}
+
+func TestPhotoWithOpt(T *testing.T) {
+	log.SetOutput(os.Stdout)
+	assert := assert.New(T)
+	var opt PhotoOpt
+	unsplash := setup()
+	photo, err := unsplash.Photos.Photo("random", &opt)
+	assert.NotNil(err)
+	assert.Nil(photo)
+	log.Println(photo)
+	opt.Height = 400
+	opt.Width = 600
+	photo, err = unsplash.Photos.Photo("random", &opt)
+	assert.NotNil(photo)
+	assert.Nil(err)
+	log.Println(photo)
 }

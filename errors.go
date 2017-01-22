@@ -61,3 +61,12 @@ type NotFoundError struct {
 func (e NotFoundError) Error() string {
 	return e.ErrString
 }
+
+// InvalidPhotoOpt occurs due to a unmarshalling error
+type InvalidPhotoOpt struct {
+	ErrString string
+}
+
+func (e InvalidPhotoOpt) Error() string {
+	return e.ErrString
+}

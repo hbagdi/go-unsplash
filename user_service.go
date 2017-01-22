@@ -28,8 +28,8 @@ import (
 	"fmt"
 )
 
-// ImageOpt denotes properties of any Image
-type ImageOpt struct {
+// ProfileImageOpt denotes properties of any Image
+type ProfileImageOpt struct {
 	Height int `json:"h,omitempty" url:"h"`
 	Width  int `json:"w,omitempty" url:"w"`
 }
@@ -38,11 +38,10 @@ type ImageOpt struct {
 type UserService service
 
 // User returns a User with username and optional profile image size ImageOpt
-func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) {
+func (us *UserService) User(username string, imageOpt *ProfileImageOpt) (*User, error) {
 	if "" == username {
 		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
-	var user *User
 	endpoint := fmt.Sprintf("%v/%v", getEndpoint(users), username)
 	req, err := newRequest(GET, endpoint, imageOpt, nil)
 	if err != nil {
@@ -53,11 +52,12 @@ func (us *UserService) User(username string, imageOpt *ImageOpt) (*User, error) 
 	if err != nil {
 		return nil, err
 	}
+	var user User
 	err = json.Unmarshal(*resp.body, &user)
 	if err != nil {
 		return nil, err
 	}
-	return user, nil
+	return &user, nil
 }
 
 type portfolioResponse struct {
@@ -69,7 +69,6 @@ func (us *UserService) Portfolio(username string) (*URL, error) {
 	if "" == username {
 		return nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
-	var portfolio portfolioResponse
 	endpoint := fmt.Sprintf("%v/%v/portfolio", getEndpoint(users), username)
 	req, err := newRequest(GET, endpoint, nil, nil)
 	if err != nil {
@@ -80,6 +79,7 @@ func (us *UserService) Portfolio(username string) (*URL, error) {
 	if err != nil {
 		return nil, err
 	}
+	var portfolio portfolioResponse
 	err = json.Unmarshal(*resp.body, &portfolio)
 	if err != nil {
 		return nil, err
