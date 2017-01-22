@@ -105,35 +105,12 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 // Note that some fields in photo structs from this result will be missing.
 // Use Photo() method to get all details of the  Photo.
 func (ps *PhotosService) All(listOpt *ListOpt) (*[]Photo, *Response, error) {
-	return ps.getPhotos(listOpt, "photos")
+	s := (service)(*ps)
+	return s.getPhotos(listOpt, "photos")
 }
 
 // Curated return a list of all curated photos.
 func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) {
-	return ps.getPhotos(listOpt, "photos/curated")
-}
-
-// getPhotos can be used to query any endpoint which returns an array of Photos
-func (ps *PhotosService) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Response, error) {
-	if nil == opt {
-		opt = defaultListOpt
-	}
-	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
-	}
-	req, err := newRequest(GET, endpoint, opt, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
-	if err != nil {
-		return nil, nil, err
-	}
-	photos := make([]Photo, 0)
-	err = json.Unmarshal(*resp.body, &photos)
-	if err != nil {
-		return nil, nil, err
-	}
-	return &photos, resp, nil
+	s := (service)(*ps)
+	return s.getPhotos(listOpt, "photos/curated")
 }

@@ -89,39 +89,20 @@ func (us *UsersService) Portfolio(username string) (*URL, error) {
 
 // Photos return an array of photos uploaded by the user.
 func (us *UsersService) Photos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
-	return us.getPhotos(username, opt, "photos")
+	if "" == username {
+		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
+	}
+	s := (service)(*us)
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, "photos")
+	return s.getPhotos(opt, endpoint)
 }
 
 // LikedPhotos return an array of liked photos
 func (us *UsersService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
-	return us.getPhotos(username, opt, "likes")
-}
-
-// getPhotos can be used to query any endpoint which returns an array of Photos
-func (us *UsersService) getPhotos(username string, opt *ListOpt, which string) (*[]Photo, *Response, error) {
 	if "" == username {
 		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
-	if nil == opt {
-		opt = defaultListOpt
-	}
-	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
-	}
-	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, which)
-	req, err := newRequest(GET, endpoint, opt, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-	cli := (service)(*us)
-	resp, err := cli.do(req)
-	if err != nil {
-		return nil, nil, err
-	}
-	photos := make([]Photo, 0)
-	err = json.Unmarshal(*resp.body, &photos)
-	if err != nil {
-		return nil, nil, err
-	}
-	return &photos, resp, nil
+	s := (service)(*us)
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, "likes")
+	return s.getPhotos(opt, endpoint)
 }

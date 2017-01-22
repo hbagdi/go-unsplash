@@ -23,8 +23,6 @@
 
 package unsplash
 
-import "encoding/json"
-
 // Collection holds a collection on unsplash.com
 type Collection struct {
 	ID           *int    `json:"id"`
@@ -50,31 +48,6 @@ type Collection struct {
 // Note that some fields in collection structs from this result will be missing.
 // Use Photo() method to get all details of the  Photo.
 func (cs *CollectionsService) All(opt *ListOpt) (*[]Collection, *Response, error) {
-	return cs.getCollections(opt, "collections")
-}
-
-// getCollections can be used to query any endpoint which
-//returns an array of Collections
-func (cs *CollectionsService) getCollections(opt *ListOpt, endpoint string) (*[]Collection, *Response, error) {
-	if nil == opt {
-		opt = defaultListOpt
-	}
-	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
-	}
-	req, err := newRequest(GET, endpoint, opt, nil)
-	if err != nil {
-		return nil, nil, err
-	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
-	if err != nil {
-		return nil, nil, err
-	}
-	collections := make([]Collection, 0)
-	err = json.Unmarshal(*resp.body, &collections)
-	if err != nil {
-		return nil, nil, err
-	}
-	return &collections, resp, nil
+	s := (service)(*cs)
+	return s.getCollections(opt, "collections")
 }
