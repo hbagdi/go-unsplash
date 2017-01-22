@@ -30,26 +30,37 @@ import (
 
 //ExifData for an image
 type ExifData struct {
-	Make         string `json:"make"`
-	Model        string `json:"model"`
-	ExposureTime string `json:"exposure_time"`
-	Aperture     string `json:"aperture"`
-	FocalLength  string `json:"focal_length"`
-	Iso          int    `json:"iso"`
+	Make         *string `json:"make"`
+	Model        *string `json:"model"`
+	ExposureTime *string `json:"exposure_time"`
+	Aperture     *string `json:"aperture"`
+	FocalLength  *string `json:"focal_length"`
+	Iso          *int    `json:"iso"`
 }
 
 // Photo represents a photo on unsplash.com
 type Photo struct {
-	ID                     *string       `json:"id"`
-	CreatedAt              *time.Time    `json:"created_at"`
-	Width                  int           `json:"width"`
-	Height                 int           `json:"height"`
-	Color                  *string       `json:"color"`
-	Downloads              int           `json:"downloads"`
-	Likes                  int           `json:"likes"`
-	LikedByUser            bool          `json:"liked_by_user"`
-	Exif                   *ExifData     `json:"exif"`
-	CurrentUserCollections []interface{} `json:"current_user_collections"`
+	ID           *string    `json:"id"`
+	CreatedAt    *time.Time `json:"created_at"`
+	Width        *int       `json:"width"`
+	Height       *int       `json:"height"`
+	Color        *string    `json:"color"`
+	Downloads    *int       `json:"downloads"`
+	Likes        *int       `json:"likes"`
+	LikedByUser  *bool      `json:"liked_by_user"`
+	Exif         *ExifData  `json:"exif"`
+	Photographer *User      `json:"user"`
+	Location     *struct {
+		Title    *string `json:"title"`
+		Name     *string `json:"name"`
+		City     *string `json:"city"`
+		Country  *string `json:"country"`
+		Position *struct {
+			Latitude  *float64 `json:"latitude"`
+			Longitude *float64 `json:"longitude"`
+		} `json:"position"`
+	} `json:"location"`
+	CurrentUserCollections *[]interface{} `json:"current_user_collections"`
 	Urls                   *struct {
 		Raw     *URL `json:"raw"`
 		Full    *URL `json:"full"`
@@ -64,7 +75,6 @@ type Photo struct {
 		Download         *URL `json:"download"`
 		DownloadLocation *URL `json:"download_location"`
 	} `json:"links"`
-	Photographer *User `json:"user"`
 }
 
 func (p *Photo) String() string {

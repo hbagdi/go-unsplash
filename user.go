@@ -47,7 +47,7 @@ type UserLinks struct {
 // UserBadge contains information about badge for a user
 type UserBadge struct {
 	Title   *URL    `json:"title,omitempty"`
-	Primary bool    `json:"primary,omitempty"`
+	Primary *bool   `json:"primary,omitempty"`
 	Slug    *string `json:"slug,omitempty"`
 	Link    *URL    `json:"link,omitempty"`
 }
@@ -59,19 +59,19 @@ type User struct {
 	Username            *string       `json:"username"`
 	Name                *string       `json:"name"`
 	FirstName           *string       `json:"first_name"`
-	CompletedOnboarding bool          `json:"completed_onboarding"`
+	CompletedOnboarding *bool         `json:"completed_onboarding"`
 	LastName            *string       `json:"last_name,omitempty"`
 	PortfolioURL        *URL          `json:"portfolio_url"`
 	Bio                 *string       `json:"bio"`
 	Location            *string       `json:"location"`
-	TotalLikes          int           `json:"total_likes"`
-	TotalPhotos         int           `json:"total_photos"`
-	TotalCollections    int           `json:"total_collections"`
-	FollowedByUser      bool          `json:"followed_by_user"`
-	NumericID           int           `json:"numeric_id"`
-	FollowersCount      int           `json:"followers_count"`
-	FollowingCount      int           `json:"following_count"`
-	Downloads           int           `json:"downloads"`
+	TotalLikes          *int          `json:"total_likes"`
+	TotalPhotos         *int          `json:"total_photos"`
+	TotalCollections    *int          `json:"total_collections"`
+	FollowedByUser      *bool         `json:"followed_by_user"`
+	NumericID           *int          `json:"numeric_id"`
+	FollowersCount      *int          `json:"followers_count"`
+	FollowingCount      *int          `json:"following_count"`
+	Downloads           *int          `json:"downloads"`
 	ProfileImage        *ProfileImage `json:"profile_image"`
 	Badge               *UserBadge    `json:"badge"`
 	Links               *UserLinks    `json:"links,omitempty"`

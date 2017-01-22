@@ -24,6 +24,7 @@
 package unsplash
 
 import (
+	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -33,7 +34,7 @@ import (
 
 func TestUserProfile(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	profileImageOpt := &ProfileImageOpt{Height: 120, Width: 400}
 	user, err := unsplash.Users.User("hbagdi", profileImageOpt)

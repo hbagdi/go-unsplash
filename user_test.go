@@ -25,8 +25,8 @@ package unsplash
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -71,7 +71,7 @@ var userJSONString = `{
 
 func TestUser(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert.Equal(42, 42)
 	var user User
 	bytes := []byte(userJSONString)

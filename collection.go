@@ -25,14 +25,14 @@ package unsplash
 
 // Collection holds a collection on unsplash.com
 type Collection struct {
-	ID           int     `json:"id"`
+	ID           *int    `json:"id"`
 	Title        *string `json:"title"`
 	Description  *string `json:"description"`
 	PublishedAt  *string `json:"published_at"`
-	Curated      bool    `json:"curated"`
-	Featured     bool    `json:"featured"`
-	TotalPhotos  int     `json:"total_photos"`
-	Private      bool    `json:"private"`
+	Curated      *bool   `json:"curated"`
+	Featured     *bool   `json:"featured"`
+	TotalPhotos  *int    `json:"total_photos"`
+	Private      *bool   `json:"private"`
 	ShareKey     *string `json:"share_key"`
 	CoverPhoto   *Photo  `json:"cover_photo"`
 	Photographer *User   `json:"user"`

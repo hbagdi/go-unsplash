@@ -24,6 +24,8 @@
 package unsplash
 
 import (
+	"encoding/json"
+	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -62,7 +64,7 @@ func TestPhotoOpt(T *testing.T) {
 }
 
 func TestSimplePhoto(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)
 	log.SetOutput(os.Stdout)
@@ -75,10 +77,14 @@ func TestSimplePhoto(T *testing.T) {
 	assert.NotNil(photo)
 	assert.Nil(err)
 	log.Println(photo)
+
+	json, err := json.Marshal(photo)
+	assert.Nil(err)
+	log.Println(string(json))
 }
 
 func TestPhotoWithOpt(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	var opt PhotoOpt
 	unsplash := setup()
@@ -96,7 +102,7 @@ func TestPhotoWithOpt(T *testing.T) {
 
 func TestAllPhotos(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	photos, resp, err := unsplash.Photos.All(nil)
 	assert.Nil(err)
@@ -135,7 +141,7 @@ func TestAllPhotos(T *testing.T) {
 func TestCuratedPhotos(T *testing.T) {
 	assert := assert.New(T)
 	//TODO write better tests
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	_, resp, err := unsplash.Photos.Curated(nil)
 	assert.Nil(err)
