@@ -87,8 +87,18 @@ func (us *UserService) Portfolio(username string) (*URL, error) {
 	return portfolio.URL, nil
 }
 
+// Photos return an array of photos uploaded by the user.
+func (us *UserService) Photos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
+	return us.getPhotos(username, opt, "photos")
+}
+
 // LikedPhotos return an array of liked photos
 func (us *UserService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
+	return us.getPhotos(username, opt, "likes")
+}
+
+// getPhotos is a common helper function for Photos and LikedPhotos
+func (us *UserService) getPhotos(username string, opt *ListOpt, which string) (*[]Photo, *Response, error) {
 	if "" == username {
 		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
 	}
@@ -98,7 +108,7 @@ func (us *UserService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Re
 	if !opt.Valid() {
 		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
 	}
-	endpoint := fmt.Sprintf("%v/%v/likes", getEndpoint(users), username)
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, which)
 	req, err := newRequest(GET, endpoint, opt, nil)
 	if err != nil {
 		return nil, nil, err
