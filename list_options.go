@@ -23,59 +23,39 @@
 
 package unsplash
 
-//The following are implementing error interface
+type order string
 
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
+//These constants should be used for OrderBy searches/results.
+const (
+	Latest  = "latest"
+	Oldest  = "oldest"
+	Popular = "popular"
+)
+
+var orders = []string{"latest", "oldest", "popular"}
+
+// ListOpt should be used for pagination over results
+type ListOpt struct {
+	Page    int    `url:"page"`
+	PerPage int    `url:"per_page"`
+	OrderBy string `url:"order_by"`
 }
 
-func (e IllegalArgumentError) Error() string {
-	return e.ErrString
+var defaultListOpt = &ListOpt{
+	Page:    1,
+	PerPage: 10,
+	OrderBy: Popular,
 }
 
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
-
-func (e JSONUnmarshallingError) Error() string {
-	return e.ErrString
-}
-
-// AuthorizationError occurs for an Unauthorized request
-type AuthorizationError struct {
-	ErrString string
-}
-
-func (e AuthorizationError) Error() string {
-	return e.ErrString
-}
-
-// NotFoundError occurs when the resource queried returns a 404.
-type NotFoundError struct {
-	ErrString string
-}
-
-func (e NotFoundError) Error() string {
-	return e.ErrString
-}
-
-// InvalidPhotoOpt occurs when PhotoOpt.Valid() fails.
-type InvalidPhotoOpt struct {
-	ErrString string
-}
-
-func (e InvalidPhotoOpt) Error() string {
-	return e.ErrString
-}
-
-// InvalidListOpt occurs when ListOpt.Valid() fails.
-type InvalidListOpt struct {
-	ErrString string
-}
-
-func (e InvalidListOpt) Error() string {
-	return e.ErrString
+// Valid validates the values in a ListOpt
+func (opt *ListOpt) Valid() bool {
+	if opt.Page <= 0 || opt.PerPage <= 0 {
+		return false
+	}
+	for _, val := range orders {
+		if val == opt.OrderBy {
+			return true
+		}
+	}
+	return false
 }

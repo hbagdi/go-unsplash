@@ -90,3 +90,43 @@ func TestUserPortfolio(T *testing.T) {
 	assert.NotNil(iae)
 	assert.Equal(true, ok)
 }
+
+func TestLikedPhotos(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	// hopefully cofounder won't change his username
+	photos, resp, err := unsplash.Users.LikedPhotos("lukechesser", nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(2, resp.NextPage)
+	lastPage := resp.LastPage
+	//check photos
+	assert.NotNil(photos)
+	assert.Equal(10, len(*photos))
+
+	opt := *defaultListOpt
+	opt.Page = 2
+	opt.PerPage = 10
+	photos, resp, err = unsplash.Users.LikedPhotos("lukechesser", &opt)
+	assert.NotNil(resp)
+	log.Println(resp)
+	assert.Equal(true, resp.HasNextPage)
+	assert.Equal(3, resp.NextPage)
+	assert.Equal(1, resp.PrevPage)
+	assert.Equal(lastPage, resp.LastPage)
+	assert.NotNil(photos)
+	assert.Equal(10, len(*photos))
+	assert.Nil(err)
+
+	photos, resp, err = unsplash.Users.LikedPhotos("lukechesser", &ListOpt{PerPage: -1})
+	assert.Nil(photos)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	_, ok := err.(*InvalidListOpt)
+	assert.Equal(true, ok)
+
+}

@@ -54,7 +54,7 @@ func New(client *http.Client) *Unsplash {
 	return unsplash
 }
 
-func (s *service) do(req *request) (*response, error) {
+func (s *service) do(req *request) (*Response, error) {
 	var err error
 	//TODO should this be exported?
 	if req == nil {

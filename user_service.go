@@ -86,3 +86,32 @@ func (us *UserService) Portfolio(username string) (*URL, error) {
 	}
 	return portfolio.URL, nil
 }
+
+// LikedPhotos return an array of liked photos
+func (us *UserService) LikedPhotos(username string, opt *ListOpt) (*[]Photo, *Response, error) {
+	if "" == username {
+		return nil, nil, &IllegalArgumentError{ErrString: "Username cannot be null"}
+	}
+	if nil == opt {
+		opt = defaultListOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+	}
+	endpoint := fmt.Sprintf("%v/%v/likes", getEndpoint(users), username)
+	req, err := newRequest(GET, endpoint, opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*us)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	likedPhotos := make([]Photo, 0)
+	err = json.Unmarshal(*resp.body, &likedPhotos)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &likedPhotos, resp, nil
+}

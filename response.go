@@ -26,21 +26,28 @@ package unsplash
 import (
 	"io/ioutil"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 )
 
-type response struct {
-	Response                                *http.Response
-	MorePage                                bool
+// Response has pagination information whenever applicable
+type Response struct {
+	httpResponse                            *http.Response
+	HasNextPage                             bool
 	body                                    *[]byte
-	FirstPage, PrevPage, NextPage, LastPage URL
+	FirstPage, LastPage, NextPage, PrevPage int
 	err                                     error
+	RateLimit                               int
+	RateLimitRemaining                      int
 }
 
-func (r *response) Errored() error {
+//
+func (r *Response) errored() error {
 	return r.err
 }
-func (r *response) CheckForErrors() error {
-	switch r.Response.StatusCode {
+func (r *Response) checkForErrors() error {
+	switch r.httpResponse.StatusCode {
 
 	case 401:
 		return &AuthorizationError{ErrString: "401: Unauthorized request"}
@@ -56,23 +63,71 @@ func (r *response) CheckForErrors() error {
 	return nil
 }
 
-func newResponse(r *http.Response) (*response, error) {
+func newResponse(r *http.Response) (*Response, error) {
 	if nil == r {
 		return nil,
 			&IllegalArgumentError{ErrString: "*http.Response cannot be null"}
 	}
-	resp := new(response)
-	resp.Response = r
-
+	resp := new(Response)
+	resp.httpResponse = r
 	defer r.Body.Close()
-	err := resp.CheckForErrors()
+	err := resp.checkForErrors()
 	if err != nil {
 		return nil, err
 	}
+	resp.populatePagingInfo()
+	resp.populateRateLimits()
 	buf, err := ioutil.ReadAll(r.Body)
 	resp.body = &buf
 	if err != nil {
 		return nil, err
 	}
 	return resp, nil
+}
+
+func (r *Response) populateRateLimits() {
+	maxLimit := r.httpResponse.Header["X-Ratelimit-Limit"]
+	r.RateLimit, _ = strconv.Atoi(maxLimit[0])
+	rateRemaining := r.httpResponse.Header["X-Ratelimit-Remaining"]
+	r.RateLimitRemaining, _ = strconv.Atoi(rateRemaining[0])
+}
+
+func (r *Response) populatePagingInfo() {
+	rawLinks, ok := r.httpResponse.Header["Link"]
+	if !ok || 0 == len(rawLinks) {
+		return
+	}
+
+	links := strings.Split(rawLinks[0], ",") //TODO why is Headers returning []string?
+
+	for _, link := range links {
+		parts := strings.Split(link, ";")
+		if !strings.Contains(parts[0], "page") && !strings.Contains(parts[1], "rel=") {
+			continue
+		}
+		href := parts[0]
+		//strip out '<' and '>'
+		href = href[1 : len(href)-1]
+		url, _ := url.Parse(href)
+
+		pageString := url.Query().Get("page")
+		pageNumber, err := strconv.Atoi(string(pageString))
+		if err != nil {
+			continue
+		}
+
+		switch strings.TrimSpace(parts[1]) {
+		case `rel="first"`:
+			r.FirstPage = pageNumber
+		case `rel="last"`:
+			r.LastPage = pageNumber
+		case `rel="next"`:
+			r.NextPage = pageNumber
+			r.HasNextPage = true
+		case `rel="prev"`:
+			r.PrevPage = pageNumber
+		default:
+			continue
+		}
+	}
 }

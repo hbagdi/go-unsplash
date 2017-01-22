@@ -59,4 +59,16 @@ func TestErrors(T *testing.T) {
 	assert.NotNil(nfe)
 	log.Println(nfe)
 	assert.Equal(true, ok)
+
+	err = &InvalidPhotoOpt{ErrString: "."}
+	ipo, ok := err.(*InvalidPhotoOpt)
+	assert.NotNil(ipo)
+	log.Println(ipo)
+	assert.Equal(true, ok)
+
+	err = &InvalidListOpt{ErrString: "."}
+	ilo, ok := err.(*InvalidListOpt)
+	assert.NotNil(ilo)
+	log.Println(ilo)
+	assert.Equal(true, ok)
 }

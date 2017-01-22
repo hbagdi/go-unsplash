@@ -23,59 +23,23 @@
 
 package unsplash
 
-//The following are implementing error interface
+import (
+	"io/ioutil"
+	"log"
+	"testing"
 
-// IllegalArgumentError occurs when the argument to a function are
-// messed up
-type IllegalArgumentError struct {
-	ErrString string
-}
+	"github.com/stretchr/testify/assert"
+)
 
-func (e IllegalArgumentError) Error() string {
-	return e.ErrString
-}
+func TestListOpt(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
 
-// JSONUnmarshallingError occurs due to a unmarshalling error
-type JSONUnmarshallingError struct {
-	ErrString string
-}
+	var opt ListOpt
+	assert.Equal(false, opt.Valid())
+	opt = *defaultListOpt
+	assert.Equal(true, opt.Valid())
 
-func (e JSONUnmarshallingError) Error() string {
-	return e.ErrString
-}
-
-// AuthorizationError occurs for an Unauthorized request
-type AuthorizationError struct {
-	ErrString string
-}
-
-func (e AuthorizationError) Error() string {
-	return e.ErrString
-}
-
-// NotFoundError occurs when the resource queried returns a 404.
-type NotFoundError struct {
-	ErrString string
-}
-
-func (e NotFoundError) Error() string {
-	return e.ErrString
-}
-
-// InvalidPhotoOpt occurs when PhotoOpt.Valid() fails.
-type InvalidPhotoOpt struct {
-	ErrString string
-}
-
-func (e InvalidPhotoOpt) Error() string {
-	return e.ErrString
-}
-
-// InvalidListOpt occurs when ListOpt.Valid() fails.
-type InvalidListOpt struct {
-	ErrString string
-}
-
-func (e InvalidListOpt) Error() string {
-	return e.ErrString
+	opt.OrderBy = "Duck"
+	assert.Equal(false, opt.Valid())
 }
