@@ -106,4 +106,8 @@ func TestUnsplash(T *testing.T) {
 	stats, err = unsplash.Stats()
 	assert.Nil(stats)
 	assert.NotNil(err)
+
+	var s service
+	_, err = s.do(nil)
+	assert.NotNil(err)
 }

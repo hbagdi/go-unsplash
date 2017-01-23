@@ -131,6 +131,10 @@ func TestLikedPhotos(T *testing.T) {
 	_, ok := err.(*InvalidListOpt)
 	assert.Equal(true, ok)
 
+	photos, resp, err = unsplash.Users.LikedPhotos("", nil)
+	assert.NotNil(err)
+	assert.Nil(photos)
+	assert.Nil(resp)
 }
 func TestUserPhotos(T *testing.T) {
 	assert := assert.New(T)
@@ -143,6 +147,12 @@ func TestUserPhotos(T *testing.T) {
 	//check pagination
 	assert.NotNil(resp)
 	log.Println(resp)
+
+	photos, resp, err := unsplash.Users.Photos("", nil)
+	assert.NotNil(err)
+	assert.Nil(photos)
+	assert.Nil(resp)
+
 }
 func TestUserCollections(T *testing.T) {
 	assert := assert.New(T)
@@ -155,4 +165,9 @@ func TestUserCollections(T *testing.T) {
 	//check pagination
 	assert.NotNil(resp)
 	log.Println(resp)
+
+	photos, resp, err := unsplash.Users.Collections("", nil)
+	assert.NotNil(err)
+	assert.Nil(photos)
+	assert.Nil(resp)
 }

@@ -27,6 +27,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -39,6 +40,7 @@ var (
 		"{\"URL\":\"https://en.wikipedia.org/wiki/42_(number)\"}",
 	}
 	badJSON = "{\"Anything that can go wrong, will go wrong.\"}"
+	badURL  = "{\"URL\":\"httpps://en.shttps:////\"}"
 )
 
 type URLWrapper struct {
@@ -61,11 +63,20 @@ func TestURL(T *testing.T) {
 		assert.Equal(string(marshalBytes), value)
 	}
 
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(os.Stdout)
 	var url URLWrapper
 	bytes := []byte(badJSON)
 	err := json.Unmarshal(bytes, &url)
 	assert.NotNil(err)
 	log.Println(err)
 	assert.Nil(url.OURL)
+
+	var url2 URL
+	err = url2.UnmarshalJSON([]byte(badURL))
+	assert.NotNil(err)
+
+	var url3 URL
+	err = url3.UnmarshalJSON([]byte(badJSON))
+	assert.NotNil(err)
+
 }

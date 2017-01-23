@@ -99,3 +99,36 @@ func TestCuratedCollections(T *testing.T) {
 	assert.NotNil(collections)
 	assert.Equal(10, len(*collections))
 }
+
+func TestRelatedCollections(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	collections, resp, err := unsplash.Collections.Related("296", nil)
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	assert.NotNil(collections)
+	log.Println(resp)
+
+	collections, resp, err = unsplash.Collections.Related("", nil)
+	assert.NotNil(err)
+	assert.Nil(collections)
+	assert.Nil(resp)
+}
+func TetstCollection(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	collection, resp, err := unsplash.Collections.Collection("910")
+	assert.Nil(err)
+	//check pagination
+	assert.NotNil(resp)
+	assert.NotNil(collection)
+	log.Println(resp)
+
+	collection, resp, err = unsplash.Collections.Collection("")
+	assert.NotNil(err)
+	assert.Nil(collection)
+	assert.Nil(resp)
+}

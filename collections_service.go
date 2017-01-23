@@ -23,6 +23,11 @@
 
 package unsplash
 
+import (
+	"encoding/json"
+	"fmt"
+)
+
 // CollectionsService interacts with /users endpoint
 type CollectionsService service
 
@@ -48,4 +53,37 @@ func (cs *CollectionsService) Featured(opt *ListOpt) (*[]Collection, *Response, 
 func (cs *CollectionsService) Curated(opt *ListOpt) (*[]Collection, *Response, error) {
 	s := (service)(*cs)
 	return s.getCollections(opt, getEndpoint(collections)+"/curated")
+}
+
+// Related returns a list of collections related to collections with id.
+func (cs *CollectionsService) Related(id string, opt *ListOpt) (*[]Collection, *Response, error) {
+	if "" == id {
+		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be null"}
+	}
+	s := (service)(*cs)
+	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(collections), id, "related")
+	return s.getCollections(opt, endpoint)
+}
+
+// Collection returns a collection with id.
+func (cs *CollectionsService) Collection(id string) (*Collection, *Response, error) {
+	if "" == id {
+		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be null"}
+	}
+	endpoint := fmt.Sprintf("%v/%v", getEndpoint(collections), id)
+	req, err := newRequest(GET, endpoint, nil, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var collection Collection
+	err = json.Unmarshal(*resp.body, &collection)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &collection, resp, nil
 }
