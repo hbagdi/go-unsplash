@@ -60,7 +60,7 @@ func (us *UsersService) User(username string, imageOpt *ProfileImageOpt) (*User,
 	return &user, nil
 }
 
-type portfolioResponse struct {
+type urlWrapper struct {
 	URL *URL `json:"url"`
 }
 
@@ -79,7 +79,7 @@ func (us *UsersService) Portfolio(username string) (*URL, error) {
 	if err != nil {
 		return nil, err
 	}
-	var portfolio portfolioResponse
+	var portfolio urlWrapper
 	err = json.Unmarshal(*resp.body, &portfolio)
 	if err != nil {
 		return nil, err

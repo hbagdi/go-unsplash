@@ -101,6 +101,52 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 	return &photo, nil
 }
 
+// Stats return a stats about a photo with id.
+func (ps *PhotosService) Stats(id string) (*PhotoStats, error) {
+	if "" == id {
+		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+	}
+	endpoint := fmt.Sprintf("%v/%v/stats", getEndpoint(photos), id)
+	req, err := newRequest(GET, endpoint, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, err
+	}
+	var stats PhotoStats
+	err = json.Unmarshal(*resp.body, &stats)
+	if err != nil {
+		return nil, err
+	}
+	return &stats, nil
+}
+
+// DownloadLink return the download URL for a photo.
+func (ps *PhotosService) DownloadLink(id string) (*URL, error) {
+	if "" == id {
+		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+	}
+	endpoint := fmt.Sprintf("%v/%v/download", getEndpoint(photos), id)
+	req, err := newRequest(GET, endpoint, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, err
+	}
+	var url urlWrapper
+	err = json.Unmarshal(*resp.body, &url)
+	if err != nil {
+		return nil, err
+	}
+	return url.URL, nil
+}
+
 // All returns a list of all photos on unsplash.
 // Note that some fields in photo structs from this result will be missing.
 // Use Photo() method to get all details of the  Photo.

@@ -84,3 +84,16 @@ func (p *Photo) String() string {
 	buf.WriteString("Photographer: " + *p.Photographer.Name + "\n")
 	return buf.String()
 }
+
+//PhotoStats shows various stats of the photo returned by /photos/:id/stats endpoint
+type PhotoStats struct {
+	Downloads int `json:"downloads"`
+	Likes     int `json:"likes"`
+	Views     int `json:"views"`
+	Links     struct {
+		Self             string `json:"self"`
+		HTML             string `json:"html"`
+		Download         string `json:"download"`
+		DownloadLocation string `json:"download_location"`
+	} `json:"links"`
+}
