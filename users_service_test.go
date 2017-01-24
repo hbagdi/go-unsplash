@@ -24,7 +24,6 @@
 package unsplash
 
 import (
-	"io/ioutil"
 	"log"
 	"os"
 	"testing"
@@ -34,13 +33,19 @@ import (
 
 func TestUserProfile(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(ioutil.Discard)
+	log.SetOutput(os.Stdout)
 	unsplash := setup()
 	profileImageOpt := &ProfileImageOpt{Height: 120, Width: 400}
-	user, err := unsplash.Users.User("hbagdi", profileImageOpt)
+	user, err := unsplash.Users.User("lukechesser", profileImageOpt)
 	assert.Nil(err)
 	assert.NotNil(user)
 	log.Println(user)
+	assert.NotNil(user.Photos)
+	photos := *user.Photos
+	assert.NotNil(photos[0])
+	log.Println(len(photos))
+	photo := photos[0]
+	assert.NotNil(&photo)
 	pi := user.ProfileImage
 	assert.NotNil(pi)
 	assert.NotNil(pi.Medium)
@@ -50,7 +55,7 @@ func TestUserProfile(T *testing.T) {
 	user, err = unsplash.Users.User("hbagdi", nil)
 	assert.Nil(err)
 	assert.NotNil(user)
-	log.Println(user)
+	//log.Println(user)
 	pi = user.ProfileImage
 	assert.NotNil(pi)
 	assert.Nil(pi.Custom)

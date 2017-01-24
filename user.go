@@ -75,6 +75,7 @@ type User struct {
 	ProfileImage        *ProfileImage `json:"profile_image"`
 	Badge               *UserBadge    `json:"badge"`
 	Links               *UserLinks    `json:"links,omitempty"`
+	Photos              *[]Photo      `json:"photos"`
 }
 
 func (u User) String() string {
