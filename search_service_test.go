@@ -22,3 +22,71 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package unsplash
+
+import (
+	"log"
+	"os"
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
+
+func TestSearchPhotos(T *testing.T) {
+	log.SetOutput(os.Stdout)
+	assert := assert.New(T)
+	assert.Nil(nil)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	var opt SearchOpt
+	opt.Query = "Nature"
+	photos, _, err := unsplash.Search.Photos(&opt)
+	log.Println(len(*photos.Results))
+	assert.NotNil(photos)
+	assert.Nil(err)
+	log.Println(photos)
+
+	photos, resp, err := unsplash.Search.Photos(nil)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(photos)
+}
+
+func TestSearchUsers(T *testing.T) {
+	log.SetOutput(os.Stdout)
+	assert := assert.New(T)
+	assert.Nil(nil)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	var opt SearchOpt
+	opt.Query = "Nature"
+	users, _, err := unsplash.Search.Users(&opt)
+	log.Println(len(*users.Results))
+	assert.NotNil(users)
+	assert.Nil(err)
+	log.Println(users)
+
+	users, resp, err := unsplash.Search.Users(nil)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(users)
+}
+
+func TestSearchCollections(T *testing.T) {
+	log.SetOutput(os.Stdout)
+	assert := assert.New(T)
+	assert.Nil(nil)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	var opt SearchOpt
+	opt.Query = "Nature"
+	collections, _, err := unsplash.Search.Photos(&opt)
+	log.Println(len(*collections.Results))
+	assert.NotNil(collections)
+	assert.Nil(err)
+	log.Println(collections)
+
+	collections, resp, err := unsplash.Search.Photos(nil)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(collections)
+}

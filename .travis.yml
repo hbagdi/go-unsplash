@@ -8,8 +8,9 @@ before_install:
  - go get github.com/mattn/goveralls
 
 script:
- - ./test.sh
+#turn these on once, API limit is higher
+# - ./test.sh
  - $HOME/gopath/bin/goveralls -service=travis-ci
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+#  - bash <(curl -s https://codecov.io/bash)
