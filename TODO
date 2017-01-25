@@ -1,5 +1,7 @@
--User struct needs a photo array
 -Search service (Not returning link headers)
+-Random photo endpoint
+-upload a photo- is this endpoint available?
+Unsplash official libraries have this; study and then test it on postman first.
 -like/unlike photo
 -update/post a photo
 -complete collections service

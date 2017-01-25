@@ -149,3 +149,31 @@ func TestCuratedPhotos(T *testing.T) {
 	assert.NotNil(resp)
 	log.Println(resp)
 }
+
+func TestPhotoStats(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	stats, err := unsplash.Photos.Stats("-HPhkZcJQNk")
+	assert.Nil(err)
+	assert.NotNil(stats)
+	log.Println(stats)
+
+	stats, err = unsplash.Photos.Stats("")
+	assert.Nil(stats)
+	assert.NotNil(err)
+}
+
+func TestDownloadLink(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	url, err := unsplash.Photos.DownloadLink("-HPhkZcJQNk")
+	assert.Nil(err)
+	assert.NotNil(url)
+	log.Println(url)
+
+	url, err = unsplash.Photos.DownloadLink("")
+	assert.Nil(url)
+	assert.NotNil(err)
+}
