@@ -38,14 +38,18 @@ func TestSearchPhotos(T *testing.T) {
 	log.SetOutput(os.Stdout)
 	unsplash := setup()
 	var opt SearchOpt
+	photos, resp, err := unsplash.Search.Photos(&opt)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(photos)
 	opt.Query = "Nature"
-	photos, _, err := unsplash.Search.Photos(&opt)
+	photos, _, err = unsplash.Search.Photos(&opt)
 	log.Println(len(*photos.Results))
 	assert.NotNil(photos)
 	assert.Nil(err)
 	log.Println(photos)
 
-	photos, resp, err := unsplash.Search.Photos(nil)
+	photos, resp, err = unsplash.Search.Photos(nil)
 	assert.NotNil(err)
 	assert.Nil(resp)
 	assert.Nil(photos)
@@ -58,14 +62,18 @@ func TestSearchUsers(T *testing.T) {
 	log.SetOutput(os.Stdout)
 	unsplash := setup()
 	var opt SearchOpt
+	users, resp, err := unsplash.Search.Users(&opt)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(users)
 	opt.Query = "Nature"
-	users, _, err := unsplash.Search.Users(&opt)
+	users, _, err = unsplash.Search.Users(&opt)
 	log.Println(len(*users.Results))
 	assert.NotNil(users)
 	assert.Nil(err)
 	log.Println(users)
 
-	users, resp, err := unsplash.Search.Users(nil)
+	users, resp, err = unsplash.Search.Users(nil)
 	assert.NotNil(err)
 	assert.Nil(resp)
 	assert.Nil(users)
@@ -78,14 +86,18 @@ func TestSearchCollections(T *testing.T) {
 	log.SetOutput(os.Stdout)
 	unsplash := setup()
 	var opt SearchOpt
+	collections, resp, err := unsplash.Search.Collections(&opt)
+	assert.NotNil(err)
+	assert.Nil(resp)
+	assert.Nil(collections)
 	opt.Query = "Nature"
-	collections, _, err := unsplash.Search.Photos(&opt)
-	log.Println(len(*collections.Results))
+	collections, _, err = unsplash.Search.Collections(&opt)
 	assert.NotNil(collections)
 	assert.Nil(err)
 	log.Println(collections)
+	log.Println(len(*collections.Results))
 
-	collections, resp, err := unsplash.Search.Photos(nil)
+	collections, resp, err = unsplash.Search.Collections(nil)
 	assert.NotNil(err)
 	assert.Nil(resp)
 	assert.Nil(collections)

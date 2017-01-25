@@ -58,7 +58,7 @@ func (ss *SearchService) Users(opt *SearchOpt) (*UserSearchResult, *Response, er
 	if !opt.Valid() {
 		return nil, nil, &InvalidListOpt{ErrString: "Search query cannot be empty."}
 	}
-	req, err := newRequest(GET, getEndpoint(searchPhotos), opt, nil)
+	req, err := newRequest(GET, getEndpoint(searchUsers), opt, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -108,7 +108,7 @@ func (ss *SearchService) Collections(opt *SearchOpt) (*CollectionSearchResult, *
 	if !opt.Valid() {
 		return nil, nil, &InvalidListOpt{ErrString: "Search query cannot be empty."}
 	}
-	req, err := newRequest(GET, getEndpoint(searchPhotos), opt, nil)
+	req, err := newRequest(GET, getEndpoint(searchCollections), opt, nil)
 	if err != nil {
 		return nil, nil, err
 	}
