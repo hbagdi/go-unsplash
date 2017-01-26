@@ -27,9 +27,11 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"testing"
 
+	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -146,6 +148,12 @@ func TestCreateCollection(T *testing.T) {
 	assert.Nil(err)
 	assert.NotNil(resp)
 	assert.NotNil(collection)
+
+	title = ""
+	collection, resp, err = unsplash.Collections.Create(&opt)
+	assert.Nil(resp)
+	assert.Nil(collection)
+	assert.NotNil(err)
 
 	collection, resp, err = unsplash.Collections.Create(nil)
 	assert.Nil(resp)
@@ -299,4 +307,85 @@ func TestRemovePhoto(T *testing.T) {
 	resp, err = unsplash.Collections.RemovePhoto(0, "")
 	assert.NotNil(err)
 	assert.Nil(resp)
+}
+
+func rogueCollectionServiceTest(T *testing.T, responder httpmock.Responder) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	log.SetOutput(os.Stdout)
+
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(collections)+"/gopherCollection",
+		responder)
+	httpmock.RegisterResponder("POST", getEndpoint(base)+getEndpoint(collections)+"?title=gopherCollection",
+		responder)
+	httpmock.RegisterResponder("PUT", getEndpoint(base)+getEndpoint(collections)+"/4242?title=gopherCollection",
+		responder)
+	httpmock.RegisterResponder("POST", getEndpoint(base)+getEndpoint(collections)+"/4242/add?photo_id=gopherPhoto",
+		responder)
+	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242/remove?photo_id=gopherPhoto",
+		responder)
+	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242",
+		responder)
+
+	unsplash := setup()
+	assert := assert.New(T)
+	collection, resp, err := unsplash.Collections.Collection("gopherCollection")
+	assert.Nil(collection)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	var opt CollectionOpt
+	title := "gopherCollection"
+	opt.Title = &title
+	collection, resp, err = unsplash.Collections.Create(&opt)
+	assert.Nil(collection)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	collection, resp, err = unsplash.Collections.Update(4242, &opt)
+	assert.Nil(collection)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	resp, err = unsplash.Collections.Delete(4242)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	resp, err = unsplash.Collections.AddPhoto(4242, "gopherPhoto")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	log.Println(err)
+}
+
+func TestCollectionServiceRogueStuff(T *testing.T) {
+	rogueCollectionServiceTest(T, httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	rogueCollectionServiceTest(T, nil)
+}
+
+func TestRemovePhotoRogue(T *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	log.SetOutput(os.Stdout)
+
+	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242/remove?photo_id=gopherPhoto",
+		httpmock.NewStringResponder(202, `Bad ass Bug flow`))
+
+	unsplash := setup()
+	assert := assert.New(T)
+	resp, err := unsplash.Collections.RemovePhoto(4242, "gopherPhoto")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	log.Println(err)
+
+	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242/remove?photo_id=gopherPhoto",
+		nil)
+
+	resp, err = unsplash.Collections.RemovePhoto(4242, "gopherPhoto")
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
 }
