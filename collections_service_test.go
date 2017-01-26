@@ -117,7 +117,7 @@ func TestRelatedCollections(T *testing.T) {
 	assert.Nil(resp)
 }
 
-func TetstSimpleCollection(T *testing.T) {
+func TestSimpleCollection(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
