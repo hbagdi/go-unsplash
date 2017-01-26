@@ -26,7 +26,6 @@ package unsplash
 import (
 	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -154,7 +153,7 @@ func TestCreateCollection(T *testing.T) {
 
 func TestDeleteCollection(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	var opt CreateCollectionOpt
 	title := "Test42"
@@ -169,6 +168,93 @@ func TestDeleteCollection(T *testing.T) {
 	assert.Nil(err)
 
 	resp, err = unsplash.Collections.Delete(0)
+	assert.NotNil(err)
+	assert.Nil(resp)
+}
+
+func TestAddPhoto(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+
+	//get a random photo
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(photos)
+	assert.Equal(1, len(*photos))
+	photo := (*photos)[0]
+	assert.NotNil(photo)
+
+	//get a user's collection
+	collections, resp, err := unsplash.Users.Collections("gopher", nil)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(collections)
+
+	collection := (*collections)[0]
+	assert.NotNil(collection)
+
+	//add the photo
+	resp, err = unsplash.Collections.AddPhoto(*collection.ID, *photo.ID)
+	assert.Nil(err)
+	assert.NotNil(resp)
+
+	//empty things
+	resp, err = unsplash.Collections.AddPhoto(0, "photoID")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	resp, err = unsplash.Collections.AddPhoto(296, "")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	resp, err = unsplash.Collections.AddPhoto(0, "")
+	assert.NotNil(err)
+	assert.Nil(resp)
+
+}
+
+func TestRemovePhoto(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+
+	//get a random photo
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(photos)
+	assert.Equal(1, len(*photos))
+	photo := (*photos)[0]
+	assert.NotNil(photo)
+
+	//get a user's collection
+	collections, resp, err := unsplash.Users.Collections("gopher", nil)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(collections)
+
+	collection := (*collections)[0]
+	assert.NotNil(collection)
+
+	//add the photo
+	resp, err = unsplash.Collections.AddPhoto(*collection.ID, *photo.ID)
+	assert.Nil(err)
+	assert.NotNil(resp)
+
+	//remove the photo
+	resp, err = unsplash.Collections.RemovePhoto(*collection.ID, *photo.ID)
+	assert.Nil(err)
+	assert.NotNil(resp)
+
+	//empty stuff
+	//empty things
+	resp, err = unsplash.Collections.RemovePhoto(0, "photoID")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	resp, err = unsplash.Collections.RemovePhoto(296, "")
+	assert.NotNil(err)
+	assert.Nil(resp)
+	resp, err = unsplash.Collections.RemovePhoto(0, "")
 	assert.NotNil(err)
 	assert.Nil(resp)
 }

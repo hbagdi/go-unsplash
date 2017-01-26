@@ -125,7 +125,7 @@ func (cs *CollectionsService) Create(opt *CreateCollectionOpt) (*Collection, *Re
 	return &collection, resp, nil
 }
 
-//Delete creates a new collection on the authenticated  user's profile.
+//Delete deletes a collection on the authenticated user's profile.
 func (cs *CollectionsService) Delete(collectionID int) (*Response, error) {
 	if collectionID == 0 {
 		return nil, &IllegalArgumentError{ErrString: "CollectionID cannot be empty or zero."}
@@ -142,6 +142,62 @@ func (cs *CollectionsService) Delete(collectionID int) (*Response, error) {
 	}
 	if resp.httpResponse.StatusCode != 204 {
 		return nil, errors.New("Failed to delete the collection.")
+	}
+	return resp, nil
+}
+
+type addPhoto struct {
+	Photo string `url:"photo_id"`
+}
+
+//AddPhoto adds a photo to a collection owned by an authenticated user.
+func (cs *CollectionsService) AddPhoto(collectionID int, photoID string) (*Response, error) {
+	if collectionID == 0 {
+		return nil, &IllegalArgumentError{ErrString: "CollectionID cannot be empty or zero."}
+	}
+	if photoID == "" {
+		return nil, &IllegalArgumentError{ErrString: "PhotoID cannot be empty or zero."}
+	}
+	opt := &addPhoto{photoID}
+	endpoint := fmt.Sprintf("%v/%v/add", getEndpoint(collections), collectionID)
+	req, err := newRequest(POST, endpoint, opt, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	//TODO parse body and return collection,photo and user
+	if err != nil {
+		return nil, err
+	}
+	if resp.httpResponse.StatusCode != 201 {
+		return nil, errors.New("Failed to add photo to the collection.")
+	}
+	return resp, nil
+}
+
+//RemovePhoto removes a photo from a collection owned by an authenticated user.
+func (cs *CollectionsService) RemovePhoto(collectionID int, photoID string) (*Response, error) {
+	if collectionID == 0 {
+		return nil, &IllegalArgumentError{ErrString: "CollectionID cannot be empty or zero."}
+	}
+	if photoID == "" {
+		return nil, &IllegalArgumentError{ErrString: "PhotoID cannot be empty or zero."}
+	}
+	opt := &addPhoto{photoID}
+	endpoint := fmt.Sprintf("%v/%v/remove", getEndpoint(collections), collectionID)
+	req, err := newRequest(DELETE, endpoint, opt, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	//TODO parse body and return collection,photo and user
+	if err != nil {
+		return nil, err
+	}
+	if resp.httpResponse.StatusCode != 200 {
+		return nil, errors.New("Failed to remove photo from the collection.")
 	}
 	return resp, nil
 }
