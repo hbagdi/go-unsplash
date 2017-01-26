@@ -59,7 +59,7 @@ func (cs *CollectionsService) Curated(opt *ListOpt) (*[]Collection, *Response, e
 // Related returns a list of collections related to collections with id.
 func (cs *CollectionsService) Related(id string, opt *ListOpt) (*[]Collection, *Response, error) {
 	if "" == id {
-		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be nil"}
 	}
 	s := (service)(*cs)
 	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(collections), id, "related")
@@ -69,7 +69,7 @@ func (cs *CollectionsService) Related(id string, opt *ListOpt) (*[]Collection, *
 // Collection returns a collection with id.
 func (cs *CollectionsService) Collection(id string) (*Collection, *Response, error) {
 	if "" == id {
-		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Collection ID cannot be nil"}
 	}
 	endpoint := fmt.Sprintf("%v/%v", getEndpoint(collections), id)
 	req, err := newRequest(GET, endpoint, nil, nil)
@@ -89,18 +89,18 @@ func (cs *CollectionsService) Collection(id string) (*Collection, *Response, err
 	return &collection, resp, nil
 }
 
-//CreateCollectionOpt shows various available optional parameters available
+//CollectionOpt shows various available optional parameters available
 //during creatioin of collection
-type CreateCollectionOpt struct {
+type CollectionOpt struct {
 	Title       *string `url:"title,omitempty"`
 	Description *string `url:"description,omitempty"`
 	Private     *bool   `url:"private,omitempty"`
 }
 
 //Create creates a new collection on the authenticated  user's profile.
-func (cs *CollectionsService) Create(opt *CreateCollectionOpt) (*Collection, *Response, error) {
+func (cs *CollectionsService) Create(opt *CollectionOpt) (*Collection, *Response, error) {
 	if nil == opt {
-		return nil, nil, &IllegalArgumentError{ErrString: "Opt cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Opt cannot be nil"}
 	}
 	if *opt.Title == "" {
 		return nil, nil, &IllegalArgumentError{ErrString: "Need to provide a title for the new collection."}
@@ -121,6 +121,32 @@ func (cs *CollectionsService) Create(opt *CreateCollectionOpt) (*Collection, *Re
 	}
 	if resp.httpResponse.StatusCode != 201 {
 		return nil, nil, errors.New("Failed to create the collection.")
+	}
+	return &collection, resp, nil
+}
+
+//Update updates an existing collection on the authenticated  user's profile.
+func (cs *CollectionsService) Update(collectionID int, opt *CollectionOpt) (*Collection, *Response, error) {
+	if nil == opt {
+		return nil, nil, &IllegalArgumentError{ErrString: "Opt cannot be nil"}
+	}
+	if collectionID == 0 {
+		return nil, nil, &IllegalArgumentError{ErrString: "collectionID cannot be nil."}
+	}
+	endpoint := fmt.Sprintf("%v/%v", getEndpoint(collections), collectionID)
+	req, err := newRequest(PUT, endpoint, opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var collection Collection
+	err = json.Unmarshal(*resp.body, &collection)
+	if err != nil {
+		return nil, nil, err
 	}
 	return &collection, resp, nil
 }

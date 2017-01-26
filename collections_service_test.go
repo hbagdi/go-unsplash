@@ -26,6 +26,8 @@ package unsplash
 import (
 	"io/ioutil"
 	"log"
+	"math/rand"
+	"strconv"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -137,7 +139,7 @@ func TestCreateCollection(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
-	var opt CreateCollectionOpt
+	var opt CollectionOpt
 	title := "Test42"
 	opt.Title = &title
 	collection, resp, err := unsplash.Collections.Create(&opt)
@@ -151,11 +153,49 @@ func TestCreateCollection(T *testing.T) {
 	assert.NotNil(err)
 }
 
+func TestUpdateCollection(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+
+	//get a user's collection
+	collections, resp, err := unsplash.Users.Collections("gopher", nil)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(collections)
+	collection := (*collections)[0]
+	assert.NotNil(collection)
+	log.Println(*collection.ID)
+	//random title
+	var opt CollectionOpt
+	title := "Test43" + strconv.Itoa(rand.Int())
+	opt.Title = &title
+	col, resp, err := unsplash.Collections.Update(*collection.ID, &opt)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(col)
+
+	col, resp, err = unsplash.Collections.Update(0, &opt)
+	assert.Nil(resp)
+	assert.Nil(col)
+	assert.NotNil(err)
+
+	col, resp, err = unsplash.Collections.Update(246, nil)
+	assert.Nil(resp)
+	assert.Nil(col)
+	assert.NotNil(err)
+
+	col, resp, err = unsplash.Collections.Update(0, nil)
+	assert.Nil(resp)
+	assert.Nil(col)
+	assert.NotNil(err)
+}
+
 func TestDeleteCollection(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
-	var opt CreateCollectionOpt
+	var opt CollectionOpt
 	title := "Test42"
 	opt.Title = &title
 	collection, resp, err := unsplash.Collections.Create(&opt)
