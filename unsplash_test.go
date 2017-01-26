@@ -30,6 +30,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 )
@@ -109,5 +110,45 @@ func TestUnsplash(T *testing.T) {
 
 	var s service
 	_, err = s.do(nil)
+	assert.NotNil(err)
+}
+
+func TestRogueServer(T *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(currentUser),
+		httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(globalStats),
+		httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	unsplash := setup()
+	assert := assert.New(T)
+	user, err := unsplash.CurrentUser()
+	assert.Nil(user)
+	assert.NotNil(err)
+	log.SetOutput(os.Stdout)
+	log.Println(err)
+	stats, err := unsplash.Stats()
+	assert.Nil(stats)
+	assert.NotNil(err)
+}
+
+func TestRogueNetwork(T *testing.T) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(currentUser),
+		nil)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(globalStats),
+		nil)
+	unsplash := setup()
+	assert := assert.New(T)
+	user, err := unsplash.CurrentUser()
+	assert.Nil(user)
+	assert.NotNil(err)
+	log.SetOutput(os.Stdout)
+	log.Println(err)
+	stats, err := unsplash.Stats()
+	assert.Nil(stats)
 	assert.NotNil(err)
 }

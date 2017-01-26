@@ -67,8 +67,6 @@ func (s *service) do(req *request) (*Response, error) {
 		return nil,
 			&IllegalArgumentError{ErrString: "Request object cannot be nil"}
 	}
-	//TODO add rate limiting support, API is erronous at the moment
-
 	//Make the request
 	client := s.httpClient
 	rawResp, err := client.Do(req.Request)

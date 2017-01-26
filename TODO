@@ -3,8 +3,5 @@
 Unsplash official libraries have this; study and then test it on postman first.
 -how about delete a photo?
 -update a photo
--create collection
--update/edit collection
--delete collection
--add photo to collection
--remove photo from collection
+-Test network and server errors using httpmock
+-turn *Response everywhere
