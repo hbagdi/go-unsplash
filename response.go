@@ -86,9 +86,13 @@ func newResponse(r *http.Response) (*Response, error) {
 
 func (r *Response) populateRateLimits() {
 	maxLimit := r.httpResponse.Header["X-Ratelimit-Limit"]
-	r.RateLimit, _ = strconv.Atoi(maxLimit[0])
+	if len(maxLimit) == 1 {
+		r.RateLimit, _ = strconv.Atoi(maxLimit[0])
+	}
 	rateRemaining := r.httpResponse.Header["X-Ratelimit-Remaining"]
-	r.RateLimitRemaining, _ = strconv.Atoi(rateRemaining[0])
+	if len(rateRemaining) == 1 {
+		r.RateLimitRemaining, _ = strconv.Atoi(rateRemaining[0])
+	}
 }
 
 func (r *Response) populatePagingInfo() {
