@@ -25,6 +25,7 @@ package unsplash
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 )
 
@@ -118,5 +119,29 @@ func (cs *CollectionsService) Create(opt *CreateCollectionOpt) (*Collection, *Re
 	if err != nil {
 		return nil, nil, err
 	}
+	if resp.httpResponse.StatusCode != 201 {
+		return nil, nil, errors.New("Failed to create the collection.")
+	}
 	return &collection, resp, nil
+}
+
+//Delete creates a new collection on the authenticated  user's profile.
+func (cs *CollectionsService) Delete(collectionID int) (*Response, error) {
+	if collectionID == 0 {
+		return nil, &IllegalArgumentError{ErrString: "CollectionID cannot be empty or zero."}
+	}
+	endpoint := fmt.Sprintf("%v/%v", getEndpoint(collections), collectionID)
+	req, err := newRequest(DELETE, endpoint, nil, nil)
+	if err != nil {
+		return nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, err
+	}
+	if resp.httpResponse.StatusCode != 204 {
+		return nil, errors.New("Failed to delete the collection.")
+	}
+	return resp, nil
 }

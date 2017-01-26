@@ -26,6 +26,7 @@ package unsplash
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -149,4 +150,25 @@ func TestCreateCollection(T *testing.T) {
 	assert.Nil(resp)
 	assert.Nil(collection)
 	assert.NotNil(err)
+}
+
+func TestDeleteCollection(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	var opt CreateCollectionOpt
+	title := "Test42"
+	opt.Title = &title
+	collection, resp, err := unsplash.Collections.Create(&opt)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(collection)
+
+	resp, err = unsplash.Collections.Delete(*collection.ID)
+	assert.NotNil(resp)
+	assert.Nil(err)
+
+	resp, err = unsplash.Collections.Delete(0)
+	assert.NotNil(err)
+	assert.Nil(resp)
 }
