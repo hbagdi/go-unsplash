@@ -87,3 +87,36 @@ func (cs *CollectionsService) Collection(id string) (*Collection, *Response, err
 	}
 	return &collection, resp, nil
 }
+
+//CreateCollectionOpt shows various available optional parameters available
+//during creatioin of collection
+type CreateCollectionOpt struct {
+	Title       *string `url:"title,omitempty"`
+	Description *string `url:"description,omitempty"`
+	Private     *bool   `url:"private,omitempty"`
+}
+
+//Create creates a new collection on the authenticated  user's profile.
+func (cs *CollectionsService) Create(opt *CreateCollectionOpt) (*Collection, *Response, error) {
+	if nil == opt {
+		return nil, nil, &IllegalArgumentError{ErrString: "Opt cannot be null"}
+	}
+	if *opt.Title == "" {
+		return nil, nil, &IllegalArgumentError{ErrString: "Need to provide a title for the new collection."}
+	}
+	req, err := newRequest(POST, getEndpoint(collections), opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*cs)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var collection Collection
+	err = json.Unmarshal(*resp.body, &collection)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &collection, resp, nil
+}

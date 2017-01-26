@@ -123,7 +123,6 @@ func TestSimpleCollection(T *testing.T) {
 	unsplash := setup()
 	collection, resp, err := unsplash.Collections.Collection("910")
 	assert.Nil(err)
-	//check pagination
 	assert.NotNil(resp)
 	assert.NotNil(collection)
 	log.Println(resp)
@@ -132,4 +131,22 @@ func TestSimpleCollection(T *testing.T) {
 	assert.NotNil(err)
 	assert.Nil(collection)
 	assert.Nil(resp)
+}
+
+func TestCreateCollection(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+	var opt CreateCollectionOpt
+	title := "Test42"
+	opt.Title = &title
+	collection, resp, err := unsplash.Collections.Create(&opt)
+	assert.Nil(err)
+	assert.NotNil(resp)
+	assert.NotNil(collection)
+
+	collection, resp, err = unsplash.Collections.Create(nil)
+	assert.Nil(resp)
+	assert.Nil(collection)
+	assert.NotNil(err)
 }
