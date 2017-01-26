@@ -60,7 +60,7 @@ type Photo struct {
 			Longitude *float64 `json:"longitude"`
 		} `json:"position"`
 	} `json:"location"`
-	CurrentUserCollections *[]interface{} `json:"current_user_collections"`
+	CurrentUserCollections *[]Collection `json:"current_user_collections"`
 	Urls                   *struct {
 		Raw     *URL `json:"raw"`
 		Full    *URL `json:"full"`

@@ -160,3 +160,60 @@ func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) 
 	s := (service)(*ps)
 	return s.getPhotos(listOpt, getEndpoint(photos)+"/curated")
 }
+
+// RandomPhotoOpt optional parameters for a random photo search
+type RandomPhotoOpt struct {
+	Height      int    `url:"h,omitempty"`
+	Width       int    `url:"w,omitempty"`
+	Featured    bool   `url:"featured,omitempty"`
+	Username    string `url:"username,omitempty"`
+	SearchQuery string `url:"query,omitempty"`
+	Count       int    `url:"count,omitempty"`
+	//Orientation orientation `url:"orientation,omitempty"`
+}
+
+//Valid validates a RandomPhotoOpt
+func (opt *RandomPhotoOpt) Valid() bool {
+	if opt.Count <= 0 {
+		return false
+	}
+	return true
+}
+
+// Orientation is orientation of a photo
+type orientation string
+
+// These constants show possible Orientation types
+const (
+	Landscaope orientation = "landscape"
+	Portrait   orientation = "portrait"
+	Squarish   orientation = "squarish"
+)
+
+var defaultRandomPhotoOpt = &RandomPhotoOpt{Count: 1}
+
+// Random returns random photo(s).
+func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error) {
+	if opt == nil {
+		opt = defaultRandomPhotoOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+	}
+	req, err := newRequest(GET, "photos/random", opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	photos := make([]Photo, 0)
+	err = json.Unmarshal(*resp.body, &photos)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &photos, resp, nil
+
+}

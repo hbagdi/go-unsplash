@@ -177,3 +177,29 @@ func TestDownloadLink(T *testing.T) {
 	assert.Nil(url)
 	assert.NotNil(err)
 }
+
+func TestRandomPhoto(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(os.Stdout)
+	unsplash := setup()
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(err)
+	assert.NotNil(photos)
+	assert.NotNil(resp)
+	assert.Equal(1, len(*photos))
+	var opt RandomPhotoOpt
+	opt.Count = 3
+	photos, resp, err = unsplash.Photos.Random(&opt)
+	assert.Nil(err)
+	assert.NotNil(photos)
+	assert.NotNil(resp)
+	assert.Equal(3, len(*photos))
+
+	opt.Count = -1
+	photos, resp, err = unsplash.Photos.Random(&opt)
+	assert.NotNil(err)
+	assert.Nil(photos)
+	assert.Nil(resp)
+	//log.Println(photos)
+
+}
