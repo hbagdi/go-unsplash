@@ -32,6 +32,8 @@ const (
 	POST method = "POST"
 	// PUT is HTTP PUT request
 	PUT method = "PUT"
+	// DELETE is HTTP DELETE request
+	DELETE method = "DELETE"
 )
 
 const (

@@ -27,14 +27,13 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestPhotoOpt(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	var opt, opt2 PhotoOpt
 	assert.Equal(false, opt.Valid())
@@ -67,7 +66,7 @@ func TestSimplePhoto(T *testing.T) {
 	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	photo, err := unsplash.Photos.Photo("", nil)
 	assert.NotNil(err)
@@ -152,7 +151,7 @@ func TestCuratedPhotos(T *testing.T) {
 
 func TestPhotoStats(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	stats, err := unsplash.Photos.Stats("-HPhkZcJQNk")
 	assert.Nil(err)
@@ -166,7 +165,7 @@ func TestPhotoStats(T *testing.T) {
 
 func TestDownloadLink(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	url, err := unsplash.Photos.DownloadLink("-HPhkZcJQNk")
 	assert.Nil(err)
@@ -180,7 +179,7 @@ func TestDownloadLink(T *testing.T) {
 
 func TestRandomPhoto(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	photos, resp, err := unsplash.Photos.Random(nil)
 	assert.Nil(err)
@@ -202,4 +201,53 @@ func TestRandomPhoto(T *testing.T) {
 	assert.Nil(resp)
 	//log.Println(photos)
 
+}
+
+func TestPhotoLike(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(err)
+	assert.NotNil(photos)
+	assert.NotNil(resp)
+	assert.Equal(1, len(*photos))
+	photoid := (*photos)[0].ID
+	photo, resp, err := unsplash.Photos.Like(*photoid)
+	assert.Nil(err)
+	assert.NotNil(photo)
+	assert.NotNil(resp)
+
+	photo, resp, err = unsplash.Photos.Like("")
+	assert.NotNil(err)
+	assert.Nil(photo)
+	assert.Nil(resp)
+}
+
+func TestPhotoUnlike(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(err)
+	assert.NotNil(photos)
+	assert.NotNil(resp)
+	assert.Equal(1, len(*photos))
+	photoid := (*photos)[0].ID
+	photo, resp, err := unsplash.Photos.Like(*photoid)
+	assert.Nil(err)
+	assert.NotNil(photo)
+	assert.NotNil(resp)
+
+	photo2, resp, err := unsplash.Photos.Unlike(*photoid)
+	assert.Nil(err)
+	assert.NotNil(photo2)
+	assert.NotNil(resp)
+	assert.Equal(photo.ID, photo2.ID)
+	assert.Equal(photo.Color, photo2.Color)
+
+	photo, resp, err = unsplash.Photos.Like("")
+	assert.NotNil(err)
+	assert.Nil(photo)
+	assert.Nil(resp)
 }

@@ -217,3 +217,49 @@ func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error
 	return &photos, resp, nil
 
 }
+
+// Like likes a photo on the currently authenticated user's behalf
+func (ps *PhotosService) Like(photoID string) (*Photo, *Response, error) {
+	if photoID == "" {
+		return nil, nil, &IllegalArgumentError{ErrString: "PhotoID cannot be null"}
+	}
+	endpoint := fmt.Sprintf("%v/%v/like", getEndpoint(photos), photoID)
+	req, err := newRequest(POST, endpoint, nil, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var photo Photo
+	err = json.Unmarshal(*resp.body, &photo)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &photo, resp, nil
+}
+
+// Unlike likes a photo on the currently authenticated user's behalf
+func (ps *PhotosService) Unlike(photoID string) (*Photo, *Response, error) {
+	if photoID == "" {
+		return nil, nil, &IllegalArgumentError{ErrString: "PhotoID cannot be null"}
+	}
+	endpoint := fmt.Sprintf("%v/%v/like", getEndpoint(photos), photoID)
+	req, err := newRequest(DELETE, endpoint, nil, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var photo Photo
+	err = json.Unmarshal(*resp.body, &photo)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &photo, resp, nil
+}
