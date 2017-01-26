@@ -27,7 +27,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -63,7 +62,7 @@ func TestURL(T *testing.T) {
 		assert.Equal(string(marshalBytes), value)
 	}
 
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	var url URLWrapper
 	bytes := []byte(badJSON)
 	err := json.Unmarshal(bytes, &url)

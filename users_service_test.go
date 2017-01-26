@@ -24,8 +24,8 @@
 package unsplash
 
 import (
+	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,7 +33,7 @@ import (
 
 func TestUserProfile(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	profileImageOpt := &ProfileImageOpt{Height: 120, Width: 400}
 	user, err := unsplash.Users.User("lukechesser", profileImageOpt)
@@ -77,7 +77,7 @@ func TestUserProfile(T *testing.T) {
 
 func TestUserPortfolio(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	url, err := unsplash.Users.Portfolio("hbagdi")
 	assert.Nil(err)
@@ -99,7 +99,7 @@ func TestUserPortfolio(T *testing.T) {
 
 func TestLikedPhotos(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	// hopefully cofounder won't change his username
 	photos, resp, err := unsplash.Users.LikedPhotos("lukechesser", nil)
@@ -144,7 +144,7 @@ func TestLikedPhotos(T *testing.T) {
 func TestUserPhotos(T *testing.T) {
 	assert := assert.New(T)
 	//TODO write better tests
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	// hopefully cofounder won't change his username
 	_, resp, err := unsplash.Users.Photos("lukechesser", nil)
@@ -162,7 +162,7 @@ func TestUserPhotos(T *testing.T) {
 func TestUserCollections(T *testing.T) {
 	assert := assert.New(T)
 	//TODO write better tests
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	// hopefully cofounder won't change his username
 	_, resp, err := unsplash.Users.Collections("gopher", nil)

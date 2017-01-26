@@ -24,8 +24,8 @@
 package unsplash
 
 import (
+	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -33,7 +33,7 @@ import (
 
 func TestAllCollections(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	collections, resp, err := unsplash.Collections.All(nil)
 	assert.Nil(err)
@@ -72,7 +72,7 @@ func TestAllCollections(T *testing.T) {
 
 func TestFeaturedCollections(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	collections, resp, err := unsplash.Collections.Featured(nil)
 	assert.Nil(err)
@@ -87,7 +87,7 @@ func TestFeaturedCollections(T *testing.T) {
 
 func TestCuratedCollections(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	collections, resp, err := unsplash.Collections.Curated(nil)
 	assert.Nil(err)
@@ -102,7 +102,7 @@ func TestCuratedCollections(T *testing.T) {
 
 func TestRelatedCollections(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	collections, resp, err := unsplash.Collections.Related("296", nil)
 	assert.Nil(err)
@@ -119,7 +119,7 @@ func TestRelatedCollections(T *testing.T) {
 
 func TetstSimpleCollection(T *testing.T) {
 	assert := assert.New(T)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	collection, resp, err := unsplash.Collections.Collection("910")
 	assert.Nil(err)

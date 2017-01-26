@@ -24,18 +24,18 @@
 package unsplash
 
 import (
+	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestSearchPhotos(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	var opt SearchOpt
 	photos, resp, err := unsplash.Search.Photos(&opt)
@@ -56,10 +56,10 @@ func TestSearchPhotos(T *testing.T) {
 }
 
 func TestSearchUsers(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	var opt SearchOpt
 	users, resp, err := unsplash.Search.Users(&opt)
@@ -80,10 +80,10 @@ func TestSearchUsers(T *testing.T) {
 }
 
 func TestSearchCollections(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	var opt SearchOpt
 	collections, resp, err := unsplash.Search.Collections(&opt)
