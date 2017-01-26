@@ -1,4 +1,4 @@
-package: github.com/hardikbagdi/unsplash
+package: github.com/hardikbagdi/go-unsplash
 import: []
 testImport:
 - package: github.com/stretchr/testify
