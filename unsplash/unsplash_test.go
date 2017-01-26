@@ -113,7 +113,7 @@ func TestUnsplash(T *testing.T) {
 	assert.NotNil(err)
 }
 
-func TestRogueServer(T *testing.T) {
+func TestUnsplashRogueServer(T *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -126,14 +126,14 @@ func TestRogueServer(T *testing.T) {
 	user, err := unsplash.CurrentUser()
 	assert.Nil(user)
 	assert.NotNil(err)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	log.Println(err)
 	stats, err := unsplash.Stats()
 	assert.Nil(stats)
 	assert.NotNil(err)
 }
 
-func TestRogueNetwork(T *testing.T) {
+func TestUnsplashRogueNetwork(T *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 
@@ -146,7 +146,7 @@ func TestRogueNetwork(T *testing.T) {
 	user, err := unsplash.CurrentUser()
 	assert.Nil(user)
 	assert.NotNil(err)
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	log.Println(err)
 	stats, err := unsplash.Stats()
 	assert.Nil(stats)

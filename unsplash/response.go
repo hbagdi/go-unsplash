@@ -42,10 +42,6 @@ type Response struct {
 	RateLimitRemaining                      int
 }
 
-//
-func (r *Response) errored() error {
-	return r.err
-}
 func (r *Response) checkForErrors() error {
 	switch r.httpResponse.StatusCode {
 
