@@ -1,5 +1,5 @@
 hash: 9f3a167fa307578b0214916e43832edb393fa0d781358782c34975e794083c11
-updated: 2017-01-21T14:50:18.827361763-05:00
+updated: 2017-01-26T15:57:16.592608951-05:00
 imports:
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
@@ -14,6 +14,8 @@ testImports:
   version: 8ee79997227bf9b34611aee7946ae64735e6fd93
   subpackages:
   - proto
+- name: github.com/jarcoal/httpmock
+  version: 4442edb3db31196622da56482fd8d0fa375fba4d
 - name: github.com/pmezard/go-difflib
   version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
   subpackages:

@@ -20,5 +20,5 @@ then
 fi
 #
 rm coverage.txt
-go test -coverprofile=coverage.txt
+go test -coverprofile=coverage.txt -v ./...
 go tool cover -html=coverage.txt
