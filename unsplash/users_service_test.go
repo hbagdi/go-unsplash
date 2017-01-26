@@ -178,59 +178,30 @@ func TestUserCollections(T *testing.T) {
 	assert.Nil(resp)
 }
 
-func TestUserRogueServer(T *testing.T) {
+func rogueUserServiceTests(T *testing.T, responder httpmock.Responder) {
+
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
 	log.SetOutput(ioutil.Discard)
 	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(users)+"/gopher",
-		httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(users)+"/gopher/portfolio",
+		responder)
+
 	unsplash := setup()
 	assert := assert.New(T)
 	user, err := unsplash.Users.User("gopher", nil)
 	assert.Nil(user)
 	assert.NotNil(err)
 	log.Println(err)
-}
 
-func TestUserRogueNetwork(T *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	log.SetOutput(ioutil.Discard)
-
-	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(users)+"/gopher",
-		nil)
-	unsplash := setup()
-	assert := assert.New(T)
-	user, err := unsplash.Users.User("gopher", nil)
-	assert.Nil(user)
-	assert.NotNil(err)
-	log.Println(err)
-}
-
-func TestPortfolioRogueServer(T *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	log.SetOutput(ioutil.Discard)
-	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(users)+"/gopher/portfolio",
-		httpmock.NewStringResponder(200, `Bad ass Bug flow`))
-	unsplash := setup()
-	assert := assert.New(T)
 	url, err := unsplash.Users.Portfolio("gopher")
 	assert.Nil(url)
 	assert.NotNil(err)
 	log.Println(err)
 }
 
-func TestPortfolioRogueNetwork(T *testing.T) {
-	httpmock.Activate()
-	defer httpmock.DeactivateAndReset()
-	log.SetOutput(ioutil.Discard)
-	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(users)+"/gopher/portfolio",
-		nil)
-	unsplash := setup()
-	assert := assert.New(T)
-	url, err := unsplash.Users.Portfolio("gopher")
-	assert.Nil(url)
-	assert.NotNil(err)
-	log.Println(err)
+func TestUserServiceRogueStuff(T *testing.T) {
+	rogueUserServiceTests(T, httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	rogueUserServiceTests(T, nil)
 }

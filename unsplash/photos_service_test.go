@@ -27,8 +27,10 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"os"
 	"testing"
 
+	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -250,4 +252,63 @@ func TestPhotoUnlike(T *testing.T) {
 	assert.NotNil(err)
 	assert.Nil(photo)
 	assert.Nil(resp)
+}
+
+func roguePhotoServiceTest(T *testing.T, responder httpmock.Responder) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	log.SetOutput(os.Stdout)
+
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto",
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto/stats",
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto/download",
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos)+"/random?count=1",
+		responder)
+	httpmock.RegisterResponder("POST", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto/like",
+		responder)
+	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto/like",
+		responder)
+
+	unsplash := setup()
+	assert := assert.New(T)
+	photo, err := unsplash.Photos.Photo("gopherPhoto", nil)
+	assert.Nil(photo)
+	assert.NotNil(err)
+	log.Println(err)
+
+	photoStats, err := unsplash.Photos.Stats("gopherPhoto")
+	assert.Nil(photoStats)
+	assert.NotNil(err)
+	log.Println(err)
+
+	url, err := unsplash.Photos.DownloadLink("gopherPhoto")
+	assert.Nil(url)
+	assert.NotNil(err)
+	log.Println(err)
+
+	photos, resp, err := unsplash.Photos.Random(nil)
+	assert.Nil(photos)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	photo, resp, err = unsplash.Photos.Like("gopherPhoto")
+	assert.Nil(photo)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	photo, resp, err = unsplash.Photos.Unlike("gopherPhoto")
+	assert.Nil(photo)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+}
+
+func TestPhotoServiceRogueStuff(T *testing.T) {
+	roguePhotoServiceTest(T, httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	roguePhotoServiceTest(T, nil)
 }

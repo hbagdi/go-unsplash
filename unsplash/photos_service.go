@@ -200,7 +200,7 @@ func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error
 	if !opt.Valid() {
 		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
 	}
-	req, err := newRequest(GET, "photos/random", opt, nil)
+	req, err := newRequest(GET, getEndpoint(photos)+"/random", opt, nil)
 	if err != nil {
 		return nil, nil, err
 	}
