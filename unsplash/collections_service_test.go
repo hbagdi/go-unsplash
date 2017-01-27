@@ -27,7 +27,6 @@ import (
 	"io/ioutil"
 	"log"
 	"math/rand"
-	"os"
 	"strconv"
 	"testing"
 
@@ -312,7 +311,7 @@ func TestRemovePhoto(T *testing.T) {
 func rogueCollectionServiceTest(T *testing.T, responder httpmock.Responder) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 
 	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(collections)+"/gopherCollection",
 		responder)
@@ -377,7 +376,7 @@ func TestCollectionServiceRogueStuff(T *testing.T) {
 func TestRemovePhotoRogue(T *testing.T) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 
 	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242/remove?photo_id=gopherPhoto",
 		httpmock.NewStringResponder(202, `Bad ass Bug flow`))

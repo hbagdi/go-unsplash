@@ -36,8 +36,9 @@ func TestGlobalStats(T *testing.T) {
 	assert := assert.New(T)
 	unsplash := setup()
 
-	stats, err := unsplash.Stats()
+	stats, resp, err := unsplash.Stats()
 	assert.NotNil(stats)
+	assert.NotNil(resp)
 	assert.Nil(err)
 	log.Println(stats)
 }

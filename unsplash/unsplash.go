@@ -84,41 +84,41 @@ func (s *service) do(req *request) (*Response, error) {
 }
 
 // CurrentUser returns details about the authenticated user
-func (u *Unsplash) CurrentUser() (*User, error) {
+func (u *Unsplash) CurrentUser() (*User, *Response, error) {
 	var err error
 	req, err := newRequest(GET, getEndpoint(currentUser), nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	resp, err := u.common.do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	user := new(User)
 	err = json.Unmarshal(*resp.body, &user)
 	if err != nil {
-		return nil,
+		return nil, nil,
 			&JSONUnmarshallingError{ErrString: err.Error()}
 	}
-	return user, nil
+	return user, resp, nil
 }
 
 // Stats gives the total photos,download since the inception of unsplash.com
-func (u *Unsplash) Stats() (*GlobalStats, error) {
+func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 	var err error
 	req, err := newRequest(GET, getEndpoint(globalStats), nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	resp, err := u.common.do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	globalStats := new(GlobalStats)
 	err = json.Unmarshal(*resp.body, &globalStats)
 	if err != nil {
-		return nil,
+		return nil, nil,
 			&JSONUnmarshallingError{ErrString: err.Error()}
 	}
-	return globalStats, nil
+	return globalStats, resp, nil
 }

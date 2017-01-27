@@ -27,7 +27,6 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/jarcoal/httpmock"
@@ -70,12 +69,14 @@ func TestSimplePhoto(T *testing.T) {
 	assert.Nil(nil)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
-	photo, err := unsplash.Photos.Photo("", nil)
+	photo, resp, err := unsplash.Photos.Photo("", nil)
 	assert.NotNil(err)
 	assert.Nil(photo)
+	assert.Nil(resp)
 
-	photo, err = unsplash.Photos.Photo("random", nil)
+	photo, resp, err = unsplash.Photos.Photo("random", nil)
 	assert.NotNil(photo)
+	assert.NotNil(resp)
 	assert.Nil(err)
 	log.Println(photo)
 
@@ -89,14 +90,16 @@ func TestPhotoWithOpt(T *testing.T) {
 	assert := assert.New(T)
 	var opt PhotoOpt
 	unsplash := setup()
-	photo, err := unsplash.Photos.Photo("random", &opt)
+	photo, resp, err := unsplash.Photos.Photo("random", &opt)
 	assert.NotNil(err)
+	assert.Nil(resp)
 	assert.Nil(photo)
 	log.Println(photo)
 	opt.Height = 400
 	opt.Width = 600
-	photo, err = unsplash.Photos.Photo("random", &opt)
+	photo, resp, err = unsplash.Photos.Photo("random", &opt)
 	assert.NotNil(photo)
+	assert.NotNil(resp)
 	assert.Nil(err)
 	log.Println(photo)
 }
@@ -155,13 +158,15 @@ func TestPhotoStats(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
-	stats, err := unsplash.Photos.Stats("-HPhkZcJQNk")
+	stats, resp, err := unsplash.Photos.Stats("-HPhkZcJQNk")
 	assert.Nil(err)
 	assert.NotNil(stats)
+	assert.NotNil(resp)
 	log.Println(stats)
 
-	stats, err = unsplash.Photos.Stats("")
+	stats, resp, err = unsplash.Photos.Stats("")
 	assert.Nil(stats)
+	assert.Nil(resp)
 	assert.NotNil(err)
 }
 
@@ -169,13 +174,15 @@ func TestDownloadLink(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
-	url, err := unsplash.Photos.DownloadLink("-HPhkZcJQNk")
+	url, resp, err := unsplash.Photos.DownloadLink("-HPhkZcJQNk")
 	assert.Nil(err)
 	assert.NotNil(url)
+	assert.NotNil(resp)
 	log.Println(url)
 
-	url, err = unsplash.Photos.DownloadLink("")
+	url, resp, err = unsplash.Photos.DownloadLink("")
 	assert.Nil(url)
+	assert.Nil(resp)
 	assert.NotNil(err)
 }
 
@@ -257,7 +264,7 @@ func TestPhotoUnlike(T *testing.T) {
 func roguePhotoServiceTest(T *testing.T, responder httpmock.Responder) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 
 	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto",
 		responder)
@@ -276,18 +283,21 @@ func roguePhotoServiceTest(T *testing.T, responder httpmock.Responder) {
 
 	unsplash := setup()
 	assert := assert.New(T)
-	photo, err := unsplash.Photos.Photo("gopherPhoto", nil)
+	photo, resp, err := unsplash.Photos.Photo("gopherPhoto", nil)
 	assert.Nil(photo)
+	assert.Nil(resp)
 	assert.NotNil(err)
 	log.Println(err)
 
-	photoStats, err := unsplash.Photos.Stats("gopherPhoto")
+	photoStats, resp, err := unsplash.Photos.Stats("gopherPhoto")
 	assert.Nil(photoStats)
+	assert.Nil(resp)
 	assert.NotNil(err)
 	log.Println(err)
 
-	url, err := unsplash.Photos.DownloadLink("gopherPhoto")
+	url, resp, err := unsplash.Photos.DownloadLink("gopherPhoto")
 	assert.Nil(url)
+	assert.Nil(resp)
 	assert.NotNil(err)
 	log.Println(err)
 

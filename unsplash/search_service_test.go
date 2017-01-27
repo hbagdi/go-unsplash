@@ -26,7 +26,6 @@ package unsplash
 import (
 	"io/ioutil"
 	"log"
-	"os"
 	"testing"
 
 	"github.com/jarcoal/httpmock"
@@ -108,7 +107,7 @@ func TestSearchCollections(T *testing.T) {
 func rogueSearchServiceTest(T *testing.T, responder httpmock.Responder) {
 	httpmock.Activate()
 	defer httpmock.DeactivateAndReset()
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	qs := "?page=1&per_page=10&query=InnerPeace"
 	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(searchCollections)+qs,
 		responder)

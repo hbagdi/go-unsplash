@@ -69,9 +69,9 @@ func processPhotoOpt(photoOpt *PhotoOpt) interface{} {
 }
 
 // Photo return a photo with id
-func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
+func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, *Response, error) {
 	if "" == id {
-		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
 	}
 
 	// Validation and conversion if necessary of photoOpt
@@ -79,72 +79,72 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, error) {
 	opt = nil
 	if photoOpt != nil {
 		if !photoOpt.Valid() {
-			return nil, &InvalidPhotoOpt{ErrString: " photoOpt has zero or non-negative values"}
+			return nil, nil, &InvalidPhotoOpt{ErrString: " photoOpt has zero or non-negative values"}
 		}
 		opt = processPhotoOpt(photoOpt)
 	}
 	endpoint := fmt.Sprintf("%v/%v", getEndpoint(photos), id)
 	req, err := newRequest(GET, endpoint, opt, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	cli := (service)(*ps)
 	resp, err := cli.do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	var photo Photo
 	err = json.Unmarshal(*resp.body, &photo)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &photo, nil
+	return &photo, resp, nil
 }
 
 // Stats return a stats about a photo with id.
-func (ps *PhotosService) Stats(id string) (*PhotoStats, error) {
+func (ps *PhotosService) Stats(id string) (*PhotoStats, *Response, error) {
 	if "" == id {
-		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
 	}
 	endpoint := fmt.Sprintf("%v/%v/stats", getEndpoint(photos), id)
 	req, err := newRequest(GET, endpoint, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	cli := (service)(*ps)
 	resp, err := cli.do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	var stats PhotoStats
 	err = json.Unmarshal(*resp.body, &stats)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return &stats, nil
+	return &stats, resp, nil
 }
 
 // DownloadLink return the download URL for a photo.
-func (ps *PhotosService) DownloadLink(id string) (*URL, error) {
+func (ps *PhotosService) DownloadLink(id string) (*URL, *Response, error) {
 	if "" == id {
-		return nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
 	}
 	endpoint := fmt.Sprintf("%v/%v/download", getEndpoint(photos), id)
 	req, err := newRequest(GET, endpoint, nil, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	cli := (service)(*ps)
 	resp, err := cli.do(req)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	var url urlWrapper
 	err = json.Unmarshal(*resp.body, &url)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return url.URL, nil
+	return url.URL, resp, nil
 }
 
 // All returns a list of all photos on unsplash.
