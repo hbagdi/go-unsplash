@@ -326,6 +326,8 @@ func rogueCollectionServiceTest(T *testing.T, responder httpmock.Responder) {
 		responder)
 	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(collections)+"/4242",
 		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(collections),
+		responder)
 
 	unsplash := setup()
 	assert := assert.New(T)
@@ -358,6 +360,12 @@ func rogueCollectionServiceTest(T *testing.T, responder httpmock.Responder) {
 	resp, err = unsplash.Collections.AddPhoto(4242, "gopherPhoto")
 	assert.NotNil(err)
 	assert.Nil(resp)
+	log.Println(err)
+
+	cols, resp, err := unsplash.Collections.All(nil)
+	assert.Nil(cols)
+	assert.Nil(resp)
+	assert.NotNil(err)
 	log.Println(err)
 }
 

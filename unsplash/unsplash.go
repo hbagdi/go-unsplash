@@ -41,7 +41,6 @@ type Unsplash struct {
 	Photos      *PhotosService
 	Collections *CollectionsService
 	Search      *SearchService
-	//TODO add rate limit struct
 }
 
 //New returns a new Unsplash struct

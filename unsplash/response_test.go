@@ -42,5 +42,3 @@ func TestResponse(T *testing.T) {
 	assert.NotNil(iae)
 	assert.Equal(true, ok)
 }
-
-//TODO test pagination using  all photos endpoint

@@ -42,3 +42,13 @@ func TestRequest(T *testing.T) {
 	assert.NotNil(iae)
 	assert.Equal(true, ok)
 }
+
+func TestRequestRogue(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	var ROGUE method
+	ROGUE = "ROGUE"
+	req, err := newRequest(ROGUE, "", nil, nil)
+	assert.Nil(req)
+	assert.NotNil(err)
+}

@@ -271,6 +271,8 @@ func roguePhotoServiceTest(T *testing.T, responder httpmock.Responder) {
 		responder)
 	httpmock.RegisterResponder("DELETE", getEndpoint(base)+getEndpoint(photos)+"/gopherPhoto/like",
 		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(photos),
+		responder)
 
 	unsplash := setup()
 	assert := assert.New(T)
@@ -303,6 +305,12 @@ func roguePhotoServiceTest(T *testing.T, responder httpmock.Responder) {
 
 	photo, resp, err = unsplash.Photos.Unlike("gopherPhoto")
 	assert.Nil(photo)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	photos, resp, err = unsplash.Photos.All(nil)
+	assert.Nil(photos)
 	assert.Nil(resp)
 	assert.NotNil(err)
 	log.Println(err)

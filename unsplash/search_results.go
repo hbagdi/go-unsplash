@@ -43,5 +43,3 @@ type CollectionSearchResult struct {
 	TotalPages *int          `json:"total_pages"`
 	Results    *[]Collection `json:"results"`
 }
-
-//TODO add unexported struct for query, page and per_page

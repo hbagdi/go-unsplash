@@ -50,7 +50,6 @@ func (r *Response) checkForErrors() error {
 
 	case 403:
 		return &AuthorizationError{ErrString: "403: Access forbidden request"}
-		//TODO check body for rate limiting
 
 	case 404:
 		return &NotFoundError{ErrString: "404: The cat got tired of the Laser"}
