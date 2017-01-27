@@ -26,8 +26,10 @@ package unsplash
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"testing"
 
+	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -101,4 +103,43 @@ func TestSearchCollections(T *testing.T) {
 	assert.NotNil(err)
 	assert.Nil(resp)
 	assert.Nil(collections)
+}
+
+func rogueSearchServiceTest(T *testing.T, responder httpmock.Responder) {
+	httpmock.Activate()
+	defer httpmock.DeactivateAndReset()
+	log.SetOutput(os.Stdout)
+	qs := "?page=1&per_page=10&query=InnerPeace"
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(searchCollections)+qs,
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(searchUsers)+qs,
+		responder)
+	httpmock.RegisterResponder("GET", getEndpoint(base)+getEndpoint(searchPhotos)+qs,
+		responder)
+
+	unsplash := setup()
+	assert := assert.New(T)
+	var opt SearchOpt
+	opt.Query = "InnerPeace"
+	photos, resp, err := unsplash.Search.Photos(&opt)
+	assert.Nil(photos)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+
+	collections, resp, err := unsplash.Search.Collections(&opt)
+	assert.Nil(collections)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+	users, resp, err := unsplash.Search.Users(&opt)
+	assert.Nil(users)
+	assert.Nil(resp)
+	assert.NotNil(err)
+	log.Println(err)
+}
+
+func TestSearchRogueStuff(T *testing.T) {
+	rogueSearchServiceTest(T, httpmock.NewStringResponder(200, `Bad ass Bug flow`))
+	rogueSearchServiceTest(T, nil)
 }
