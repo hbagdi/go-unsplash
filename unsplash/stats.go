@@ -25,7 +25,9 @@ package unsplash
 
 import (
 	"bytes"
+	"encoding/json"
 	"strconv"
+	"strings"
 )
 
 // GlobalStats shows the total photo stats of Unsplash.com
@@ -35,6 +37,41 @@ type GlobalStats struct {
 	BatchDownloads int `json:"batch_downloads,omitempty"`
 }
 
+// processNumber converts a string or float or int representation into an int
+// this hack is needed because the API strangely returns a float value in quotes in the JSON response for this endpoint
+func processNumber(i interface{}) int {
+	switch v := i.(type) {
+	case int:
+		return v
+	case string:
+		s := strings.Split(i.(string), ".")
+		n, _ := strconv.Atoi(s[0])
+		return n
+	case float64:
+		return int(v)
+	}
+	return 0
+}
+
+// UnmarshalJSON converts a JSON string representation of GlobalStats into a struct
+func (gs *GlobalStats) UnmarshalJSON(b []byte) error {
+	var f interface{}
+	err := json.Unmarshal(b, &f)
+	if err != nil {
+		return err
+	}
+	m := f.(map[string]interface{})
+	if _, ok := m["total_photos"]; ok {
+		gs.TotalPhotos = processNumber(m["total_photos"])
+	}
+	if _, ok := m["photo_downloads"]; ok {
+		gs.PhotoDownloads = processNumber(m["photo_downloads"])
+	}
+	if _, ok := m["batch_downloads"]; ok {
+		gs.BatchDownloads = processNumber(m["batch_downloads"])
+	}
+	return nil
+}
 func (G *GlobalStats) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("\nGlobal Stats:\n")
