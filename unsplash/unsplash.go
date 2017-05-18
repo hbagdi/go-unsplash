@@ -21,6 +21,14 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+// Package unsplash provides a RESTful go binding for https://unsplash.com API.
+//
+//
+// Authentication:
+// The package does not deal with completeing OAUTH authentication and expects
+// the user to provide a *http.Client which has the necessary Authentication setup.
+//
+// https://golang.org/x/oauth2 package can be used for a token source for this purpose.
 package unsplash
 
 import (

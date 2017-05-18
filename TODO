@@ -1,7 +1,4 @@
 -Search service (Not returning link headers)
 -upload a photo- is this endpoint available?
 Unsplash official libraries have this; study and then test it on postman first.
--how about delete a photo?
 -update a photo
--Test network and server errors using httpmock
--turn *Response everywhere
