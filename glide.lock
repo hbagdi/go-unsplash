@@ -1,5 +1,5 @@
 hash: 4d6137f1821dd17dee3b0100f7410cb5015046057ae46bfba9d1b7f23ddb6897
-updated: 2017-01-26T16:12:10.372691132-05:00
+updated: 2017-05-20T19:27:59.282470836-04:00
 imports:
 - name: github.com/google/go-querystring
   version: 53e6ce116135b80d037921a7fdd5138cf32d7a8a
@@ -11,7 +11,7 @@ testImports:
   subpackages:
   - spew
 - name: github.com/golang/protobuf
-  version: 8ee79997227bf9b34611aee7946ae64735e6fd93
+  version: fec3b39b059c0f88fa6b20f5ed012b1aa203a8b4
   subpackages:
   - proto
 - name: github.com/jarcoal/httpmock
@@ -25,15 +25,15 @@ testImports:
   subpackages:
   - assert
 - name: golang.org/x/net
-  version: f2499483f923065a842d38eb4c7f1927e6fc6e6d
+  version: 513929065c19401a1c7b76ecd942f9f86a0c061b
   subpackages:
   - context
 - name: golang.org/x/oauth2
-  version: 314dd2c0bf3ebd592ec0d20847d27e79d0dbe8dd
+  version: f047394b6d14284165300fd82dad67edb3a4d7f6
   subpackages:
   - internal
 - name: google.golang.org/appengine
-  version: a2c54d2174c17540446e0ced57d9d459af61bc1c
+  version: 170382fa85b10b94728989dfcf6cc818b335c952
   subpackages:
   - internal
   - internal/base
