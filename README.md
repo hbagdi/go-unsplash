@@ -10,12 +10,12 @@ A wrapper for the [Unsplash API](https://unsplash.com/developers).
 [Unsplash.com](https://unsplash.com) provides free ([do whatever you want](https://unsplash.com/license)) high-resolution photos. As many as you want without any pesky API rate limits.
 
 ## Documentation
-- [Installation](#Installation)
-- [Dependencies](#Dependencies)
-- [API terms and guidelines](#API-Guidelines)
+- [Installation](#installation)
+- [Dependencies](#dependencies)
+- [API terms and guidelines](#api-guidelines)
 - [Registering your App](#Registeration)
 - [Usage](#Usage)
-- [License](#License)
+- [License](#license)
 
 ## Installation
 
