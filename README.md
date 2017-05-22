@@ -10,13 +10,12 @@ A wrapper for the [Unsplash API](https://unsplash.com/developers).
 [Unsplash.com](https://unsplash.com) provides free ([ CC0-licensed](https://unsplash.com/license)) high-resolution photos.
 As many as you want without any pesky API rate limits.
 
-## Documentation
+## Documentation  
 - [Installation](#installation)
 - [Dependencies](#dependencies)
 - [API terms and guidelines](#api-guidelines)
 - [Registering your App](#registration)
 - [Usage](#usage)
-  - [Authentication](authentication)
 - [License](#license)
 
 ## Installation
@@ -45,10 +44,51 @@ You can then
 use the AppID and Secret for authentication.
 
 ## Usage
+
+- [Installation](#installation)
+- [Authentication](#authentication)
+- [Creating an instance](#creating-an-instance)
+- [Error handling](#error-handling)
+- [Response struct](#response-struct)
+- [Pagination](#pagination) - paging through results
+- [unsplash.Photos](#photos)
+  - [Random](#random) - get random photo(s)
+  - [All](#all-photos) - get all photos on unplash.com
+  - [Curated](#curated-photos) - returns a list of curated photos
+  - [Photo](#photo) -get details of a single photo
+  - [Like](#like) - like a photo on the authenticated users' behalf
+  - [Unlike](#unlike) - unlike a photo on the authenticated users' behalf
+  - [Download link](#download-link) - get download link of a photo
+  - [Stats](#stats) - statistics of a photo
+- [unsplash.Collections](#collections)
+  - [All](#all-collections) - return all collections on unsplash.com
+  - [Collection](#collection) - get details about a single collection
+  - [Curated](#curated-collections) -  get a list of curated collections
+  - [Featured](#featured-collections) - get a list of featured collections
+  - [Related](#related-collections) - get a list of related collections of a particular collection
+  - [Create](#create-collection) - create a collection for the authenticated user
+  - [Delete](#delete-collection) - delete a collection
+  - [Update](#update-collection) - update a collection's description
+  - [Add Photo](#add-photo) - add a photo to a collection
+  - [Remove Photo](#remove-photo) - remove a photo from a collection
+- [unsplash.Users](#users)
+  - [User](#user) -  get details about a single user
+  - [Portfolio](#portfolio) - get link to a user's portfolio
+  - [Liked Photos](#liked-photos) - get list of photos a user has liked
+  - [Photos](#user-photos) - get list of photos a user has uploaded to unsplash.com
+  - [Collections](#user-collections) - collections of a user
+- [unsplash.Search](#search)
+  - [Photos](#search-photos) - search photos
+  - [Collections](#search-collections) - search collections
+  - [Users](#search-users) - search users
+
+
+### Installation
+
 Once you've installed the library using [`go get`](#installation),
 import it to your go project:
 ```go
-import github.com/hardikbagdi/go-unsplash/unsplash
+import "github.com/hardikbagdi/go-unsplash/unsplash"
 ```
 
 ### Authentication
@@ -62,8 +102,6 @@ should not be shared between users.
 
 Note that if you're just using actions that require the public permission scope,
 only the AppID is required.
-
- TODO add more auth info and example.
 
 ### Creating an instance
 An instance of unsplash can be created using `New()`.  
@@ -94,14 +132,14 @@ if err != nil {
 #### Error types
  TODO
 
-### Response object
+### Response struct
 Most API methods return a
 [`*Response`](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash#Response)
 along-with the result of the call.  
 This struct contains paging and rate-limit information.
 
-### Paging
-Paging is currently supported by supplying a page
+### Pagination
+Pagination is currently supported by supplying a page
 number in the
 [`ListOpt`](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash#ListOpt).
 The `NextPage` field in Response can be used to  get the next page number.
@@ -124,11 +162,91 @@ photos, resp ,err = unsplash.Search.Photos(searchOpt)
 ### Photos
 TODO
 
+###### Random
+TODO
+
+###### All photos
+TODO
+
+###### Curated Photos
+TODO
+
+###### Photo
+TODO
+
+###### Like
+TODO
+
+###### Unlike
+TODO
+
+###### Download Link
+TODO
+
+###### Stats
+TODO
+
+
 ### Collections
+TODO
+
+###### All collections
+TODO
+
+###### Curated collections
+TODO
+
+###### Featured collections
+TODO
+
+###### Related collections
+TODO
+
+###### Create collection
+TODO
+
+###### Delete collection
+TODO
+
+###### Update collection
+TODO
+
+###### Add photo
+TODO
+
+###### Remove photo
 TODO
 
 ### Users
 TODO
+
+###### User
+TODO
+
+###### Portfolio
+TODO
+
+###### Liked Photos
+TODO
+
+###### User photos
+TODO
+
+###### User collections
+TODO
+
+### Search
+TODO
+
+###### Search photos
+TODO
+
+###### Search collections
+TODO
+
+###### Search users
+TODO
+
 
 ## License
 
