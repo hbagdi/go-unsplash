@@ -174,11 +174,27 @@ Unsplash.Photos is of type PhotosService.
 It provides various methods for querying the /photos endpoint of the API.
 
 ###### Random
-TODO
+You can get a single random photo or multiple depending upon opt.
+If opt is nil, then a single random photo is returned.
+Random photos satisfy all the parameters specified in `*RandomPhotoOpt`.
+```go
+photos, resp, err := unsplash.Photos.Random(nil)
+assert.Nil(err)
+assert.NotNil(photos)
+assert.NotNil(resp)
+assert.Equal(1, len(*photos))
+var opt RandomPhotoOpt
+opt.Count = 3
+photos, resp, err = unsplash.Photos.Random(&opt)
+assert.Nil(err)
+assert.NotNil(photos)
+assert.NotNil(resp)
+assert.Equal(3, len(*photos))
+```
 
 ###### All photos
 Get all photos on unsplash.com.  
-Obviously, this is a huge list and hence can be paginated.
+Obviously, this is a huge list and hence can be paginated through.
 ```go
 opt := new(unsplash.ListOpt)
 opt.Page = 1
@@ -210,10 +226,60 @@ for {
 ```
 
 ###### Curated Photos
-TODO
+Get all curated photos on unsplash.com.  
+Obviously, this is a huge list and hence can be paginated through.
+```go
+opt := new(unsplash.ListOpt)
+opt.Page = 1
+opt.PerPage = 10
+
+if !opt.Valid() {
+	fmt.Println("error with opt")
+	return
+}
+count := 0
+for {
+	photos, resp, err := un.Photos.Curated(opt)
+
+	if err != nil {
+		fmt.Println("error")
+		return
+	}
+	//process photos
+	for _, c := range *photos {
+		fmt.Printf("%d : %d\n", count, *c.ID)
+		count += 1
+	}
+	//go for next page
+	if !resp.HasNextPage {
+		return
+	}
+	opt.Page = resp.NextPage
+}
+```
 
 ###### Photo
-TODO
+Get details of a specific photo.
+```go
+photo, resp, err := unsplash.Photos.Photo("9BoqXzEeQqM", nil)
+assert.NotNil(photo)
+assert.NotNil(resp)
+assert.Nil(err)
+fmt.Println(photo)
+//photo is of type *Unsplash.Photo
+
+// you can also specify a PhotoOpt to get a custom size or cropped photo
+var opt PhotoOpt
+opt.Height = 400
+opt.Width = 600
+photo, resp, err = unsplash.Photos.Photo("9BoqXzEeQqM", &opt)
+assert.NotNil(photo)
+assert.NotNil(resp)
+assert.Nil(err)
+log.Println(photo)
+//photo.Urls.Custom will have the cropped photo
+// See PhotoOpt for more details
+```
 
 ###### Like
 TODO

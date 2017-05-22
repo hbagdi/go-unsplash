@@ -193,6 +193,7 @@ const (
 var defaultRandomPhotoOpt = &RandomPhotoOpt{Count: 1}
 
 // Random returns random photo(s).
+// If opt is nil, then a single random photo is returned by default
 func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error) {
 	if opt == nil {
 		opt = defaultRandomPhotoOpt
