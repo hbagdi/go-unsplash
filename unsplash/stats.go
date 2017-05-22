@@ -72,11 +72,11 @@ func (gs *GlobalStats) UnmarshalJSON(b []byte) error {
 	}
 	return nil
 }
-func (G *GlobalStats) String() string {
+func (gs *GlobalStats) String() string {
 	var buf bytes.Buffer
 	buf.WriteString("\nGlobal Stats:\n")
-	buf.WriteString("Total Photos: " + strconv.Itoa(G.TotalPhotos) + "\n")
-	buf.WriteString("Total downloads: " + strconv.Itoa(G.PhotoDownloads) + "\n")
-	buf.WriteString("Batch downloads: " + strconv.Itoa(G.BatchDownloads) + "\n")
+	buf.WriteString("Total Photos: " + strconv.Itoa(gs.TotalPhotos) + "\n")
+	buf.WriteString("Total downloads: " + strconv.Itoa(gs.PhotoDownloads) + "\n")
+	buf.WriteString("Batch downloads: " + strconv.Itoa(gs.BatchDownloads) + "\n")
 	return buf.String()
 }
