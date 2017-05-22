@@ -1,4 +1,4 @@
-package testing
+package main
 
 import (
 	"encoding/json"
@@ -18,7 +18,7 @@ type AuthConfig struct {
 }
 
 func authFromFile() *AuthConfig {
-	bytes, err := ioutil.ReadFile("auth.json")
+	bytes, err := ioutil.ReadFile("../auth.json")
 	if err != nil {
 		return nil
 	}
@@ -45,47 +45,40 @@ func setup() *unsplash.Unsplash {
 	client := oauth2.NewClient(oauth2.NoContext, ts)
 	return unsplash.New(client)
 }
-func main() {
+
+//Photos.All()
+func photosAll() {
 	un := setup()
 	fmt.Println("Done auth")
 	opt := new(unsplash.ListOpt)
-	opt.PerPage = 100
 	opt.Page = 1
+	opt.PerPage = 100
 
-	//delete all collections of @gopher
-	for {
-		collections, resp, err := un.Users.Collections("gopher", opt)
-
-		if err != nil {
-			fmt.Print("error")
-			return
-		}
-		for _, c := range *collections {
-			un.Collections.Delete(*c.ID)
-		}
-		if !resp.HasNextPage {
-			break
-		}
-		opt.Page = resp.NextPage
+	if !opt.Valid() {
+		fmt.Println("error with opt")
+		return
 	}
-
-	opt.PerPage = 100
-	opt.Page = 1
-
-	//unlike all photos for @gopher
+	count := 0
 	for {
-		photos, resp, err := un.Users.LikedPhotos("gopher", opt)
+		photos, resp, err := un.Photos.All(opt)
 
 		if err != nil {
-			fmt.Print("error")
+			fmt.Println("error")
 			return
 		}
+		//process photos
 		for _, c := range *photos {
-			un.Photos.Unlike(*c.ID)
+			fmt.Printf("%d : %d\n", count, *c.ID)
+			count += 1
 		}
+		//go for next page
 		if !resp.HasNextPage {
-			break
+			return
 		}
 		opt.Page = resp.NextPage
 	}
+}
+
+func main() {
+	photosAll()
 }

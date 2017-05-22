@@ -147,6 +147,9 @@ func TestCreateCollection(T *testing.T) {
 	assert.Nil(err)
 	assert.NotNil(resp)
 	assert.NotNil(collection)
+	resp, err = unsplash.Collections.Delete(*collection.ID)
+	assert.NotNil(resp)
+	assert.Nil(err)
 
 	title = ""
 	collection, resp, err = unsplash.Collections.Create(&opt)
