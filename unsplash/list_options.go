@@ -52,6 +52,9 @@ func (opt *ListOpt) Valid() bool {
 	if opt.Page <= 0 || opt.PerPage <= 0 {
 		return false
 	}
+	if opt.OrderBy == "" {
+		return true
+	}
 	for _, val := range orders {
 		if val == opt.OrderBy {
 			return true

@@ -7,7 +7,8 @@
 
 A wrapper for the [Unsplash API](https://unsplash.com/developers).
 
-[Unsplash.com](https://unsplash.com) provides free ([ CC0-licensed](https://unsplash.com/license)) high-resolution photos.
+[Unsplash.com](https://unsplash.com) provides free
+([CC0-licensed](https://unsplash.com/license)) high-resolution photos.
 As many as you want without any pesky API rate limits.
 
 ## Documentation  
@@ -15,6 +16,7 @@ As many as you want without any pesky API rate limits.
 - [Dependencies](#dependencies)
 - [API terms and guidelines](#api-guidelines)
 - [Registering your App](#registration)
+- [Contact for help](#help)
 - [Usage](#usage)
 - [License](#license)
 
@@ -25,27 +27,35 @@ go get github.com/hardikbagdi/go-unsplash
 ```
 
 ## Dependencies
-This library has a single dependency on Google's [go-querystring](https://github.com/google/go-querystring/query).
+This library has a single dependency on Google's
+[go-querystring](https://github.com/google/go-querystring/query).
 
 
 ## API Guidelines
 
-- API is [open and free](https://community.unsplash.com/developersblog/the-unsplash-api-is-now-open-free).
+- API is [open and free]
+(https://community.unsplash.com/developersblog/the-unsplash-api-is-now-open-free).
 - API [Terms & Conditions](https://unsplash.com/api-terms)
-- API [Guidelines](https://community.unsplash.com/developersblog/unsplash-api-guidelines)
-- [Hotlinking](https://unsplash.com/documentation#hotlinking) the
-Unsplash image files is encouraged.
+- API [Guidelines]
+(https://community.unsplash.com/developersblog/unsplash-api-guidelines)
+- [Hotlinking](https://unsplash.com/documentation#hotlinking)
+the Unsplash image files is encouraged.
 
 
 ## Registration
-[Sign up](https://unsplash.com/join) on Unsplash.com and register as a [developer](https://unsplash.com/developers).  
+[Sign up](https://unsplash.com/join) on Unsplash.com and register as a
+[developer](https://unsplash.com/developers).  
 You can then
 [create a new application](https://unsplash.com/oauth/applications/new) and
 use the AppID and Secret for authentication.
 
+## Help
+Please open an issue in this repository if you need help or want to report a bug.  
+Mail at the e-mail address in the license if needed.
+
 ## Usage
 
-- [Installation](#installation)
+- [Importing](#importing)
 - [Authentication](#authentication)
 - [Creating an instance](#creating-an-instance)
 - [Error handling](#error-handling)
@@ -62,7 +72,7 @@ use the AppID and Secret for authentication.
   - [Stats](#stats) - statistics of a photo
 - [unsplash.Collections](#collections)
   - [All](#all-collections) - return all collections on unsplash.com
-  - [Collection](#collection) - get details about a single collection
+  - [Collection](#collection) - get details about a single existing collection
   - [Curated](#curated-collections) -  get a list of curated collections
   - [Featured](#featured-collections) - get a list of featured collections
   - [Related](#related-collections) - get a list of related collections of a particular collection
@@ -83,7 +93,7 @@ use the AppID and Secret for authentication.
   - [Users](#search-users) - search users
 
 
-### Installation
+### Importing
 
 Once you've installed the library using [`go get`](#installation),
 import it to your go project:
@@ -129,9 +139,6 @@ if err != nil {
 }
 ```
 
-#### Error types
- TODO
-
 ### Response struct
 Most API methods return a
 [`*Response`](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash#Response)
@@ -151,22 +158,56 @@ if err != nil {
   return
 }
 // process photos
+for _,photo := range *photos {
+  fmt.Println(*photo.ID)
+}
 // get next
 if !resp.HasNextPage {
   return
 }
-searchOpt.Page := resp.NextPage
+searchOpt.Page = resp.NextPage
 photos, resp ,err = unsplash.Search.Photos(searchOpt)
-//photos now has next page of photos
+//photos now has next page of the search result
 ```
 ### Photos
-TODO
+Unsplash.Photos is of type PhotosService.  
+It provides various methods for querying the /photos endpoint of the API.
 
 ###### Random
 TODO
 
 ###### All photos
-TODO
+Get all photos on unsplash.com.  
+Obviously, this is a huge list and hence can be paginated.
+```go
+opt := new(unsplash.ListOpt)
+opt.Page = 1
+opt.PerPage = 10
+
+if !opt.Valid() {
+	fmt.Println("error with opt")
+	return
+}
+count := 0
+for {
+	photos, resp, err := un.Photos.All(opt)
+
+	if err != nil {
+		fmt.Println("error")
+		return
+	}
+	//process photos
+	for _, c := range *photos {
+		fmt.Printf("%d : %d\n", count, *c.ID)
+		count += 1
+	}
+	//go for next page
+	if !resp.HasNextPage {
+		return
+	}
+	opt.Page = resp.NextPage
+}
+```
 
 ###### Curated Photos
 TODO
@@ -200,6 +241,9 @@ TODO
 TODO
 
 ###### Related collections
+TODO
+
+###### Collection
 TODO
 
 ###### Create collection
