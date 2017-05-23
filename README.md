@@ -173,7 +173,7 @@ photos, resp ,err = unsplash.Search.Photos(searchOpt)
 Unsplash.Photos is of type PhotosService.  
 It provides various methods for querying the /photos endpoint of the API.
 
-###### Random
+#### Random
 You can get a single random photo or multiple depending upon opt.
 If opt is nil, then a single random photo is returned.
 Random photos satisfy all the parameters specified in `*RandomPhotoOpt`.
@@ -192,7 +192,7 @@ assert.NotNil(resp)
 assert.Equal(3, len(*photos))
 ```
 
-###### All photos
+#### All photos
 Get all photos on unsplash.com.  
 Obviously, this is a huge list and hence can be paginated through.
 ```go
@@ -225,7 +225,7 @@ for {
 }
 ```
 
-###### Curated Photos
+#### Curated Photos
 Get all curated photos on unsplash.com.  
 Obviously, this is a huge list and hence can be paginated through.
 ```go
@@ -258,7 +258,7 @@ for {
 }
 ```
 
-###### Photo
+#### Photo
 Get details of a specific photo.
 ```go
 photo, resp, err := unsplash.Photos.Photo("9BoqXzEeQqM", nil)
@@ -281,81 +281,257 @@ log.Println(photo)
 // See PhotoOpt for more details
 ```
 
-###### Like
-TODO
+#### Like
+```go
+//Like a random photo
+photos, resp, err := unsplash.Photos.Random(nil)
+assert.Nil(err)
+assert.NotNil(photos)
+assert.NotNil(resp)
+assert.Equal(1, len(*photos))
+photoid := (*photos)[0].ID
+photo, resp, err := unsplash.Photos.Like(*photoid)
+assert.Nil(err)
+assert.NotNil(photo)
+assert.NotNil(resp)
+```
 
-###### Unlike
-TODO
+#### Unlike
+Same way as Like except call `Unlike()`.
 
-###### Download Link
-TODO
+#### Download Link
+Get download URL for a photo.
+```go
+url, resp, err := unsplash.Photos.DownloadLink("-HPhkZcJQNk")
+assert.Nil(err)
+assert.NotNil(url)
+assert.NotNil(resp)
+log.Println(url)
+```
 
-###### Stats
-TODO
+#### Stats
+Statistics for a specific photo
+```go
+stats, resp, err := unsplash.Photos.Stats("-HPhkZcJQNk")
+assert.Nil(err)
+assert.NotNil(stats)
+assert.NotNil(resp)
+log.Println(stats)
+```
 
 
 ### Collections
-TODO
+Various details about collection(s).
 
-###### All collections
-TODO
+#### All collections
+```go
+collections, resp, err = unsplash.Collections.All(nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+opt := new(ListOpt)
+opt.Page = 2
+opt.PerPage = 10
+//get the second page
+collections, resp, err = unsplash.Collections.All(opt)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+```
 
-###### Curated collections
-TODO
+#### Curated collections
+```go
+collections, resp, err := unsplash.Collections.Curated(nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+```
 
-###### Featured collections
-TODO
+#### Featured collections
+Same as Curated, but use `Featured()` instead.
 
-###### Related collections
-TODO
+#### Related collections
+Get collections related to a collection.
+```go
+collections, resp, err := unsplash.Collections.Related("296", nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+//page through if necessary
+```
 
-###### Collection
-TODO
+#### Collection
+Details about a specific collection
+```go
+collection, resp, err := unsplash.Collections.Collection("910")
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collection)
+```
 
-###### Create collection
-TODO
+#### Create collection
+Create a collection on behalf of the authenticated user.
+```go
+var opt CollectionOpt
+title := "Test42"
+opt.Title = &title
+collection, resp, err := unsplash.Collections.Create(&opt)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collection)
+```
 
-###### Delete collection
-TODO
+#### Delete collection
+Let's delete the collection just created above.
+```go
+//get list of collections of a user
+collections, resp, err := unsplash.Users.Collections("gopher", nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+//take the first one
+collection := (*collections)[0]
+assert.NotNil(collection)
+//delete it
+resp, err = unsplash.Collections.Delete(*collection.ID)
+assert.NotNil(resp)
+assert.Nil(err)
+```
 
-###### Update collection
-TODO
+#### Update collection
+```go
+//get a user's collection
+collections, resp, err := unsplash.Users.Collections("gopher", nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+// take the first one
+collection := (*collections)[0]
+assert.NotNil(collection)
+log.Println(*collection.ID)
+//random title
+var opt CollectionOpt
+title := "Test43" + strconv.Itoa(rand.Int())
+opt.Title = &title
+//update the title
+col, resp, err := unsplash.Collections.Update(*collection.ID, &opt)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(col)
+```
 
-###### Add photo
-TODO
+#### Add photo
+```go
+photos, resp, err := unsplash.Photos.Random(nil)
+photo := (*photos)[0]
+//get a user's collection
+collections, resp, err := unsplash.Users.Collections("gopher", nil)
+assert.Nil(err)
+collection := (*collections)[0]
+//add the photo
+resp, err = unsplash.Collections.AddPhoto(*collection.ID, *photo.ID)
+assert.Nil(err)
+```
 
-###### Remove photo
-TODO
+#### Remove photo
+```go
+//remove a photo
+_, _ = unsplash.Collections.RemovePhoto(*collection.ID, *photo.ID)
+```
 
 ### Users
-TODO
+Details about an unsplash.com users.
 
-###### User
-TODO
+#### User
+Details about unsplash.com users.
+```go
+profileImageOpt := &ProfileImageOpt{Height: 120, Width: 400}
+//or pass a nil as second arg
+user, err := unsplash.Users.User("lukechesser", profileImageOpt)
+assert.Nil(err)
+assert.NotNil(user)
 
-###### Portfolio
-TODO
+//OR, get the currently authenticated user
+user, resp, err := unsplash.CurrentUser()
+assert.Nil(user)
+assert.Nil(resp)
+assert.NotNil(err)
+```
 
-###### Liked Photos
-TODO
+#### Portfolio
+```go
+url, err = unsplash.Users.Portfolio("gopher")
+assert.Nil(err)
+assert.NotNil(url)
+assert.Equal(url.String(), "https://wikipedia.org/wiki/Gopher")
+```
 
-###### User photos
-TODO
+#### Liked Photos
+```go
+photos, resp, err := unsplash.Users.LikedPhotos("lukechesser", nil)
+assert.Nil(err)
+assert.NotNil(photos)
+assert.NotNil(resp)
+```
 
-###### User collections
-TODO
+#### User photos
+Get photos a users has uploaded on unsplash.com
+```go
+photos, resp, err := unsplash.Users.Photos("lukechesser", nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(photos)
+```
+
+#### User collections
+Get a list of collections created by the user.
+```go
+collections, resp, err := unsplash.Users.Collections("gopher", nil)
+assert.Nil(err)
+assert.NotNil(resp)
+assert.NotNil(collections)
+```
 
 ### Search
-TODO
+Search for photos, collections or users.
 
-###### Search photos
-TODO
+#### Search photos
+```go
+var opt SearchOpt
+//an empty search will be erroneous
+photos, resp, err := unsplash.Search.Photos(&opt)
+assert.NotNil(err)
+assert.Nil(resp)
+assert.Nil(photos)
+opt.Query = "Nature"
+//Search for photos tageed "Nature"
+photos, _, err = unsplash.Search.Photos(&opt)
+log.Println(len(*photos.Results))
+assert.NotNil(photos)
+assert.Nil(err)
+```
 
-###### Search collections
-TODO
+#### Search collections
 
-###### Search users
-TODO
+```go
+var opt SearchOpt
+opt.Query = "Nature"
+collections, _, err = unsplash.Search.Collections(&opt)
+assert.NotNil(collections)
+assert.Nil(err)
+log.Println(len(*collections.Results))
+```
+
+#### Search users
+
+```go
+var opt SearchOpt
+opt.Query = "Nature"
+users, _, err = unsplash.Search.Users(&opt)
+log.Println(len(*users.Results))
+assert.NotNil(users)
+assert.Nil(err)
+```
 
 
 ## License
