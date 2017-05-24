@@ -30,17 +30,66 @@ Usage
 Use the following import path:
     import "github.com/hardikbagdi/go-unsplash/unsplash"
 
-
 Authentication
 
 Authentication is not handled by directly by go-unsplash.
-Instead, pass an `http.Client`
+Instead, pass an http.Client
 that can handle authentication for you.
-You can use libraries such as [oauth2](https:godoc.org/golang.org/x/oauth2).
-Please note that all calls will include the OAuth token and hence,
-[`http.Client`](https:godoc.org/net/http#Client)
+You can use libraries such as https://godoc.org/golang.org/x/oauth2.
+Please note that all calls will include the OAuth token and hence, http.Client
 should not be shared between users.
 Note that if you're just using actions that require the public permission scope,
 only the AppID is required.
+
+
+Creating an instance
+
+An instance of unsplash can be created using New().
+The http.Client supplied will be used to make requests to the API.
+
+	ts := oauth2.StaticTokenSource(
+	  &oauth2.Token{AccessToken: "Your-access-token"},
+	)
+	client := oauth2.NewClient(oauth2.NoContext, ts)
+	//use the http.Client to instantiate unsplash
+	unsplash := unsplash.New(client)
+	// requests can be now made to the API
+	randomPhoto, _ , err := unsplash.RandomPhoto(nil)
+
+Error handling
+
+All API calls return an error as second or third return object.
+All successful calls will return nil in place of this return.
+Further, go-unsplash has errors defined as types for better error handling.
+
+	randomPhoto, _ , err := unsplash.RandomPhoto(nil)
+	if err != nil {
+	  //handle error
+	}
+
+Pagination
+Pagination is supported by supplying a page
+number in the ListOpt.
+The NextPage field in Response can be used to  get the next page number.
+
+	searchOpt := &SearchOpt{Query : "Batman"}
+	photos, resp, err := unsplash.Search.Photos(searchOpt)
+
+	if err != nil {
+	  return
+	}
+	// process photos
+	for _,photo := range *photos {
+	  fmt.Println(*photo.ID)
+	}
+	// get next
+	if !resp.HasNextPage {
+	  return
+	}
+	searchOpt.Page = resp.NextPage
+	photos, resp ,err = unsplash.Search.Photos(searchOpt)
+	//photos now has next page of the search result
+
+
 */
 package unsplash
