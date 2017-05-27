@@ -105,9 +105,11 @@ func (r *Response) populatePagingInfo() {
 		}
 		href := parts[0]
 		//strip out '<' and '>'
-		href = href[1 : len(href)-1]
-		url, _ := url.Parse(href)
-
+		href = href[strings.Index(href, "<")+1 : strings.Index(href, ">")]
+		url, err := url.Parse(href)
+		if err != nil {
+			continue
+		}
 		pageString := url.Query().Get("page")
 		pageNumber, err := strconv.Atoi(string(pageString))
 		if err != nil {

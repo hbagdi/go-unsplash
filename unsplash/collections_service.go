@@ -120,7 +120,7 @@ func (cs *CollectionsService) Create(opt *CollectionOpt) (*Collection, *Response
 		return nil, nil, err
 	}
 	if resp.httpResponse.StatusCode != 201 {
-		return nil, nil, errors.New("Failed to create the collection.")
+		return nil, nil, errors.New("failed to create the collection")
 	}
 	return &collection, resp, nil
 }
@@ -167,7 +167,7 @@ func (cs *CollectionsService) Delete(collectionID int) (*Response, error) {
 		return nil, err
 	}
 	if resp.httpResponse.StatusCode != 204 {
-		return nil, errors.New("Failed to delete the collection.")
+		return nil, errors.New("failed to delete the collection")
 	}
 	return resp, nil
 }
@@ -197,7 +197,7 @@ func (cs *CollectionsService) AddPhoto(collectionID int, photoID string) (*Respo
 		return nil, err
 	}
 	if resp.httpResponse.StatusCode != 201 {
-		return nil, errors.New("Failed to add photo to the collection.")
+		return nil, errors.New("failed to add photo to the collection")
 	}
 	return resp, nil
 }
@@ -223,7 +223,7 @@ func (cs *CollectionsService) RemovePhoto(collectionID int, photoID string) (*Re
 		return nil, err
 	}
 	if resp.httpResponse.StatusCode != 200 {
-		return nil, errors.New("Failed to remove photo from the collection.")
+		return nil, errors.New("failed to remove photo from the collection")
 	}
 	return resp, nil
 }
