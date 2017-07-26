@@ -1,9 +1,9 @@
 # Unsplash API client
 
-[![GoDoc](https://godoc.org/github.com/hardikbagdi/go-unsplash?status.svg)](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash)
-[![Go Report Card](https://goreportcard.com/badge/github.com/hardikbagdi/go-unsplash)](https://goreportcard.com/report/github.com/hardikbagdi/go-unsplash)
+[![GoDoc](https://godoc.org/github.com/hardikbagdi/go-unsplash?status.svg)](https://godoc.org/github.com/hbagdi/go-unsplash/unsplash)
+[![Go Report Card](https://goreportcard.com/badge/github.com/hbagdi/go-unsplash)](https://goreportcard.com/report/github.com/hbagdi/go-unsplash)
 [![Build Status](https://travis-ci.org/hbagdi/go-unsplash.svg?branch=master)](https://travis-ci.org/hbagdi/go-unsplash) 
-[![Coverage Status](https://coveralls.io/repos/github/hardikbagdi/go-unsplash/badge.svg?branch=master)](https://coveralls.io/github/hardikbagdi/go-unsplash?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/hbagdi/go-unsplash/badge.svg?branch=master)](https://coveralls.io/github/hbagdi/go-unsplash?branch=master)
 
 A wrapper for the [Unsplash API](https://unsplash.com/developers).
 
@@ -22,7 +22,7 @@ A wrapper for the [Unsplash API](https://unsplash.com/developers).
 ## Installation
 
 ```go
-go get github.com/hardikbagdi/go-unsplash/unsplash
+go get github.com/hbagdi/go-unsplash/unsplash
 ```
 
 ## Dependencies
@@ -97,7 +97,7 @@ Mail at the e-mail address in the license if needed.
 Once you've installed the library using [`go get`](#installation), import it to your go project:
 
 ```go
-import "github.com/hardikbagdi/go-unsplash/unsplash"
+import "github.com/hbagdi/go-unsplash/unsplash"
 ```
 
 ### Authentication
@@ -138,12 +138,12 @@ if err != nil {
 
 ### Response struct
 
-Most API methods return a [`*Response`](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash#Response) along-with the result of the call.<br>
+Most API methods return a [`*Response`](https://godoc.org/github.com/hbagdi/go-unsplash/unsplash#Response) along-with the result of the call.<br>
 This struct contains paging and rate-limit information.
 
 ### Pagination
 
-Pagination is currently supported by supplying a page number in the [`ListOpt`](https://godoc.org/github.com/hardikbagdi/go-unsplash/unsplash#ListOpt). The `NextPage` field in Response can be used to get the next page number.
+Pagination is currently supported by supplying a page number in the [`ListOpt`](https://godoc.org/github.com/hbagdi/go-unsplash/unsplash#ListOpt). The `NextPage` field in Response can be used to get the next page number.
 
 ```go
 searchOpt := &SearchOpt{Query : "Batman"}
