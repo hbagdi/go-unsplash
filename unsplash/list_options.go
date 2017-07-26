@@ -49,11 +49,20 @@ var defaultListOpt = &ListOpt{
 
 // Valid validates the values in a ListOpt
 func (opt *ListOpt) Valid() bool {
-	if opt.Page <= 0 || opt.PerPage <= 0 {
+	if opt.Page < 0 {
 		return false
 	}
+	if opt.Page == 0 {
+		opt.Page = 1
+	}
+	if opt.PerPage < 0 {
+		return false
+	}
+	if opt.PerPage == 0 {
+		opt.PerPage = 10
+	}
 	if opt.OrderBy == "" {
-		return true
+		opt.OrderBy = Latest
 	}
 	for _, val := range orders {
 		if val == opt.OrderBy {

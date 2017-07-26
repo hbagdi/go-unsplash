@@ -36,9 +36,29 @@ func TestListOpt(T *testing.T) {
 	log.SetOutput(ioutil.Discard)
 
 	var opt ListOpt
-	assert.Equal(false, opt.Valid())
+	assert.Equal(true, opt.Valid())
+	assert.Equal(1, opt.Page)
+	assert.Equal(10, opt.PerPage)
+	assert.Equal(Latest, opt.OrderBy)
 	opt = *defaultListOpt
 	assert.Equal(true, opt.Valid())
+
+	opt = ListOpt{OrderBy: Popular}
+	assert.Equal(true, opt.Valid())
+	assert.Equal(1, opt.Page)
+	assert.Equal(10, opt.PerPage)
+
+	opt = ListOpt{Page: 10}
+	assert.Equal(true, opt.Valid())
+	assert.Equal(Latest, opt.OrderBy)
+	assert.Equal(10, opt.Page)
+	assert.Equal(10, opt.PerPage)
+
+	opt = ListOpt{PerPage: 20, OrderBy: Oldest}
+	assert.Equal(true, opt.Valid())
+	assert.Equal(Oldest, opt.OrderBy)
+	assert.Equal(1, opt.Page)
+	assert.Equal(20, opt.PerPage)
 
 	opt.OrderBy = "Duck"
 	assert.Equal(false, opt.Valid())
