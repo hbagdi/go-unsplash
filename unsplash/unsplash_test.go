@@ -24,6 +24,7 @@
 package unsplash
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -32,7 +33,7 @@ import (
 
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
 
 type AuthConfig struct {
@@ -86,11 +87,12 @@ func setup() *Unsplash {
 			os.Exit(1)
 		}
 	}
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: c.AuthToken},
-	)
-	client := oauth2.NewClient(oauth2.NoContext, ts)
-	return New(client)
+	client := clientcredentials.Config{
+		ClientID: c.AppID,
+		ClientSecret: c.Secret,
+		TokenURL: "https://unsplash.com/oauth/token",
+	}
+	return New(client.Client(context.Background()))
 }
 func TestUnsplash(T *testing.T) {
 	assert := assert.New(T)
