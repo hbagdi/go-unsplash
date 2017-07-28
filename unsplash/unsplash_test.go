@@ -27,6 +27,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"os"
 	"testing"
 
@@ -34,6 +35,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"golang.org/x/oauth2"
 )
+
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type AuthConfig struct {
 	AppID, Secret, AuthToken string
@@ -51,6 +54,7 @@ func authFromFile() *AuthConfig {
 	}
 	return &config
 }
+
 func getAppAuth() *AuthConfig {
 	var config AuthConfig
 	appID, ok := os.LookupEnv("unsplash_appID")
@@ -59,6 +63,14 @@ func getAppAuth() *AuthConfig {
 	}
 	config.AppID = appID
 	return &config
+}
+
+func randName(n int) string {
+	b := make([]rune, n)
+	for i := range b {
+		b[i] = letters[rand.Intn(len(letters))]
+	}
+	return string(b)
 }
 
 func getUserAuth() *AuthConfig {
