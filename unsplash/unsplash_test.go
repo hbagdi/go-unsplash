@@ -24,6 +24,8 @@
 package unsplash
 
 import (
+	"math/rand"
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"log"
@@ -32,8 +34,10 @@ import (
 
 	"github.com/jarcoal/httpmock"
 	"github.com/stretchr/testify/assert"
-	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
 )
+
+var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type AuthConfig struct {
 	AppID, Secret, AuthToken string
@@ -51,6 +55,7 @@ func authFromFile() *AuthConfig {
 	}
 	return &config
 }
+
 func getAppAuth() *AuthConfig {
 	var config AuthConfig
 	appID, ok := os.LookupEnv("unsplash_appID")
@@ -59,6 +64,14 @@ func getAppAuth() *AuthConfig {
 	}
 	config.AppID = appID
 	return &config
+}
+
+func randCollectionName(n int) string {
+    b := make([]rune, n)
+    for i := range b {
+        b[i] = letters[rand.Intn(len(letters))]
+    }
+    return string(b)
 }
 
 func getUserAuth() *AuthConfig {
@@ -86,11 +99,12 @@ func setup() *Unsplash {
 			os.Exit(1)
 		}
 	}
-	ts := oauth2.StaticTokenSource(
-		&oauth2.Token{AccessToken: c.AuthToken},
-	)
-	client := oauth2.NewClient(oauth2.NoContext, ts)
-	return New(client)
+	client := clientcredentials.Config{
+		ClientID: c.AppID,
+		ClientSecret: c.Secret,
+		TokenURL: "https://unsplash.com/oauth/token",
+	}
+	return New(client.Client(context.Background()))
 }
 func TestUnsplash(T *testing.T) {
 	assert := assert.New(T)
