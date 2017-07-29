@@ -79,9 +79,12 @@ type Photo struct {
 
 func (p *Photo) String() string {
 	var buf bytes.Buffer
-	buf.WriteString("\nID :" + *p.ID + "\n")
-	buf.WriteString("Link: " + p.Links.HTML.String() + "\n")
-	buf.WriteString("Photographer: " + *p.Photographer.Name + "\n")
+	if p.ID == nil {
+		return "Photo is not valid"
+	}
+	buf.WriteString("Photo: ID[")
+	buf.WriteString(*p.ID)
+	buf.WriteString("]")
 	return buf.String()
 }
 

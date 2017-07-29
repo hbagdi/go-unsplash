@@ -59,6 +59,7 @@ func TestListOpt(T *testing.T) {
 	assert.Equal(Oldest, opt.OrderBy)
 	assert.Equal(1, opt.Page)
 	assert.Equal(20, opt.PerPage)
+	log.Println(opt.String())
 
 	opt.OrderBy = "Duck"
 	assert.Equal(false, opt.Valid())

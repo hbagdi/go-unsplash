@@ -129,6 +129,7 @@ func TestSimpleCollection(T *testing.T) {
 	assert.NotNil(resp)
 	assert.NotNil(collection)
 	log.Println(resp)
+	log.Println(collection)
 
 	collection, resp, err = unsplash.Collections.Collection("")
 	assert.NotNil(err)
