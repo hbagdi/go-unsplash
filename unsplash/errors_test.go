@@ -60,15 +60,21 @@ func TestErrors(T *testing.T) {
 	log.Println(nfe)
 	assert.Equal(true, ok)
 
-	err = &InvalidPhotoOpt{ErrString: "."}
-	ipo, ok := err.(*InvalidPhotoOpt)
+	err = &InvalidPhotoOptError{ErrString: "."}
+	ipo, ok := err.(*InvalidPhotoOptError)
 	assert.NotNil(ipo)
 	log.Println(ipo)
 	assert.Equal(true, ok)
 
-	err = &InvalidListOpt{ErrString: "."}
-	ilo, ok := err.(*InvalidListOpt)
+	err = &InvalidListOptError{ErrString: "."}
+	ilo, ok := err.(*InvalidListOptError)
 	assert.NotNil(ilo)
+	log.Println(ilo)
+	assert.Equal(true, ok)
+
+	err = &RateLimitError{ErrString: "."}
+	rle, ok := err.(*RateLimitError)
+	assert.NotNil(rle)
 	log.Println(ilo)
 	assert.Equal(true, ok)
 }

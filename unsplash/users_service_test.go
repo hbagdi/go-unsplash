@@ -134,7 +134,7 @@ func TestLikedPhotos(T *testing.T) {
 	assert.Nil(photos)
 	assert.Nil(resp)
 	assert.NotNil(err)
-	_, ok := err.(*InvalidListOpt)
+	_, ok := err.(*InvalidListOptError)
 	assert.Equal(true, ok)
 
 	photos, resp, err = unsplash.Users.LikedPhotos("", nil)

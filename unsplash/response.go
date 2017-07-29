@@ -49,12 +49,16 @@ func (r *Response) checkForErrors() error {
 		return &AuthorizationError{ErrString: "401: Unauthorized request"}
 
 	case 403:
+		if r.RateLimitRemaining == 0 {
+			return &RateLimitError{ErrString: "403: Rate limit exhausted"}
+		}
+
 		return &AuthorizationError{ErrString: "403: Access forbidden request"}
 
 	case 404:
 		return &NotFoundError{ErrString: "404: The cat got tired of the Laser"}
+
 	}
-	//TODO
 	return nil
 }
 
@@ -65,12 +69,15 @@ func newResponse(r *http.Response) (*Response, error) {
 	}
 	resp := new(Response)
 	resp.httpResponse = r
+	//populate first
+	resp.populatePagingInfo()
+	resp.populateRateLimits()
+	//now check for errors
 	err := resp.checkForErrors()
 	if err != nil {
 		return nil, err
 	}
-	resp.populatePagingInfo()
-	resp.populateRateLimits()
+	//looks good, read the response
 	buf, err := ioutil.ReadAll(r.Body)
 	if err != nil {
 		return nil, err
@@ -80,17 +87,19 @@ func newResponse(r *http.Response) (*Response, error) {
 }
 
 func (r *Response) populateRateLimits() {
-	maxLimit := r.httpResponse.Header["X-Ratelimit-Limit"]
-	if len(maxLimit) == 1 {
+	//fails silently
+	maxLimit, ok := r.httpResponse.Header["X-Ratelimit-Limit"]
+	if ok && len(maxLimit) == 1 {
 		r.RateLimit, _ = strconv.Atoi(maxLimit[0])
 	}
-	rateRemaining := r.httpResponse.Header["X-Ratelimit-Remaining"]
-	if len(rateRemaining) == 1 {
+	rateRemaining, ok := r.httpResponse.Header["X-Ratelimit-Remaining"]
+	if ok && len(rateRemaining) == 1 {
 		r.RateLimitRemaining, _ = strconv.Atoi(rateRemaining[0])
 	}
 }
 
 func (r *Response) populatePagingInfo() {
+	//fails silently
 	rawLinks, ok := r.httpResponse.Header["Link"]
 	if !ok || 0 == len(rawLinks) {
 		return

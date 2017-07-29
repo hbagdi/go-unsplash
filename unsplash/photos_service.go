@@ -79,7 +79,7 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, *Response
 	opt = nil
 	if photoOpt != nil {
 		if !photoOpt.Valid() {
-			return nil, nil, &InvalidPhotoOpt{ErrString: " photoOpt has zero or non-negative values"}
+			return nil, nil, &InvalidPhotoOptError{ErrString: " photoOpt has zero or non-negative values"}
 		}
 		opt = processPhotoOpt(photoOpt)
 	}
@@ -202,7 +202,7 @@ func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error
 		opt = defaultRandomPhotoOpt
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+		return nil, nil, &InvalidListOptError{ErrString: "opt provided is not valid."}
 	}
 	req, err := newRequest(GET, getEndpoint(photos)+"/random", opt, nil)
 	if err != nil {

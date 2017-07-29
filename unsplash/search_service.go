@@ -56,7 +56,7 @@ func (ss *SearchService) Users(opt *SearchOpt) (*UserSearchResult, *Response, er
 		return nil, nil, &IllegalArgumentError{ErrString: "SearchOpt cannot be nil"}
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "Search query cannot be empty."}
+		return nil, nil, &InvalidListOptError{ErrString: "Search query cannot be empty."}
 	}
 	req, err := newRequest(GET, getEndpoint(searchUsers), opt, nil)
 	if err != nil {
@@ -81,7 +81,7 @@ func (ss *SearchService) Photos(opt *SearchOpt) (*PhotoSearchResult, *Response, 
 		return nil, nil, &IllegalArgumentError{ErrString: "SearchOpt cannot be nil"}
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "Search query cannot be empty."}
+		return nil, nil, &InvalidListOptError{ErrString: "Search query cannot be empty."}
 	}
 	req, err := newRequest(GET, getEndpoint(searchPhotos), opt, nil)
 	if err != nil {
@@ -106,7 +106,7 @@ func (ss *SearchService) Collections(opt *SearchOpt) (*CollectionSearchResult, *
 		return nil, nil, &IllegalArgumentError{ErrString: "SearchOpt cannot be nil"}
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "Search query cannot be empty."}
+		return nil, nil, &InvalidListOptError{ErrString: "Search query cannot be empty."}
 	}
 	req, err := newRequest(GET, getEndpoint(searchCollections), opt, nil)
 	if err != nil {

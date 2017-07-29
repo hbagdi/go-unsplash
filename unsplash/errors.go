@@ -63,19 +63,28 @@ func (e NotFoundError) Error() string {
 }
 
 // InvalidPhotoOpt occurs when PhotoOpt.Valid() fails.
-type InvalidPhotoOpt struct {
+type InvalidPhotoOptError struct {
 	ErrString string
 }
 
-func (e InvalidPhotoOpt) Error() string {
+func (e InvalidPhotoOptError) Error() string {
 	return e.ErrString
 }
 
 // InvalidListOpt occurs when ListOpt.Valid() fails.
-type InvalidListOpt struct {
+type InvalidListOptError struct {
 	ErrString string
 }
 
-func (e InvalidListOpt) Error() string {
+func (e InvalidListOptError) Error() string {
+	return e.ErrString
+}
+
+// RateLimitError occurs when rate limit is reached for the API key.
+type RateLimitError struct {
+	ErrString string
+}
+
+func (e RateLimitError) Error() string {
 	return e.ErrString
 }

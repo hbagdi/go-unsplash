@@ -68,7 +68,7 @@ func TestAllCollections(T *testing.T) {
 	assert.Nil(collections)
 	assert.Nil(resp)
 	assert.NotNil(err)
-	_, ok := err.(*InvalidListOpt)
+	_, ok := err.(*InvalidListOptError)
 	assert.Equal(true, ok)
 
 }

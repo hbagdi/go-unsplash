@@ -138,7 +138,7 @@ func TestAllPhotos(T *testing.T) {
 	assert.Nil(photos)
 	assert.Nil(resp)
 	assert.NotNil(err)
-	_, ok := err.(*InvalidListOpt)
+	_, ok := err.(*InvalidListOptError)
 	assert.Equal(true, ok)
 
 }

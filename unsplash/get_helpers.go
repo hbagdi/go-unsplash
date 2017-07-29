@@ -31,7 +31,7 @@ func (s *service) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Response,
 		opt = defaultListOpt
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+		return nil, nil, &InvalidListOptError{ErrString: "opt provided is not valid."}
 	}
 	req, err := newRequest(GET, endpoint, opt, nil)
 	if err != nil {
@@ -56,7 +56,7 @@ func (s *service) getCollections(opt *ListOpt, endpoint string) (*[]Collection, 
 		opt = defaultListOpt
 	}
 	if !opt.Valid() {
-		return nil, nil, &InvalidListOpt{ErrString: "opt provided is not valid."}
+		return nil, nil, &InvalidListOptError{ErrString: "opt provided is not valid."}
 	}
 	req, err := newRequest(GET, endpoint, opt, nil)
 	if err != nil {
