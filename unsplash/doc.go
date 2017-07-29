@@ -28,7 +28,7 @@ Package unsplash provides a RESTful go binding for https//:unsplash.com API.
 Usage
 
 Use the following import path:
-    import "github.com/hardikbagdi/go-unsplash/unsplash"
+    import "github.com/hbagdi/go-unsplash/unsplash"
 
 Authentication
 
@@ -68,28 +68,27 @@ Further, go-unsplash has errors defined as types for better error handling.
 	}
 
 Pagination
+
 Pagination is supported by supplying a page
 number in the ListOpt.
 The NextPage field in Response can be used to  get the next page number.
 
-	searchOpt := &SearchOpt{Query : "Batman"}
-	photos, resp, err := unsplash.Search.Photos(searchOpt)
+	var allPhotos []*unsplash.Photo
+	searchOpt := &unsplash.SearchOpt{Query: "Batman"}
+	for {
+		photos, resp, err := unsplash.Search.Photos(searchOpt)
 
-	if err != nil {
-	  return
-	}
-	// process photos
-	for _,photo := range *photos {
-	  fmt.Println(*photo.ID)
-	}
-	// get next
-	if !resp.HasNextPage {
-	  return
-	}
-	searchOpt.Page = resp.NextPage
-	photos, resp ,err = unsplash.Search.Photos(searchOpt)
-	//photos now has next page of the search result
+		if err != nil {
+			return
+		}
 
+		allPhotos = append(allPhotos, photos)
+
+		if !resp.HasNextPage {
+			break
+		}
+		searchOpt.Page = resp.NextPage
+	}
 
 */
 package unsplash
