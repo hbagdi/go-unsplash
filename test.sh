@@ -1,5 +1,14 @@
 #!/usr/bin/env bash
 
+#Do not run tests on other's PRs; secret key issues
+if ! [[ -z $TRAVIS_PULL_REQUEST_SLUG ]]
+then
+	if [[ $TRAVIS_PULL_REQUEST_SLUG != "hbagdi/go-unsplash" ]]
+	then
+		exit 0
+	fi
+fi
+
 #For testing on local desktop
 TOKEN_FILE="auth.env"
 if [ -r $TOKEN_FILE ];
