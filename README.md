@@ -1,5 +1,6 @@
 # Unsplash API client
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2a4ec2b508704df4b52f6b3613c9e554)](https://www.codacy.com/app/hardikbagdi/go-unsplash?utm_source=github.com&utm_medium=referral&utm_content=hbagdi/go-unsplash&utm_campaign=badger)
 [![GoDoc](https://godoc.org/github.com/hardikbagdi/go-unsplash?status.svg)](https://godoc.org/github.com/hbagdi/go-unsplash/unsplash)
 [![Go Report Card](https://goreportcard.com/badge/github.com/hbagdi/go-unsplash)](https://goreportcard.com/report/github.com/hbagdi/go-unsplash)
 [![Build Status](https://travis-ci.org/hbagdi/go-unsplash.svg?branch=master)](https://travis-ci.org/hbagdi/go-unsplash) 
