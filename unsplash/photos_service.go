@@ -174,8 +174,11 @@ type RandomPhotoOpt struct {
 
 //Valid validates a RandomPhotoOpt
 func (opt *RandomPhotoOpt) Valid() bool {
-	if opt.Count <= 0 {
+	if opt.Count < 0 || opt.Height < 0 || opt.Width < 0 {
 		return false
+	}
+	if opt.Count == 0 {
+		opt.Count = 1
 	}
 	return true
 }
