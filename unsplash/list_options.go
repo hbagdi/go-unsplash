@@ -23,7 +23,10 @@
 
 package unsplash
 
-type order string
+import (
+	"bytes"
+	"strconv"
+)
 
 //These constants should be used for OrderBy searches/results.
 const (
@@ -70,4 +73,19 @@ func (opt *ListOpt) Valid() bool {
 		}
 	}
 	return false
+}
+
+func (opt *ListOpt) String() string {
+	var buf bytes.Buffer
+	if !opt.Valid() {
+		buf.WriteString("ListOpt is invalid")
+	}
+	buf.WriteString("ListOpt: Page[")
+	buf.WriteString(strconv.Itoa(opt.Page))
+	buf.WriteString("], PerPage[")
+	buf.WriteString(strconv.Itoa(opt.PerPage))
+	buf.WriteString("], OrderBy[")
+	buf.WriteString(opt.OrderBy)
+	buf.WriteString("]")
+	return buf.String()
 }

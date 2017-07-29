@@ -195,6 +195,10 @@ func TestRandomPhoto(T *testing.T) {
 	assert.NotNil(photos)
 	assert.NotNil(resp)
 	assert.Equal(1, len(*photos))
+	photo := (*photos)[0]
+	log.Println(photo.String())
+	user := photo.Photographer
+	log.Println(user.String())
 	var opt RandomPhotoOpt
 	opt.Count = 3
 	photos, resp, err = unsplash.Photos.Random(&opt)
@@ -246,6 +250,7 @@ func TestPhotoUnlike(T *testing.T) {
 	photo, resp, err := unsplash.Photos.Like(*photoid)
 	assert.Nil(err)
 	assert.NotNil(photo)
+	log.Println(photo.String())
 	assert.NotNil(resp)
 
 	photo2, resp, err := unsplash.Photos.Unlike(*photoid)

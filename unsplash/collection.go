@@ -23,6 +23,11 @@
 
 package unsplash
 
+import (
+	"bytes"
+	"strconv"
+)
+
 // Collection holds a collection on unsplash.com
 type Collection struct {
 	ID           *int    `json:"id"`
@@ -42,4 +47,14 @@ type Collection struct {
 		Photos  *URL `json:"photos"`
 		Related *URL `json:"related"`
 	} `json:"links"`
+}
+
+func (c *Collection) String() string {
+	var buffer bytes.Buffer
+	buffer.WriteString("Collection: ")
+	if c.Title != nil {
+		buffer.WriteString(*c.Title)
+	}
+	buffer.WriteString("[ID:" + strconv.Itoa(*c.ID) + "]")
+	return buffer.String()
 }

@@ -80,8 +80,13 @@ type User struct {
 
 func (u User) String() string {
 	var buf bytes.Buffer
-	buf.WriteString("\nID :" + *u.ID + "\n")
-	buf.WriteString("Fullname: " + *u.Name + "\n")
-	buf.WriteString("Profile: " + u.Links.HTML.String() + "\n")
+	if u.ID == nil {
+		return "User is not valid"
+	}
+	buf.WriteString("User: Name[")
+	buf.WriteString(*u.Name)
+	buf.WriteString("], ID[")
+	buf.WriteString(*u.ID)
+	buf.WriteString("]")
 	return buf.String()
 }
