@@ -62,7 +62,7 @@ func (e NotFoundError) Error() string {
 	return e.ErrString
 }
 
-// InvalidPhotoOpt occurs when PhotoOpt.Valid() fails.
+// InvalidPhotoOptError occurs when PhotoOpt.Valid() fails.
 type InvalidPhotoOptError struct {
 	ErrString string
 }
@@ -71,7 +71,7 @@ func (e InvalidPhotoOptError) Error() string {
 	return e.ErrString
 }
 
-// InvalidListOpt occurs when ListOpt.Valid() fails.
+// InvalidListOptError occurs when ListOpt.Valid() fails.
 type InvalidListOptError struct {
 	ErrString string
 }

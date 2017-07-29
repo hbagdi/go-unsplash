@@ -23,8 +23,8 @@
 
 package unsplash
 
+//These are permission scopes for the Unsplash API for OAuth.
 const (
-
 	//Public is default; gives access to read public data.
 	Public = "public"
 	//ReadUser gives access to read user’s private data.
@@ -44,5 +44,3 @@ const (
 	//WriteCollections gives access to create and update a users's collections.
 	WriteCollections = "write_collections"
 )
-
-//These are permission scopes for the Unsplash API for OAuth.

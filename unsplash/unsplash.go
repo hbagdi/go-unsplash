@@ -76,7 +76,10 @@ func (s *service) do(req *request) (*Response, error) {
 		return nil, err
 	}
 	resp, err := newResponse(rawResp)
-	io.Copy(ioutil.Discard, rawResp.Body)
+	if err != nil {
+		return nil, err
+	}
+	_, err = io.Copy(ioutil.Discard, rawResp.Body)
 	if err != nil {
 		return nil, err
 	}
