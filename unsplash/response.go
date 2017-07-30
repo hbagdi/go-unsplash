@@ -24,6 +24,8 @@
 package unsplash
 
 import (
+	"bytes"
+	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -44,22 +46,33 @@ type Response struct {
 
 func (r *Response) checkForErrors() error {
 	switch r.httpResponse.StatusCode {
-
+	case 200, 201, 202, 204, 205:
+		return nil
 	case 401:
-		return &AuthorizationError{ErrString: "401: Unauthorized request"}
-
+		return &AuthorizationError{ErrString: errStringHelper(r.httpResponse.StatusCode, "Unauthorized request", r.body)}
 	case 403:
 		if r.RateLimitRemaining == 0 {
-			return &RateLimitError{ErrString: "403: Rate limit exhausted"}
+			return &RateLimitError{ErrString: errStringHelper(r.httpResponse.StatusCode, "Rate limit exhausted", r.body)}
 		}
 
-		return &AuthorizationError{ErrString: "403: Access forbidden request"}
+		return &AuthorizationError{ErrString: errStringHelper(r.httpResponse.StatusCode, "Access forbidden request", r.body)}
 
 	case 404:
-		return &NotFoundError{ErrString: "404: The cat got tired of the Laser"}
+		return &NotFoundError{ErrString: errStringHelper(r.httpResponse.StatusCode, "The cat got tired of the Laser", r.body)}
+	default:
+		return errors.New(errStringHelper(r.httpResponse.StatusCode, "API returned an error", r.body))
 
 	}
-	return nil
+}
+func errStringHelper(statusCode int, msg string, errBody *[]byte) string {
+	var buf bytes.Buffer
+	//XXX Writes can fail?
+	buf.WriteString(strconv.Itoa(statusCode))
+	buf.WriteString(": ")
+	buf.WriteString(msg)
+	buf.WriteString(", Body: ")
+	buf.Write(*errBody)
+	return buf.String()
 }
 
 func newResponse(r *http.Response) (*Response, error) {
@@ -72,17 +85,17 @@ func newResponse(r *http.Response) (*Response, error) {
 	//populate first
 	resp.populatePagingInfo()
 	resp.populateRateLimits()
-	//now check for errors
-	err := resp.checkForErrors()
-	if err != nil {
-		return nil, err
-	}
-	//looks good, read the response
-	buf, err := ioutil.ReadAll(r.Body)
+	//read the response
+	buf, err := ioutil.ReadAll(resp.httpResponse.Body)
 	if err != nil {
 		return nil, err
 	}
 	resp.body = &buf
+	//now check for errors
+	err = resp.checkForErrors()
+	if err != nil {
+		return nil, err
+	}
 	return resp, nil
 }
 
