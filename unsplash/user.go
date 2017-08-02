@@ -78,7 +78,7 @@ type User struct {
 	Photos              *[]Photo      `json:"photos"`
 }
 
-func (u User) String() string {
+func (u *User) String() string {
 	var buf bytes.Buffer
 	if u.ID == nil {
 		return "User is not valid"
