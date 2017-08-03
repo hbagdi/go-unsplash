@@ -90,3 +90,54 @@ func (u *User) String() string {
 	buf.WriteString("]")
 	return buf.String()
 }
+
+// UserUpdateInfo is used to update private data of a user
+type UserUpdateInfo struct {
+	Username          string `url:"username,omitempty"`
+	FirstName         string `url:"first_name,omitempty"`
+	LastName          string `url:"last_name,omitempty"`
+	Bio               string `url:"bio,omitempty"`
+	Email             string `url:"email,omitempty"`
+	PortfolioURL      string `url:"url,omitempty"`
+	Location          string `url:"location,omitempty"`
+	InstagramUsername string `url:"instagram_username,omitempty"`
+}
+
+func (u *UserUpdateInfo) String() string {
+	var buf bytes.Buffer
+	buf.WriteString("UserUpdateInfo:")
+
+	buf.WriteString("Username[")
+	buf.WriteString(u.Username)
+	buf.WriteString("]")
+
+	buf.WriteString("FirstName[")
+	buf.WriteString(u.FirstName)
+	buf.WriteString("]")
+
+	buf.WriteString("LastName[")
+	buf.WriteString(u.LastName)
+	buf.WriteString("]")
+
+	buf.WriteString("Bio[")
+	buf.WriteString(u.Bio)
+	buf.WriteString("]")
+
+	buf.WriteString("Email[")
+	buf.WriteString(u.Email)
+	buf.WriteString("]")
+
+	buf.WriteString("PortfolioURL[")
+	buf.WriteString(u.PortfolioURL)
+	buf.WriteString("]")
+
+	buf.WriteString("Location[")
+	buf.WriteString(u.Location)
+	buf.WriteString("]")
+
+	buf.WriteString("InstagramUsername[")
+	buf.WriteString(u.InstagramUsername)
+	buf.WriteString("]")
+
+	return buf.String()
+}

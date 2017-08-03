@@ -106,6 +106,29 @@ func (u *Unsplash) CurrentUser() (*User, *Response, error) {
 	return user, resp, nil
 }
 
+// UpdateCurrentUser updates the current user's private data and returns an update User struct
+func (u *Unsplash) UpdateCurrentUser(updateInfo *UserUpdateInfo) (*User, *Response, error) {
+	if updateInfo == nil {
+		return nil, nil, &IllegalArgumentError{ErrString: "updateInfo cannot be null"}
+	}
+	endpoint := "me"
+	req, err := newRequest(PUT, endpoint, updateInfo, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	resp, err := u.common.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	user := new(User)
+	err = json.Unmarshal(*resp.body, &user)
+	if err != nil {
+		return nil, nil,
+			&JSONUnmarshallingError{ErrString: err.Error()}
+	}
+	return user, resp, nil
+}
+
 // Stats gives the total photos,download since the inception of unsplash.com
 func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 	var err error

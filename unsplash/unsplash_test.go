@@ -170,3 +170,29 @@ func TestUnsplashRogueNetwork(T *testing.T) {
 	assert.Nil(resp)
 	assert.NotNil(err)
 }
+
+func TestUpdateCurrentUser(T *testing.T) {
+	log.SetOutput(os.Stdout)
+	assert := assert.New(T)
+	unsplash := setup()
+	assert.NotNil(unsplash)
+	newUserName := "lukechesser"
+
+	user, resp, err := unsplash.UpdateCurrentUser(nil)
+	assert.NotNil(err)
+	assert.Nil(user)
+	assert.Nil(resp)
+	log.Println(err.Error())
+
+	user, resp, err = unsplash.UpdateCurrentUser(&UserUpdateInfo{Username: newUserName})
+	assert.NotNil(err)
+	assert.Nil(user)
+	assert.Nil(resp)
+	log.Println(err.Error())
+
+	newUserName = "gopher" //same as previous for testing
+	user, resp, err = unsplash.UpdateCurrentUser(&UserUpdateInfo{Username: newUserName})
+	assert.Nil(err)
+	assert.NotNil(user)
+	assert.NotNil(resp)
+}

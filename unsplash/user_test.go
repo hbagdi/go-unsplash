@@ -22,3 +22,29 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package unsplash
+
+import (
+	"io/ioutil"
+	"log"
+	"testing"
+)
+
+func TestUserString(T *testing.T) {
+	log.SetOutput(ioutil.Discard)
+	u := new(User)
+	log.Println(u.String())
+}
+
+func TestUserUpdateInforString(T *testing.T) {
+	log.SetOutput(ioutil.Discard)
+	u := new(UserUpdateInfo)
+	u.Username = "gopher"
+	u.FirstName = "Go"
+	u.LastName = "Gopher"
+	u.Bio = "I'm a gopher."
+	u.Email = "gopher@gopher.gopher"
+	u.PortfolioURL = "gopher.com"
+	u.Location = "1AU"
+	u.InstagramUsername = "gopher"
+	log.Println(u.String())
+}
