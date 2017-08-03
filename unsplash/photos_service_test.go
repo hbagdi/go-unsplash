@@ -186,6 +186,19 @@ func TestDownloadLink(T *testing.T) {
 	assert.NotNil(err)
 }
 
+func TestRandomPhotoOpt(T *testing.T) {
+	assert := assert.New(T)
+	var opt RandomPhotoOpt
+	opt.CollectionIDs = []int{42}
+	opt.SearchQuery = "Gopher"
+	assert.Equal(false, opt.Valid())
+
+	var opt2 RandomPhotoOpt
+	assert.Equal(true, opt2.Valid())
+
+	opt2.Orientation = "gopher"
+	assert.Equal(false, opt2.Valid())
+}
 func TestRandomPhoto(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
@@ -201,7 +214,18 @@ func TestRandomPhoto(T *testing.T) {
 	log.Println(user.String())
 	var opt RandomPhotoOpt
 	opt.Count = 3
+	opt.SearchQuery = "Earth"
+	opt.Orientation = Landscape
 	photos, resp, err = unsplash.Photos.Random(&opt)
+	assert.Nil(err)
+	assert.NotNil(photos)
+	assert.NotNil(resp)
+	assert.Equal(3, len(*photos))
+
+	var opt2 RandomPhotoOpt
+	opt2.Count = 3
+	opt2.CollectionIDs = []int{151842, 203782}
+	photos, resp, err = unsplash.Photos.Random(&opt2)
 	assert.Nil(err)
 	assert.NotNil(photos)
 	assert.NotNil(resp)

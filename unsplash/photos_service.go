@@ -163,23 +163,35 @@ func (ps *PhotosService) Curated(listOpt *ListOpt) (*[]Photo, *Response, error) 
 
 // RandomPhotoOpt optional parameters for a random photo search
 type RandomPhotoOpt struct {
-	Height      int    `url:"h,omitempty"`
-	Width       int    `url:"w,omitempty"`
-	Featured    bool   `url:"featured,omitempty"`
-	Username    string `url:"username,omitempty"`
-	SearchQuery string `url:"query,omitempty"`
-	Count       int    `url:"count,omitempty"`
-	//Orientation orientation `url:"orientation,omitempty"`
+	Height        int         `url:"h,omitempty"`
+	Width         int         `url:"w,omitempty"`
+	Featured      bool        `url:"featured,omitempty"`
+	Username      string      `url:"username,omitempty"`
+	SearchQuery   string      `url:"query,omitempty"`
+	Count         int         `url:"count,omitempty"`
+	Orientation   orientation `url:"orientation,omitempty"`
+	CollectionIDs []int       `url:"collections,comma"`
 }
 
 //Valid validates a RandomPhotoOpt
 func (opt *RandomPhotoOpt) Valid() bool {
+	//negative values
 	if opt.Count < 0 || opt.Height < 0 || opt.Width < 0 {
+		return false
+	}
+	//collections and query can't be used at the same time acc to API documentation
+	if len(opt.CollectionIDs) != 0 && opt.SearchQuery != "" {
 		return false
 	}
 	if opt.Count == 0 {
 		opt.Count = 1
 	}
+	if opt.Orientation != "" {
+		if opt.Orientation != Landscape && opt.Orientation != Portrait && opt.Orientation != Squarish {
+			return false
+		}
+	}
+
 	return true
 }
 
@@ -188,9 +200,9 @@ type orientation string
 
 // These constants show possible Orientation types
 const (
-	Landscaope orientation = "landscape"
-	Portrait   orientation = "portrait"
-	Squarish   orientation = "squarish"
+	Landscape orientation = "landscape"
+	Portrait  orientation = "portrait"
+	Squarish  orientation = "squarish"
 )
 
 var defaultRandomPhotoOpt = &RandomPhotoOpt{Count: 1}
