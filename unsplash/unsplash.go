@@ -130,6 +130,7 @@ func (u *Unsplash) UpdateCurrentUser(updateInfo *UserUpdateInfo) (*User, *Respon
 }
 
 // Stats gives the total photos,download since the inception of unsplash.com
+// This method is DEPRECATED, USE TotalStats()
 func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 	var err error
 	req, err := newRequest(GET, getEndpoint(globalStats), nil, nil)
@@ -147,4 +148,9 @@ func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 			&JSONUnmarshallingError{ErrString: err.Error()}
 	}
 	return globalStats, resp, nil
+}
+
+// TotalStats returns various stats related to unsplash.com since it's inception
+func (u *Unsplash) TotalStats() (*GlobalStats, *Response, error) {
+	return u.Stats()
 }

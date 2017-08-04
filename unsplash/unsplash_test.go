@@ -106,13 +106,22 @@ func setup() *Unsplash {
 }
 func TestUnsplash(T *testing.T) {
 	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
 	assert.NotNil(unsplash)
 	assert.NotNil(unsplash.common)
 	assert.NotNil(unsplash.common.httpClient)
+	tstats, resp, err := unsplash.TotalStats()
+	assert.Nil(err)
+	assert.NotNil(tstats)
+	assert.NotNil(resp)
 	stats, resp, err := unsplash.Stats()
 	assert.Nil(err)
 	assert.NotNil(stats)
+	//FIXME
+	if stats.Photos <= 0 || stats.Downloads <= 0 || stats.Views <= 0 || stats.Likes <= 0 || stats.Photographers <= 0 || stats.Pixels <= 0 || stats.DownloadsPerSecond <= 0 || stats.ViewsPerSecond <= 0 || stats.Developers <= 0 || stats.Applications <= 0 || stats.Requests <= 0 {
+		assert.Fail("GlobalStats struct has a zero field: %s\n", stats.String())
+	}
 	assert.NotNil(resp)
 	log.Println(stats)
 
@@ -172,7 +181,7 @@ func TestUnsplashRogueNetwork(T *testing.T) {
 }
 
 func TestUpdateCurrentUser(T *testing.T) {
-	log.SetOutput(os.Stdout)
+	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	unsplash := setup()
 	assert.NotNil(unsplash)

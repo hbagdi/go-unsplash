@@ -32,25 +32,35 @@ import (
 
 // GlobalStats shows the total photo stats of Unsplash.com
 type GlobalStats struct {
-	TotalPhotos    int `json:"total_photos,omitempty"`
-	PhotoDownloads int `json:"photo_downloads,omitempty"`
-	BatchDownloads int `json:"batch_downloads,omitempty"`
+	TotalPhotos        uint64
+	PhotoDownloads     uint64
+	Photos             uint64 `json:"photos,omitempty"`
+	Downloads          uint64 `json:"downloads,omitempty"`
+	Views              uint64 `json:"views,omitempty"`
+	Likes              uint64 `json:"likes,omitempty"`
+	Photographers      uint64 `json:"photographers,omitempty"`
+	Pixels             uint64 `json:"pixels,omitempty"`
+	DownloadsPerSecond uint64 `json:"downloads_per_second,omitempty"`
+	ViewsPerSecond     uint64 `json:"views_per_second,omitempty"`
+	Developers         uint64 `json:"developers,omitempty"`
+	Applications       uint64 `json:"applications,omitempty"`
+	Requests           uint64 `json:"requests,omitempty"`
 }
 
 // processNumber converts a string or float or int representation into an int
 // this hack is needed because the API strangely returns a float value in quotes in the JSON response for this endpoint
-func processNumber(i interface{}) int {
+func processNumber(i interface{}) uint64 {
+	var n uint64
 	switch v := i.(type) {
-	case int:
-		return v
+	case uint64:
+		n = v
 	case string:
-		s := strings.Split(i.(string), ".")
-		n, _ := strconv.Atoi(s[0])
-		return n
+		s := strings.Split(v, ".")
+		n, _ = strconv.ParseUint(s[0], 10, 64)
 	case float64:
-		return int(v)
+		n = uint64(v)
 	}
-	return 0
+	return n
 }
 
 // UnmarshalJSON converts a JSON string representation of GlobalStats into a struct
@@ -61,22 +71,89 @@ func (gs *GlobalStats) UnmarshalJSON(b []byte) error {
 		return err
 	}
 	m := f.(map[string]interface{})
-	if _, ok := m["total_photos"]; ok {
-		gs.TotalPhotos = processNumber(m["total_photos"])
+	if v, ok := m["photos"]; ok {
+		gs.Photos = processNumber(v)
+		gs.TotalPhotos = gs.Photos
 	}
-	if _, ok := m["photo_downloads"]; ok {
-		gs.PhotoDownloads = processNumber(m["photo_downloads"])
+	if v, ok := m["downloads"]; ok {
+		gs.Downloads = processNumber(v)
+		gs.PhotoDownloads = gs.Downloads
 	}
-	if _, ok := m["batch_downloads"]; ok {
-		gs.BatchDownloads = processNumber(m["batch_downloads"])
+	if v, ok := m["views"]; ok {
+		gs.Views = processNumber(v)
+	}
+	if v, ok := m["likes"]; ok {
+		gs.Likes = processNumber(v)
+	}
+	if v, ok := m["photographers"]; ok {
+		gs.Photographers = processNumber(v)
+	}
+	if v, ok := m["pixels"]; ok {
+		gs.Pixels = processNumber(v)
+	}
+	if v, ok := m["downloads_per_second"]; ok {
+		gs.DownloadsPerSecond = processNumber(v)
+	}
+	if v, ok := m["views_per_second"]; ok {
+		gs.ViewsPerSecond = processNumber(v)
+	}
+	if v, ok := m["developers"]; ok {
+		gs.Developers = processNumber(v)
+	}
+	if v, ok := m["applications"]; ok {
+		gs.Applications = processNumber(v)
+	}
+	if v, ok := m["requests"]; ok {
+		gs.Requests = processNumber(v)
 	}
 	return nil
 }
 func (gs *GlobalStats) String() string {
 	var buf bytes.Buffer
-	buf.WriteString("\nGlobal Stats:\n")
-	buf.WriteString("Total Photos: " + strconv.Itoa(gs.TotalPhotos) + "\n")
-	buf.WriteString("Total downloads: " + strconv.Itoa(gs.PhotoDownloads) + "\n")
-	buf.WriteString("Batch downloads: " + strconv.Itoa(gs.BatchDownloads) + "\n")
+	buf.WriteString("Global Stats: ")
+
+	buf.WriteString(" Photos[")
+	buf.WriteString(strconv.FormatUint(gs.Photos, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Downloads[")
+	buf.WriteString(strconv.FormatUint(gs.Downloads, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Views[")
+	buf.WriteString(strconv.FormatUint(gs.Views, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Likes[")
+	buf.WriteString(strconv.FormatUint(gs.Likes, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Photographers[")
+	buf.WriteString(strconv.FormatUint(gs.Photographers, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Pixels[")
+	buf.WriteString(strconv.FormatUint(gs.Pixels, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" DownloadsPerSecond[")
+	buf.WriteString(strconv.FormatUint(gs.DownloadsPerSecond, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" ViewsPerSecond[")
+	buf.WriteString(strconv.FormatUint(gs.ViewsPerSecond, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Developers[")
+	buf.WriteString(strconv.FormatUint(gs.Developers, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Applications[")
+	buf.WriteString(strconv.FormatUint(gs.Applications, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Requests[")
+	buf.WriteString(strconv.FormatUint(gs.Requests, 10))
+	buf.WriteString("]")
 	return buf.String()
 }
