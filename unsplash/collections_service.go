@@ -192,7 +192,6 @@ func (cs *CollectionsService) AddPhoto(collectionID int, photoID string) (*Respo
 	}
 	cli := (service)(*cs)
 	resp, err := cli.do(req)
-	//TODO parse body and return collection,photo and user
 	if err != nil {
 		return nil, err
 	}
@@ -218,7 +217,6 @@ func (cs *CollectionsService) RemovePhoto(collectionID int, photoID string) (*Re
 	}
 	cli := (service)(*cs)
 	resp, err := cli.do(req)
-	//TODO parse body and return collection,photo and user
 	if err != nil {
 		return nil, err
 	}

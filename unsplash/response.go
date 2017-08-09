@@ -118,7 +118,7 @@ func (r *Response) populatePagingInfo() {
 		return
 	}
 
-	links := strings.Split(rawLinks[0], ",") //TODO why is Headers returning []string?
+	links := strings.Split(rawLinks[0], ",")
 
 	for _, link := range links {
 		parts := strings.Split(link, ";")

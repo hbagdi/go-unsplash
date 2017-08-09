@@ -10,6 +10,10 @@ then
 fi
 
 #For testing on local desktop
+curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+chmod +x ./cc-test-reporter
+./cc-test-reporter before-build
+
 declare -r TOKEN_FILE="auth.env"
 if [ -r $TOKEN_FILE ];
 then
@@ -29,7 +33,6 @@ then
 fi
 #
 set -e
-echo "" > coverage.txt
 
 for d in $(go list ./... | grep -v vendor); do
     go test -v -coverprofile="profile.out" -covermode=atomic $d
@@ -38,3 +41,5 @@ for d in $(go list ./... | grep -v vendor); do
         rm profile.out
     fi
 done
+/bin/cp coverage.txt c.out
+./cc-test-reporter after-build
