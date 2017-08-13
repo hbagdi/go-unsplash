@@ -10,9 +10,12 @@ then
 fi
 
 #For testing on local desktop
-curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-chmod +x ./cc-test-reporter
-./cc-test-reporter before-build
+if [ "$TRAVIS_EVENT_TYPE" != "cron" ]
+then
+	curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+	chmod +x ./cc-test-reporter
+	./cc-test-reporter before-build
+fi
 
 declare -r TOKEN_FILE="auth.env"
 if [ -r $TOKEN_FILE ];
@@ -41,5 +44,8 @@ for d in $(go list ./... | grep -v vendor); do
         rm profile.out
     fi
 done
-/bin/cp coverage.txt c.out
-./cc-test-reporter after-build
+if [ "$TRAVIS_EVENT_TYPE" != "cron" ]
+then
+	/bin/cp coverage.txt c.out
+	./cc-test-reporter after-build
+fi
