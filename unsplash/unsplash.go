@@ -66,6 +66,7 @@ func (s *service) do(req *request) (*Response, error) {
 		return nil,
 			&IllegalArgumentError{ErrString: "Request object cannot be nil"}
 	}
+	req.Request.Header.Set("Accept-Version", "v1")
 	//Make the request
 	client := s.httpClient
 	rawResp, err := client.Do(req.Request)
