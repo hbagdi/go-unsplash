@@ -98,6 +98,37 @@ func TestUserPortfolio(T *testing.T) {
 	assert.Equal(true, ok)
 }
 
+func TestUserStatistics(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+	stats, resp, err := unsplash.Users.Statistics("lukechesser", nil)
+	assert.Nil(err)
+	assert.NotNil(stats)
+	assert.NotNil(resp)
+	assert.NotNil(30, stats.Downloads.Historical.Quantity)
+	log.Println(stats)
+
+	stats, resp, err = unsplash.Users.Statistics("lukechesser", &StatsOpt{Quantity: 10})
+	assert.Nil(err)
+	assert.NotNil(stats)
+	assert.NotNil(resp)
+	assert.NotNil(30, stats.Downloads.Historical.Quantity)
+	log.Println(stats)
+
+	stats, resp, err = unsplash.Users.Statistics("lukechesser", &StatsOpt{Resolution: "sd"})
+	assert.NotNil(err)
+	assert.Nil(resp)
+
+	stats, resp, err = unsplash.Users.Statistics("lukechesser", &StatsOpt{Quantity: 31})
+	assert.NotNil(err)
+	assert.Nil(resp)
+
+	stats, resp, err = unsplash.Users.Statistics("", nil)
+	assert.Nil(stats)
+	assert.Nil(resp)
+	assert.NotNil(err)
+}
 func TestLikedPhotos(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)

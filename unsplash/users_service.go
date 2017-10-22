@@ -116,3 +116,32 @@ func (us *UsersService) Collections(username string, opt *ListOpt) (*[]Collectio
 	endpoint := fmt.Sprintf("%v/%v/%v", getEndpoint(users), username, getEndpoint(collections))
 	return s.getCollections(opt, endpoint)
 }
+
+// Statistics return a stats about a photo with id.
+func (us *UsersService) Statistics(username string, opt *StatsOpt) (*UserStatistics, *Response, error) {
+	if "" == username {
+		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+	}
+	if opt == nil {
+		opt = defaultStatsOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidStatsOptError{ErrString: "opt provided is not valid."}
+	}
+	endpoint := fmt.Sprintf("%v/%v/statistics", getEndpoint(users), username)
+	req, err := newRequest(GET, endpoint, opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*us)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var stats UserStatistics
+	err = json.Unmarshal(*resp.body, &stats)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &stats, resp, nil
+}
