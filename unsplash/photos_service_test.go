@@ -170,6 +170,22 @@ func TestPhotoStats(T *testing.T) {
 	assert.NotNil(err)
 }
 
+func TestPhotoStatistics(T *testing.T) {
+	assert := assert.New(T)
+	log.SetOutput(ioutil.Discard)
+	unsplash := setup()
+	stats, resp, err := unsplash.Photos.Statistics("-HPhkZcJQNk")
+	assert.Nil(err)
+	assert.NotNil(stats)
+	assert.NotNil(resp)
+	log.Println(stats.Downloads)
+
+	stats, resp, err = unsplash.Photos.Statistics("")
+	assert.Nil(stats)
+	assert.Nil(resp)
+	assert.NotNil(err)
+}
+
 func TestDownloadLink(T *testing.T) {
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)

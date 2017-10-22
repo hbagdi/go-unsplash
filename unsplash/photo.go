@@ -100,3 +100,44 @@ type PhotoStats struct {
 		DownloadLocation string `json:"download_location"`
 	} `json:"links"`
 }
+
+// PhotoStatistics represents statistics like downloads, views and likes of an unsplash photo
+type PhotoStatistics struct {
+	ID        string `json:"id"`
+	Downloads struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"downloads"`
+	Views struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"views"`
+	Likes struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"likes"`
+}
