@@ -157,3 +157,96 @@ func (gs *GlobalStats) String() string {
 	buf.WriteString("]")
 	return buf.String()
 }
+
+// MonthStats shows the overall Unsplash stats for the past 30 days.
+type MonthStats struct {
+	Downloads        uint64 `json:"downloads"`
+	Views            uint64 `json:"views"`
+	Likes            uint64 `json:"likes"`
+	NewPhotos        uint64 `json:"new_photos"`
+	NewPhotographers uint64 `json:"new_photographers"`
+	NewPixels        uint64 `json:"new_pixels"`
+	NewDevelopers    uint64 `json:"new_developers"`
+	NewApplications  uint64 `json:"new_applications"`
+	NewRequests      uint64 `json:"new_requests"`
+}
+
+// UnmarshalJSON converts a JSON string representation of GlobalStats into a struct
+func (stats *MonthStats) UnmarshalJSON(b []byte) error {
+	var f interface{}
+	err := json.Unmarshal(b, &f)
+	if err != nil {
+		return err
+	}
+	m := f.(map[string]interface{})
+	if v, ok := m["downloads"]; ok {
+		stats.Downloads = processNumber(v)
+	}
+	if v, ok := m["views"]; ok {
+		stats.Views = processNumber(v)
+	}
+	if v, ok := m["likes"]; ok {
+		stats.Likes = processNumber(v)
+	}
+	if v, ok := m["new_photographers"]; ok {
+		stats.NewPhotographers = processNumber(v)
+	}
+	if v, ok := m["new_pixels"]; ok {
+		stats.NewPixels = processNumber(v)
+	}
+	if v, ok := m["new_photos"]; ok {
+		stats.NewPhotos = processNumber(v)
+	}
+	if v, ok := m["new_requests"]; ok {
+		stats.NewRequests = processNumber(v)
+	}
+	if v, ok := m["new_developers"]; ok {
+		stats.NewDevelopers = processNumber(v)
+	}
+	if v, ok := m["new_applications"]; ok {
+		stats.NewApplications = processNumber(v)
+	}
+	return nil
+}
+func (stats *MonthStats) String() string {
+	var buf bytes.Buffer
+	buf.WriteString("Monthly Stats: ")
+
+	buf.WriteString(" Downloads[")
+	buf.WriteString(strconv.FormatUint(stats.Downloads, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Views[")
+	buf.WriteString(strconv.FormatUint(stats.Views, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" Likes[")
+	buf.WriteString(strconv.FormatUint(stats.Likes, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Photos[")
+	buf.WriteString(strconv.FormatUint(stats.NewPhotos, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Photographers[")
+	buf.WriteString(strconv.FormatUint(stats.NewPhotographers, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Pixels[")
+	buf.WriteString(strconv.FormatUint(stats.NewPixels, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Applications[")
+	buf.WriteString(strconv.FormatUint(stats.NewApplications, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Developers[")
+	buf.WriteString(strconv.FormatUint(stats.NewDevelopers, 10))
+	buf.WriteString("]")
+
+	buf.WriteString(" New Requests[")
+	buf.WriteString(strconv.FormatUint(stats.NewRequests, 10))
+	buf.WriteString("]")
+
+	return buf.String()
+}

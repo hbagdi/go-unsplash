@@ -40,6 +40,7 @@ const (
 	apiBaseURL                = "https://api.unsplash.com/"
 	currentUserEndpoint       = "me"
 	globalStatsEndpoint       = "stats/total"
+	monthStatsEndpoint        = "stats/month"
 	usersEndpoint             = "users"
 	photosEndpoint            = "photos"
 	collectionsEndpoint       = "collections"
@@ -55,6 +56,7 @@ const (
 	base endpoint = iota
 	currentUser
 	globalStats
+	monthStats
 	users
 	photos
 	collections
@@ -70,6 +72,7 @@ func init() {
 	mapURL[base] = apiBaseURL
 	mapURL[currentUser] = currentUserEndpoint
 	mapURL[globalStats] = globalStatsEndpoint
+	mapURL[monthStats] = monthStatsEndpoint
 	mapURL[users] = usersEndpoint
 	mapURL[photos] = photosEndpoint
 	mapURL[collections] = collectionsEndpoint
