@@ -125,12 +125,18 @@ func (ps *PhotosService) Stats(id string) (*PhotoStats, *Response, error) {
 }
 
 // Statistics return a stats about a photo with id.
-func (ps *PhotosService) Statistics(id string) (*PhotoStatistics, *Response, error) {
+func (ps *PhotosService) Statistics(id string, opt *StatsOpt) (*PhotoStatistics, *Response, error) {
 	if "" == id {
 		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
 	}
+	if opt == nil {
+		opt = defaultStatsOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidStatsOptError{ErrString: "opt provided is not valid."}
+	}
 	endpoint := fmt.Sprintf("%v/%v/statistics", getEndpoint(photos), id)
-	req, err := newRequest(GET, endpoint, nil, nil)
+	req, err := newRequest(GET, endpoint, opt, nil)
 	if err != nil {
 		return nil, nil, err
 	}

@@ -80,6 +80,15 @@ func (e InvalidListOptError) Error() string {
 	return e.ErrString
 }
 
+// InvalidStatsOptError occurs when StatsOpt.Valid() fails.
+type InvalidStatsOptError struct {
+	ErrString string
+}
+
+func (e InvalidStatsOptError) Error() string {
+	return e.ErrString
+}
+
 // RateLimitError occurs when rate limit is reached for the API key.
 type RateLimitError struct {
 	ErrString string
