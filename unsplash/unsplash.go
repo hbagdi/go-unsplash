@@ -155,3 +155,23 @@ func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 func (u *Unsplash) TotalStats() (*GlobalStats, *Response, error) {
 	return u.Stats()
 }
+
+// MonthStats returns various stats related to unsplash.com for last 30 days
+func (u *Unsplash) MonthStats() (*MonthStats, *Response, error) {
+	var err error
+	req, err := newRequest(GET, getEndpoint(monthStats), nil, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	resp, err := u.common.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	monthStats := new(MonthStats)
+	err = json.Unmarshal(*resp.body, &monthStats)
+	if err != nil {
+		return nil, nil,
+			&JSONUnmarshallingError{ErrString: err.Error()}
+	}
+	return monthStats, resp, nil
+}
