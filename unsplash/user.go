@@ -141,3 +141,47 @@ func (u *UserUpdateInfo) String() string {
 
 	return buf.String()
 }
+
+// UserStatistics represents statistics like downloads, views and likes of an unsplash user
+type UserStatistics struct {
+	Username  string `json:"username"`
+	Downloads struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Average    int    `json:"average"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"downloads"`
+	Views struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Average    int    `json:"average"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"views"`
+	Likes struct {
+		Total      int `json:"total"`
+		Historical struct {
+			Change     int    `json:"change"`
+			Average    int    `json:"average"`
+			Resolution string `json:"resolution"`
+			Quantity   int    `json:"quantity"`
+			Values     []struct {
+				Date  string `json:"date"`
+				Value int    `json:"value"`
+			} `json:"values"`
+		} `json:"historical"`
+	} `json:"likes"`
+}
