@@ -75,6 +75,12 @@ func TestErrors(T *testing.T) {
 	err = &RateLimitError{ErrString: "."}
 	rle, ok := err.(*RateLimitError)
 	assert.NotNil(rle)
-	log.Println(ilo)
+	log.Println(rle)
+	assert.Equal(true, ok)
+
+	err = &InvalidStatsOptError{ErrString: "."}
+	iso, ok := err.(*InvalidStatsOptError)
+	assert.NotNil(iso)
+	log.Println(iso)
 	assert.Equal(true, ok)
 }

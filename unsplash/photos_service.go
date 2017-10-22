@@ -124,6 +124,35 @@ func (ps *PhotosService) Stats(id string) (*PhotoStats, *Response, error) {
 	return &stats, resp, nil
 }
 
+// Statistics return a stats about a photo with id.
+func (ps *PhotosService) Statistics(id string, opt *StatsOpt) (*PhotoStatistics, *Response, error) {
+	if "" == id {
+		return nil, nil, &IllegalArgumentError{ErrString: "Photo ID cannot be null"}
+	}
+	if opt == nil {
+		opt = defaultStatsOpt
+	}
+	if !opt.Valid() {
+		return nil, nil, &InvalidStatsOptError{ErrString: "opt provided is not valid."}
+	}
+	endpoint := fmt.Sprintf("%v/%v/statistics", getEndpoint(photos), id)
+	req, err := newRequest(GET, endpoint, opt, nil)
+	if err != nil {
+		return nil, nil, err
+	}
+	cli := (service)(*ps)
+	resp, err := cli.do(req)
+	if err != nil {
+		return nil, nil, err
+	}
+	var stats PhotoStatistics
+	err = json.Unmarshal(*resp.body, &stats)
+	if err != nil {
+		return nil, nil, err
+	}
+	return &stats, resp, nil
+}
+
 // DownloadLink return the download URL for a photo.
 func (ps *PhotosService) DownloadLink(id string) (*URL, *Response, error) {
 	if "" == id {
