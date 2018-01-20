@@ -30,7 +30,7 @@ go get github.com/hbagdi/go-unsplash/unsplash
 
 ## Dependencies
 
-This library has a single dependency on Google's [go-querystring](https://github.com/google/go-querystring/query).
+This library has a single dependency on Google's [go-querystring](https://github.com/google/go-querystring).
 
 ## API Guidelines
 
