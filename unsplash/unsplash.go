@@ -31,12 +31,13 @@ import (
 )
 
 type service struct {
-	httpClient *http.Client
+	client *Unsplash
 }
 
 // Unsplash wraps the entire Unsplash.com API
 type Unsplash struct {
-	common      *service
+	client      *http.Client
+	common      service
 	Users       *UsersService
 	Photos      *PhotosService
 	Collections *CollectionsService
@@ -45,21 +46,20 @@ type Unsplash struct {
 
 //New returns a new Unsplash struct
 func New(client *http.Client) *Unsplash {
-	unsplash := new(Unsplash)
-	unsplash.common = new(service)
 	if client == nil {
-		unsplash.common.httpClient = http.DefaultClient
-	} else {
-		unsplash.common.httpClient = client
+		client = http.DefaultClient
 	}
-	unsplash.Users = (*UsersService)(unsplash.common)
-	unsplash.Photos = (*PhotosService)(unsplash.common)
-	unsplash.Collections = (*CollectionsService)(unsplash.common)
-	unsplash.Search = (*SearchService)(unsplash.common)
+	unsplash := new(Unsplash)
+	unsplash.client = client
+	unsplash.common.client = unsplash
+	unsplash.Users = (*UsersService)(&unsplash.common)
+	unsplash.Photos = (*PhotosService)(&unsplash.common)
+	unsplash.Collections = (*CollectionsService)(&unsplash.common)
+	unsplash.Search = (*SearchService)(&unsplash.common)
 	return unsplash
 }
 
-func (s *service) do(req *request) (*Response, error) {
+func (s *Unsplash) do(req *request) (*Response, error) {
 	var err error
 	//TODO should this be exported?
 	if req == nil {
@@ -68,7 +68,7 @@ func (s *service) do(req *request) (*Response, error) {
 	}
 	req.Request.Header.Set("Accept-Version", "v1")
 	//Make the request
-	client := s.httpClient
+	client := s.client
 	rawResp, err := client.Do(req.Request)
 	if rawResp != nil {
 		defer rawResp.Body.Close()
@@ -94,7 +94,7 @@ func (u *Unsplash) CurrentUser() (*User, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := u.common.do(req)
+	resp, err := u.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -117,7 +117,7 @@ func (u *Unsplash) UpdateCurrentUser(updateInfo *UserUpdateInfo) (*User, *Respon
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := u.common.do(req)
+	resp, err := u.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -138,7 +138,7 @@ func (u *Unsplash) Stats() (*GlobalStats, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := u.common.do(req)
+	resp, err := u.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -163,7 +163,7 @@ func (u *Unsplash) MonthStats() (*MonthStats, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := u.common.do(req)
+	resp, err := u.do(req)
 	if err != nil {
 		return nil, nil, err
 	}

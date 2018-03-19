@@ -37,7 +37,7 @@ func (s *service) getPhotos(opt *ListOpt, endpoint string) (*[]Photo, *Response,
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := s.do(req)
+	resp, err := s.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -62,7 +62,7 @@ func (s *service) getCollections(opt *ListOpt, endpoint string) (*[]Collection, 
 	if err != nil {
 		return nil, nil, err
 	}
-	resp, err := s.do(req)
+	resp, err := s.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
