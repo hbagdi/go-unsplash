@@ -47,8 +47,7 @@ func (us *UsersService) User(username string, imageOpt *ProfileImageOpt) (*User,
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*us)
-	resp, err := cli.do(req)
+	resp, err := us.client.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -74,8 +73,7 @@ func (us *UsersService) Portfolio(username string) (*URL, error) {
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*us)
-	resp, err := cli.do(req)
+	resp, err := us.client.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -133,8 +131,7 @@ func (us *UsersService) Statistics(username string, opt *StatsOpt) (*UserStatist
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*us)
-	resp, err := cli.do(req)
+	resp, err := us.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}

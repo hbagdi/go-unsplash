@@ -76,8 +76,7 @@ func (cs *CollectionsService) Collection(id string) (*Collection, *Response, err
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -109,8 +108,7 @@ func (cs *CollectionsService) Create(opt *CollectionOpt) (*Collection, *Response
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -138,8 +136,7 @@ func (cs *CollectionsService) Update(collectionID int, opt *CollectionOpt) (*Col
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -161,8 +158,7 @@ func (cs *CollectionsService) Delete(collectionID int) (*Response, error) {
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -190,8 +186,7 @@ func (cs *CollectionsService) AddPhoto(collectionID int, photoID string) (*Respo
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, err
 	}
@@ -215,8 +210,7 @@ func (cs *CollectionsService) RemovePhoto(collectionID int, photoID string) (*Re
 	if err != nil {
 		return nil, err
 	}
-	cli := (service)(*cs)
-	resp, err := cli.do(req)
+	resp, err := cs.client.do(req)
 	if err != nil {
 		return nil, err
 	}

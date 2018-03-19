@@ -88,8 +88,7 @@ func (ps *PhotosService) Photo(id string, photoOpt *PhotoOpt) (*Photo, *Response
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -111,8 +110,7 @@ func (ps *PhotosService) Stats(id string) (*PhotoStats, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -140,8 +138,7 @@ func (ps *PhotosService) Statistics(id string, opt *StatsOpt) (*PhotoStatistics,
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -163,8 +160,7 @@ func (ps *PhotosService) DownloadLink(id string) (*URL, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -249,8 +245,7 @@ func (ps *PhotosService) Random(opt *RandomPhotoOpt) (*[]Photo, *Response, error
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -273,8 +268,7 @@ func (ps *PhotosService) Like(photoID string) (*Photo, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -296,8 +290,7 @@ func (ps *PhotosService) Unlike(photoID string) (*Photo, *Response, error) {
 	if err != nil {
 		return nil, nil, err
 	}
-	cli := (service)(*ps)
-	resp, err := cli.do(req)
+	resp, err := ps.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}

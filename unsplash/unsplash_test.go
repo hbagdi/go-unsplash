@@ -110,7 +110,7 @@ func TestUnsplash(T *testing.T) {
 	unsplash := setup()
 	assert.NotNil(unsplash)
 	assert.NotNil(unsplash.common)
-	assert.NotNil(unsplash.common.httpClient)
+	assert.NotNil(unsplash.client)
 	tstats, resp, err := unsplash.TotalStats()
 	assert.Nil(err)
 	assert.NotNil(tstats)
@@ -138,7 +138,7 @@ func TestUnsplash(T *testing.T) {
 	assert.NotNil(err)
 
 	var s service
-	_, err = s.do(nil)
+	_, err = s.client.do(nil)
 	assert.NotNil(err)
 }
 

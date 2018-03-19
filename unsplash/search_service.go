@@ -62,8 +62,7 @@ func (ss *SearchService) Users(opt *SearchOpt) (*UserSearchResult, *Response, er
 	if err != nil {
 		return nil, nil, err
 	}
-	s := (service)(*ss)
-	resp, err := s.do(req)
+	resp, err := ss.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -87,8 +86,7 @@ func (ss *SearchService) Photos(opt *SearchOpt) (*PhotoSearchResult, *Response, 
 	if err != nil {
 		return nil, nil, err
 	}
-	s := (service)(*ss)
-	resp, err := s.do(req)
+	resp, err := ss.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -112,8 +110,7 @@ func (ss *SearchService) Collections(opt *SearchOpt) (*CollectionSearchResult, *
 	if err != nil {
 		return nil, nil, err
 	}
-	s := (service)(*ss)
-	resp, err := s.do(req)
+	resp, err := ss.client.do(req)
 	if err != nil {
 		return nil, nil, err
 	}
