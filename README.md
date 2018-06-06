@@ -10,7 +10,7 @@
 
 A wrapper for the [Unsplash API](https://unsplash.com/developers).
 
-[Unsplash.com](https://unsplash.com) provides free ([CC0-licensed](https://unsplash.com/license)) high-resolution photos. As many as you want without any pesky API rate limits.
+[Unsplash](https://unsplash.com) provides [freely licensed](https://unsplash.com/license) high-resolution photos that can be used for anything.
 
 ## Documentation
 
@@ -34,10 +34,7 @@ This library has a single dependency on Google's [go-querystring](https://github
 
 ## API Guidelines
 
-- API is [open and free] (<https://community.unsplash.com/developersblog/the-unsplash-api-is-now-open-free>).
-- API [Terms & Conditions](https://unsplash.com/api-terms)
-- API [Guidelines] (<https://community.unsplash.com/developersblog/unsplash-api-guidelines>)
-- [Hotlinking](https://unsplash.com/documentation#hotlinking) the Unsplash image files is encouraged.
+When using the Unsplash API, you need to make sure to abide by their [API guidelines](https://medium.com/unsplash/unsplash-api-guidelines-28e0216e6daa) and [API Terms](https://unsplash.com/api-terms).
 
 ## Registration
 
