@@ -204,10 +204,4 @@ func TestUpdateCurrentUser(T *testing.T) {
 	assert.Nil(user)
 	assert.Nil(resp)
 	log.Println(err.Error())
-
-	newUserName = "gopher" //same as previous for testing
-	user, resp, err = unsplash.UpdateCurrentUser(&UserUpdateInfo{Username: newUserName})
-	assert.Nil(err)
-	assert.NotNil(user)
-	assert.NotNil(resp)
 }
