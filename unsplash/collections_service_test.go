@@ -165,6 +165,7 @@ func TestCreateCollection(T *testing.T) {
 }
 
 func TestUpdateCollection(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
@@ -203,6 +204,7 @@ func TestUpdateCollection(T *testing.T) {
 }
 
 func TestDeleteCollection(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
@@ -224,6 +226,7 @@ func TestDeleteCollection(T *testing.T) {
 }
 
 func TestAddPhoto(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
@@ -265,6 +268,7 @@ func TestAddPhoto(T *testing.T) {
 }
 
 func TestRemovePhoto(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
