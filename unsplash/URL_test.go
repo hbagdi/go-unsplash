@@ -40,6 +40,9 @@ var (
 	}
 	badJSON = "{\"Anything that can go wrong, will go wrong.\"}"
 	badURL  = "{\"URL\":\"httpps://en.shttps:////\"}"
+
+	trimmedURL    = "https://unsplash.com/@hbagdi/likes"
+	whitespaceURL = "{\"URL\":\"" + trimmedURL + " \"}"
 )
 
 type URLWrapper struct {
@@ -78,4 +81,9 @@ func TestURL(T *testing.T) {
 	err = url3.UnmarshalJSON([]byte(badJSON))
 	assert.NotNil(err)
 
+	bytes = []byte(whitespaceURL)
+	var url4 URLWrapper
+	err = json.Unmarshal(bytes, &url4)
+	assert.Nil(err)
+	assert.Equal(trimmedURL, url4.OURL.String())
 }
