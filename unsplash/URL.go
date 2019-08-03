@@ -26,6 +26,7 @@ package unsplash
 import (
 	"encoding/json"
 	"net/url"
+	"strings"
 )
 
 // URL is URL with custom JSON marshalling
@@ -45,7 +46,7 @@ func (u *URL) UnmarshalJSON(b []byte) error {
 	if err != nil {
 		return err
 	}
-	parsedURL, err := url.Parse(urlString)
+	parsedURL, err := url.Parse(strings.TrimSpace(urlString))
 	if err != nil {
 		return err
 	}
