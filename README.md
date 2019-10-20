@@ -6,7 +6,6 @@
 [![codecov](https://codecov.io/gh/hbagdi/go-unsplash/branch/master/graph/badge.svg)](https://codecov.io/gh/hbagdi/go-unsplash)
 [![Go Report Card](https://goreportcard.com/badge/github.com/hbagdi/go-unsplash)](https://goreportcard.com/report/github.com/hbagdi/go-unsplash)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2a4ec2b508704df4b52f6b3613c9e554)](https://www.codacy.com/app/hardikbagdi/go-unsplash)
-[![codebeat badge](https://codebeat.co/badges/944d69fb-df96-4e74-aa37-8bcc8d34d395)](https://codebeat.co/projects/github-com-hbagdi-go-unsplash-master)
 
 A wrapper for the [Unsplash API](https://unsplash.com/developers).
 
