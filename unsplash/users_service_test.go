@@ -158,7 +158,7 @@ func TestLikedPhotos(T *testing.T) {
 	assert.Equal(3, resp.NextPage)
 	assert.Equal(1, resp.PrevPage)
 	assert.NotNil(photos)
-	assert.Equal(42, len(*photos))
+	assert.Equal(30, len(*photos))
 
 	photos, resp, err = unsplash.Users.LikedPhotos("lukechesser", &ListOpt{PerPage: -1})
 	assert.Nil(photos)

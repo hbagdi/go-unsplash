@@ -89,6 +89,8 @@ func TestFeaturedCollections(T *testing.T) {
 }
 
 func TestCuratedCollections(T *testing.T) {
+	// Curated collections have been removed from the API
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
