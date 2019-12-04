@@ -143,6 +143,7 @@ func TestAllPhotos(T *testing.T) {
 
 }
 func TestCuratedPhotos(T *testing.T) {
+	T.Skip() // endpoint is removed
 	assert := assert.New(T)
 	//TODO write better tests
 	log.SetOutput(ioutil.Discard)
@@ -155,6 +156,7 @@ func TestCuratedPhotos(T *testing.T) {
 }
 
 func TestPhotoStats(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
