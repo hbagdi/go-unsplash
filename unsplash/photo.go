@@ -38,13 +38,23 @@ type ExifData struct {
 	Iso          *int    `json:"iso"`
 }
 
+// Tag lists can be applied to any photo
+type Tag struct {
+	Type  *string `json:"type"`
+	Title *string `json:"title"`
+}
+
 // Photo represents a photo on unsplash.com
 type Photo struct {
 	ID           *string    `json:"id"`
 	CreatedAt    *time.Time `json:"created_at"`
+	UpdatedAt    *time.Time `json:"updated_at"`
 	Width        *int       `json:"width"`
 	Height       *int       `json:"height"`
 	Color        *string    `json:"color"`
+	Description  *string    `json:"description"`
+	AltText      *string    `json:"alt_description"`
+	Views        *int       `json:"views"`
 	Downloads    *int       `json:"downloads"`
 	Likes        *int       `json:"likes"`
 	LikedByUser  *bool      `json:"liked_by_user"`
@@ -60,6 +70,7 @@ type Photo struct {
 			Longitude *float64 `json:"longitude"`
 		} `json:"position"`
 	} `json:"location"`
+	Tags                   *[]Tag        `json:"tags"`
 	CurrentUserCollections *[]Collection `json:"current_user_collections"`
 	Urls                   *struct {
 		Raw     *URL `json:"raw"`
