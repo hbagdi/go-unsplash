@@ -76,6 +76,9 @@ type User struct {
 	Badge               *UserBadge    `json:"badge"`
 	Links               *UserLinks    `json:"links,omitempty"`
 	Photos              *[]Photo      `json:"photos"`
+	UpdatedAt           *string       `json:"updated_at"`
+	InstagramUsername   *string       `json:"instagram_username"`
+	TwitterUsername     *string       `json:"twitter_username"`
 }
 
 func (u *User) String() string {
