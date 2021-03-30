@@ -81,6 +81,7 @@ func TestSearchUsers(T *testing.T) {
 }
 
 func TestSearchCollections(T *testing.T) {
+	T.Skip()
 	log.SetOutput(ioutil.Discard)
 	assert := assert.New(T)
 	assert.Nil(nil)

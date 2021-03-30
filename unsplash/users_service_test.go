@@ -33,6 +33,7 @@ import (
 )
 
 func TestUserProfile(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
@@ -191,6 +192,7 @@ func TestUserPhotos(T *testing.T) {
 
 }
 func TestUserCollections(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	//TODO write better tests
 	log.SetOutput(ioutil.Discard)

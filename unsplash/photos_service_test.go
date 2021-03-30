@@ -275,6 +275,7 @@ func TestRandomPhoto(T *testing.T) {
 }
 
 func TestPhotoLike(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
@@ -296,6 +297,7 @@ func TestPhotoLike(T *testing.T) {
 }
 
 func TestPhotoUnlike(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()

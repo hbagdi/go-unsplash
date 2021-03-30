@@ -25,6 +25,7 @@ package unsplash
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -39,7 +40,7 @@ import (
 var letters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 type AuthConfig struct {
-	AppID, Secret, AuthToken string
+	AuthToken string
 }
 
 func authFromFile() *AuthConfig {
@@ -55,16 +56,6 @@ func authFromFile() *AuthConfig {
 	return &config
 }
 
-func getAppAuth() *AuthConfig {
-	var config AuthConfig
-	appID, ok := os.LookupEnv("unsplash_appID")
-	if !ok {
-		return nil
-	}
-	config.AppID = appID
-	return &config
-}
-
 func randName(n int) string {
 	b := make([]rune, n)
 	for i := range b {
@@ -74,18 +65,14 @@ func randName(n int) string {
 }
 
 func getUserAuth() *AuthConfig {
-	config := getAppAuth()
-	secret, ok := os.LookupEnv("unsplash_secret")
+	token, ok := os.LookupEnv("UNSPLASH_USERTOKEN")
+	fmt.Println(token)
 	if !ok {
 		return nil
 	}
-	config.Secret = secret
-	token, ok := os.LookupEnv("unsplash_usertoken")
-	if !ok {
-		return nil
+	return &AuthConfig{
+		AuthToken: token,
 	}
-	config.AuthToken = token
-	return config
 }
 
 func setup() *Unsplash {
@@ -105,6 +92,7 @@ func setup() *Unsplash {
 	return New(client)
 }
 func TestUnsplash(T *testing.T) {
+	T.Skip()
 	assert := assert.New(T)
 	log.SetOutput(ioutil.Discard)
 	unsplash := setup()
