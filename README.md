@@ -1,11 +1,8 @@
 # Unsplash API client
 
 [![GoDoc](https://godoc.org/github.com/hardikbagdi/go-unsplash?status.svg)](https://godoc.org/github.com/hbagdi/go-unsplash/unsplash)
-[![Build Status](https://travis-ci.org/hbagdi/go-unsplash.svg?branch=master)](https://travis-ci.org/hbagdi/go-unsplash) 
-[![Coverage Status](https://coveralls.io/repos/github/hbagdi/go-unsplash/badge.svg?branch=master)](https://coveralls.io/github/hbagdi/go-unsplash?branch=master)
-[![codecov](https://codecov.io/gh/hbagdi/go-unsplash/branch/master/graph/badge.svg)](https://codecov.io/gh/hbagdi/go-unsplash)
+[![CI Test](https://github.com/hbagdi/go-unsplash/actions/workflows/test.yaml/badge.svg)](https://github.com/hbagdi/go-unsplash/actions/workflows/test.yaml)
 [![Go Report Card](https://goreportcard.com/badge/github.com/hbagdi/go-unsplash)](https://goreportcard.com/report/github.com/hbagdi/go-unsplash)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2a4ec2b508704df4b52f6b3613c9e554)](https://www.codacy.com/app/hardikbagdi/go-unsplash)
 
 A wrapper for the [Unsplash API](https://unsplash.com/developers).
 
