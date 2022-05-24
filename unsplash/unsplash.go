@@ -25,6 +25,7 @@ package unsplash
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -36,6 +37,7 @@ type service struct {
 
 // Unsplash wraps the entire Unsplash.com API
 type Unsplash struct {
+	client_id   string
 	client      *http.Client
 	common      service
 	Users       *UsersService
@@ -59,6 +61,12 @@ func New(client *http.Client) *Unsplash {
 	return unsplash
 }
 
+func NewWithClientID(client *http.Client, client_id string) *Unsplash {
+	r := New(client)
+	r.client_id = client_id
+	return r
+}
+
 func (s *Unsplash) do(req *request) (*Response, error) {
 	var err error
 	//TODO should this be exported?
@@ -67,6 +75,9 @@ func (s *Unsplash) do(req *request) (*Response, error) {
 			&IllegalArgumentError{ErrString: "Request object cannot be nil"}
 	}
 	req.Request.Header.Set("Accept-Version", "v1")
+	if s.client_id != "" {
+		req.Request.Header.Set("Authorization", fmt.Sprintf("Client-ID %v", s.client_id))
+	}
 	//Make the request
 	client := s.client
 	rawResp, err := client.Do(req.Request)
