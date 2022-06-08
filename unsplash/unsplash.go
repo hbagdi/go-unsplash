@@ -61,6 +61,9 @@ func New(client *http.Client) *Unsplash {
 	return unsplash
 }
 
+//New returns a new Unsplash struct using client_id for Authorization header
+//This will only enable API that do not require user level authorization, but
+//just application level.
 func NewWithClientID(client *http.Client, client_id string) *Unsplash {
 	r := New(client)
 	r.client_id = client_id
