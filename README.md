@@ -112,7 +112,8 @@ The http.Client supplied will be used to make requests to the API.
 
 ```go
 ts := oauth2.StaticTokenSource(
-  &oauth2.Token{AccessToken: "Your-access-token"},
+  // note Client-ID in front of the access token
+  &oauth2.Token{AccessToken: "Client-ID Your-access-token"},
 )
 client := oauth2.NewClient(oauth2.NoContext, ts)
 //use the http.Client to instantiate unsplash
