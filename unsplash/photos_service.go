@@ -196,16 +196,17 @@ type RandomPhotoOpt struct {
 	Count         int         `url:"count,omitempty"`
 	Orientation   orientation `url:"orientation,omitempty"`
 	CollectionIDs []int       `url:"collections,comma"`
+	TopicIDs      []string    `url:"topics,comma"`
 }
 
-//Valid validates a RandomPhotoOpt
+// Valid validates a RandomPhotoOpt
 func (opt *RandomPhotoOpt) Valid() bool {
 	//negative values
 	if opt.Count < 0 || opt.Height < 0 || opt.Width < 0 {
 		return false
 	}
-	//collections and query can't be used at the same time acc to API documentation
-	if len(opt.CollectionIDs) != 0 && opt.SearchQuery != "" {
+	//collections/topics and query can't be used at the same time acc to API documentation
+	if (len(opt.CollectionIDs) != 0 || len(opt.TopicIDs) != 0) && opt.SearchQuery != "" {
 		return false
 	}
 	if opt.Count == 0 {
