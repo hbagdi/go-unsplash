@@ -37,7 +37,6 @@ const (
 )
 
 const (
-	apiBaseURL                = "https://api.unsplash.com/"
 	currentUserEndpoint       = "me"
 	globalStatsEndpoint       = "stats/total"
 	monthStatsEndpoint        = "stats/month"
@@ -49,6 +48,8 @@ const (
 	searchPhotosEndpoint      = searchEndpoint + "/" + photosEndpoint
 	searchCollectionsEndpoint = searchEndpoint + "/" + collectionsEndpoint
 )
+
+var apiBaseURL = "https://api.unsplash.com/"
 
 type endpoint int
 
@@ -83,4 +84,9 @@ func init() {
 
 func getEndpoint(e endpoint) string {
 	return mapURL[e]
+}
+
+func SetupBaseUrl(url string) {
+	apiBaseURL = url
+	mapURL[base] = apiBaseURL
 }
