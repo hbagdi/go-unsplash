@@ -26,6 +26,7 @@ package unsplash
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 
 	"github.com/google/go-querystring/query"
@@ -39,14 +40,19 @@ func newRequest(m method, e string, qs interface{}, body interface{}) (*request,
 	if e == "" {
 		return nil, &IllegalArgumentError{ErrString: "Endpoint can't be null."}
 	}
-	//body to be sent in JSON
-	buf, err := json.Marshal(body)
-	if err != nil {
-		return nil, err
+	//body to be sent in JSON, omitted entirely when nil so GET/DELETE requests
+	//don't carry a body (some CDNs/WAFs reject bodies on bodiless verbs)
+	var bodyReader io.Reader
+	if body != nil {
+		buf, err := json.Marshal(body)
+		if err != nil {
+			return nil, err
+		}
+		bodyReader = bytes.NewBuffer(buf)
 	}
 	//Create a new request
 
-	httpRequest, err := http.NewRequest(string(m), getEndpoint(base)+e, bytes.NewBuffer(buf))
+	httpRequest, err := http.NewRequest(string(m), getEndpoint(base)+e, bodyReader)
 
 	if err != nil {
 		return nil, err
@@ -61,6 +67,8 @@ func newRequest(m method, e string, qs interface{}, body interface{}) (*request,
 	}
 	req := new(request)
 	req.Request = httpRequest
-	req.Request.Header.Add("Content-Type", "application/json")
+	if body != nil {
+		req.Request.Header.Add("Content-Type", "application/json")
+	}
 	return req, nil
 }
