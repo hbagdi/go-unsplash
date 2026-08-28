@@ -54,6 +54,7 @@ type Photo struct {
 	Color          *string    `json:"color"`
 	Description    *string    `json:"description"`
 	AltDescription *string    `json:"alt_description"`
+	BlurHash       *string    `json:"blur_hash"`
 	Views          *int       `json:"views"`
 	Downloads      *int       `json:"downloads"`
 	Likes          *int       `json:"likes"`
